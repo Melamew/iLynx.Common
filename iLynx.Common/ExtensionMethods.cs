@@ -17,8 +17,8 @@ namespace System
         public static string ToString(this IEnumerable<byte> val, string splitter)
         {
             var ret = val.Aggregate(string.Empty, (current, v) => current + (v.ToString("X2") + splitter));
-            if (ret.EndsWith(splitter))
-                ret = ret.Remove(ret.LastIndexOf(splitter, StringComparison.InvariantCulture), splitter.Length);
+            // Remove the superflous splitter that was added during the aggregate.
+            ret = ret.Remove(ret.Length - splitter.Length, splitter.Length);
             return ret;
         }
 
@@ -208,7 +208,7 @@ namespace System
         }
 
         /// <summary>
-        /// Transforms the specified arr (In place, and returns it).
+        /// Transforms the specified arr (In place) and returns it.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr">The arr.</param>
