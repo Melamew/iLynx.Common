@@ -1,10 +1,10 @@
 using iLynx.Common;
 using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
-using iLynx.Networking.Cryptography;
 using iLynx.Networking.Interfaces;
+using iLynx.Networking.TCP;
 
-namespace iLynx.Networking.TCP
+namespace iLynx.Networking.Cryptography
 {
     public class CryptoConnectionListener<TMessage, TMessageKey> : SocketListenerBase,
         IConnectionListener<TMessage, TMessageKey> where TMessage : IKeyedMessage<TMessageKey>

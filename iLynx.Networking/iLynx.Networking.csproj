@@ -61,6 +61,7 @@
     <Compile Include="ClientServer\ServersideClient.cs" />
     <Compile Include="ConnectionBase.cs" />
     <Compile Include="Cryptography\AlgorithmComparer.cs" />
+    <Compile Include="Cryptography\CryptoConnectionListener.cs" />
     <Compile Include="Cryptography\CryptoConnectionStub.cs" />
     <Compile Include="Cryptography\CryptoConnectionStubBuilder.cs" />
     <Compile Include="Cryptography\IAlgorithmContainer.cs" />
@@ -97,7 +98,6 @@
     <Compile Include="StreamedSocketConnectionStub.cs" />
     <Compile Include="StreamConnectionStub.cs" />
     <Compile Include="StubConnection.cs" />
-    <Compile Include="TCP\CryptoConnectionListener.cs" />
     <Compile Include="TCP\SocketListenerBase.cs" />
     <Compile Include="TCP\TcpConnectionListener.cs" />
     <Compile Include="TCP\TcpStubBuilder.cs" />
