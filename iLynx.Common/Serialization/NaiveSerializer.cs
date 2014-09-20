@@ -12,8 +12,9 @@ namespace iLynx.Common.Serialization
     /// NaiveSerializer
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class NaiveSerializer<T> : ComponentBase, ISerializer
+    public class NaiveSerializer<T> : ISerializer
     {
+        private readonly ILogger logger;
         private readonly IEnumerable<SerializationInfo<T>> sortedGraph;
         private const BindingFlags FieldFlags = BindingFlags.GetField | BindingFlags.SetField | BindingFlags.Public | BindingFlags.Instance;
         private const BindingFlags PropertyFlags = BindingFlags.SetProperty | BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance;
@@ -23,8 +24,8 @@ namespace iLynx.Common.Serialization
         /// </summary>
         /// <exception cref="System.NotSupportedException">Missing Types are currently not supported</exception>
         public NaiveSerializer(ILogger logger)
-            : base(logger)
         {
+            this.logger = logger;
             if (typeof(T) == Type.Missing.GetType()) throw new NotSupportedException("Missing Types are currently not supported");
             sortedGraph = BuildObjectGraph(typeof(T)).Values;
         }
@@ -140,8 +141,8 @@ namespace iLynx.Common.Serialization
         /// <param name="m">The m.</param>
         private void PostQuit(Exception e, MethodBase m)
         {
-            LogException(e, m);
-            LogCritical("Last Error was unrecoverable. Giving up");
+            logger.Log(LoggingType.Error, this, string.Format("{0}: {1}", e, m));
+            logger.Log(LoggingType.Critical, this, "Last Error was unrecoverable. Giving up");
         }
 
         // ReSharper disable StaticFieldInGenericType

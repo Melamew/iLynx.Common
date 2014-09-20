@@ -8,7 +8,7 @@ namespace iLynx.Common.Serialization
     /// <summary>
     /// Serializer
     /// </summary>
-    public class Serializer : ComponentBase, ISerializerService
+    public class Serializer : ISerializerService
     {
         /// <summary>
         /// The namespace GUID used by this serializer
@@ -44,17 +44,7 @@ namespace iLynx.Common.Serialization
         /// <returns></returns>
         public static ISerializerService GetInstance()
         {
-            return new Serializer(RuntimeCommon.DefaultLogger);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Serializer" /> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        public Serializer(ILogger logger)
-            : base(logger)
-        {
-
+            return new Serializer();
         }
 
         /// <summary>
@@ -176,7 +166,7 @@ namespace iLynx.Common.Serialization
             {
                 return new NaiveSerializer<T>(RuntimeCommon.DefaultLogger);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //LogException(e, MethodBase.GetCurrentMethod());
                 return null;

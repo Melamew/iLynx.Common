@@ -111,7 +111,6 @@
     <Compile Include="Collections\ICache.cs" />
     <Compile Include="Collections\IIDentifiable.cs" />
     <Compile Include="Collections\PriorityQueue.cs" />
-    <Compile Include="ComponentBase.cs" />
     <Compile Include="Configuration\SingletonConfigurationManager.cs" />
     <Compile Include="Configuration\ExeConfig.cs" />
     <Compile Include="Configuration\ExeConfigValue.cs" />

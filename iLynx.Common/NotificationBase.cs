@@ -35,22 +35,8 @@ namespace iLynx.Common
     /// <summary>
     /// NotificationBase
     /// </summary>
-    public abstract class NotificationBase : ComponentBase, INotifyPropertyChanged, IDisposable
+    public abstract class NotificationBase : INotifyPropertyChanged, IDisposable
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NotificationBase" /> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        protected NotificationBase(ILogger logger)
-            : base(logger)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NotificationBase" /> class.
-        /// </summary>
-        protected NotificationBase() : base(RuntimeCommon.DefaultLogger) { }
-
         /// <summary>
         /// Occurs when [property changed].
         /// </summary>
