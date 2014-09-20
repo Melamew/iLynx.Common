@@ -80,6 +80,7 @@
     <Compile Include="Cryptography\RsaKeyExchangeAlgorithm.cs" />
     <Compile Include="Cryptography\AlgorithmContainer.cs" />
     <Compile Include="Interfaces\IConnection.cs" />
+    <Compile Include="Interfaces\IConnectionListener.cs" />
     <Compile Include="Interfaces\IConnectionStub.cs" />
     <Compile Include="Interfaces\IConnectionStubBuilder.cs" />
     <Compile Include="Interfaces\IConnectionStubListener.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Interfaces\IEndPointWrapper.cs" />
     <Compile Include="Interfaces\IKeyedDatagramMessage.cs" />
     <Compile Include="Interfaces\IKeyedMessage.cs" />
+    <Compile Include="Interfaces\IListener.cs" />
     <Compile Include="Interfaces\MessageReceivedHandler.cs" />
     <Compile Include="Serialization\SimpleMessageSerializer.cs" />
     <Compile Include="SimpleMessage.cs" />
@@ -95,6 +97,9 @@
     <Compile Include="StreamedSocketConnectionStub.cs" />
     <Compile Include="StreamConnectionStub.cs" />
     <Compile Include="StubConnection.cs" />
+    <Compile Include="TCP\CryptoConnectionListener.cs" />
+    <Compile Include="TCP\SocketListenerBase.cs" />
+    <Compile Include="TCP\TcpConnectionListener.cs" />
     <Compile Include="TCP\TcpStubBuilder.cs" />
     <Compile Include="TCP\TcpStubListener.cs" />
     <Compile Include="UDP\DatagramSocketConnectionStub.cs" />
