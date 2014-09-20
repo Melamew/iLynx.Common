@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FD13EB83-1471-4B59-9FCE-75AB804A0A3F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>iLynx.Networking</RootNamespace>
+    <AssemblyName>iLynx.Networking</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClientServer\Client.cs" />
+    <Compile Include="ClientServer\ClientActionEventArgs.cs" />
+    <Compile Include="ClientServer\ClientBase.cs" />
+    <Compile Include="ClientServer\IClientSideClient.cs" />
+    <Compile Include="ClientServer\MessageEnvelope.cs" />
+    <Compile Include="ClientServer\MessageReaderBase.cs" />
+    <Compile Include="ClientServer\ClientBuilder.cs" />
+    <Compile Include="ClientServer\ClientConnectedEventArgs.cs" />
+    <Compile Include="ClientServer\ClientDisconnectedEventArgs.cs" />
+    <Compile Include="ClientServer\IAuthenticationHandler.cs" />
+    <Compile Include="ClientServer\IClient.cs" />
+    <Compile Include="ClientServer\IClientBuilder.cs" />
+    <Compile Include="ClientServer\IClientMessage.cs" />
+    <Compile Include="ClientServer\IMessageHandler.cs" />
+    <Compile Include="ClientServer\IMessageServer.cs" />
+    <Compile Include="ClientServer\MessageServer.cs" />
+    <Compile Include="ClientServer\ServersideClient.cs" />
+    <Compile Include="ConnectionBase.cs" />
+    <Compile Include="Cryptography\AlgorithmComparer.cs" />
+    <Compile Include="Cryptography\CryptoConnectionStub.cs" />
+    <Compile Include="Cryptography\CryptoConnectionStubBuilder.cs" />
+    <Compile Include="Cryptography\IAlgorithmContainer.cs" />
+    <Compile Include="Cryptography\IAlgorithmDescriptor.cs" />
+    <Compile Include="Cryptography\ICryptoConnection.cs" />
+    <Compile Include="Cryptography\ICryptoConnectionStub.cs" />
+    <Compile Include="Cryptography\ICryptoConnectionStubBuilder.cs" />
+    <Compile Include="Cryptography\CryptoConnectionStubListener.cs" />
+    <Compile Include="Cryptography\IKeyExchangeAlgorithm.cs" />
+    <Compile Include="Cryptography\IKeyExchangeAlgorithmDescriptor.cs" />
+    <Compile Include="Cryptography\ILinkNegotiator.cs" />
+    <Compile Include="Cryptography\ISymmetricAlgorithmDescriptor.cs" />
+    <Compile Include="Cryptography\ITimedCryptoConnection.cs" />
+    <Compile Include="Cryptography\ITimestampedKeyedMessage.cs" />
+    <Compile Include="Cryptography\ITlsConnection.cs" />
+    <Compile Include="Cryptography\KeyExchangeLinkNegotiator.cs" />
+    <Compile Include="Cryptography\RsaKeyExchangeAlgorithm.cs" />
+    <Compile Include="Cryptography\AlgorithmContainer.cs" />
+    <Compile Include="Interfaces\IConnection.cs" />
+    <Compile Include="Interfaces\IConnectionStub.cs" />
+    <Compile Include="Interfaces\IConnectionStubBuilder.cs" />
+    <Compile Include="Interfaces\IConnectionStubListener.cs" />
+    <Compile Include="Interfaces\IEndPointDescriptor.cs" />
+    <Compile Include="Interfaces\IEndPointWrapper.cs" />
+    <Compile Include="Interfaces\IKeyedDatagramMessage.cs" />
+    <Compile Include="Interfaces\IKeyedMessage.cs" />
+    <Compile Include="Interfaces\MessageReceivedHandler.cs" />
+    <Compile Include="Serialization\SimpleMessageSerializer.cs" />
+    <Compile Include="SimpleMessage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketExtensions.cs" />
+    <Compile Include="StreamedSocketConnectionStub.cs" />
+    <Compile Include="StreamConnectionStub.cs" />
+    <Compile Include="StubConnection.cs" />
+    <Compile Include="TCP\TcpStubBuilder.cs" />
+    <Compile Include="TCP\TcpStubListener.cs" />
+    <Compile Include="UDP\DatagramSocketConnectionStub.cs" />
+    <Compile Include="UDP\UdpStubBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">
+      <Project>{1241AC19-9872-4126-8915-3A34919E1705}</Project>
+      <Name>iLynx.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.PubSub\iLynx.PubSub.csproj">
+      <Project>{DF55B984-7E5E-447C-9D68-D93F9FB0C227}</Project>
+      <Name>iLynx.PubSub</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

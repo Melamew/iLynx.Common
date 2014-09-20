@@ -1,0 +1,12 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/iLynx.Common.WPF;component/Themes/Templates/Nodes.xaml"/>
+        <ResourceDictionary Source="/iLynx.Common.WPF;component/Themes/Templates/ColorPicker.xaml"/>
+        <ResourceDictionary Source="/iLynx.Common.WPF;component/Themes/Templates/ValuePicker.xaml"/>
+        
+        <!--Default style!-->
+        <ResourceDictionary Source="/iLynx.Common.WPF;component/Themes/FlatTheme.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
