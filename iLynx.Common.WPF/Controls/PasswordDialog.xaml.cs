@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using iLynx.Common.WPF.Annotations;
 
 namespace iLynx.Common.WPF.Controls
 {
@@ -42,7 +41,6 @@ namespace iLynx.Common.WPF.Controls
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;

@@ -113,8 +113,12 @@
     <Compile Include="BorderlessWindow.cs" />
     <Compile Include="Controls\AutoSizingCanvas.cs" />
     <Compile Include="Controls\ColorPicker.cs" />
+    <Compile Include="Controls\ConnectedEventArgs.cs" />
     <Compile Include="Controls\Connector.cs" />
+    <Compile Include="Controls\IConnectable.cs" />
+    <Compile Include="Controls\IPositionable.cs" />
     <Compile Include="Controls\Node.cs" />
+    <Compile Include="Controls\NodeExtensions.cs" />
     <Compile Include="Controls\NodePanel.cs" />
     <Compile Include="Controls\NodeSocket.cs" />
     <Compile Include="Controls\PasswordDialog.xaml.cs">
@@ -136,15 +140,18 @@
     <Compile Include="HotkeyDescriptor.cs" />
     <Compile Include="IDispatcher.cs" />
     <Compile Include="IGlobalHotkeyService.cs" />
+    <Compile Include="Imaging\ColorForPixel.cs" />
     <Compile Include="Imaging\Extensions.cs" />
     <Compile Include="Imaging\HsvColor.cs" />
     <Compile Include="Imaging\IBitmapRenderer.cs" />
     <Compile Include="Imaging\IRenderer.cs" />
+    <Compile Include="Imaging\IRenderProxy.cs" />
     <Compile Include="Imaging\IWriteableBitmapWrapper.cs" />
     <Compile Include="Imaging\Line2D.cs" />
     <Compile Include="Imaging\RenderCallback.cs" />
     <Compile Include="Imaging\RenderContext.cs" />
     <Compile Include="Imaging\RendererBase.cs" />
+    <Compile Include="Imaging\RenderProxy.cs" />
     <Compile Include="Imaging\UnsafeFunctions.cs" />
     <Compile Include="Imaging\VectorD.cs" />
     <Compile Include="Imaging\VectorI.cs" />
@@ -153,7 +160,6 @@
     <Compile Include="MouseObserver.cs" />
     <Compile Include="NodeHelper.cs" />
     <Compile Include="ObjectObserver.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="SizeObserver.cs" />
     <Compile Include="Themes\IThemeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -170,8 +176,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Themes\FlatTheme.cs" />
+    <Compile Include="Themes\Theme.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
-    <Compile Include="Imaging\UnmanagedWriteableBitmapRenderer.cs" />
+    <Compile Include="Imaging\UnmanagedBitmapRenderer.cs" />
     <Compile Include="Imaging\WriteableBitmapWrapper.cs" />
     <Compile Include="WPFApplicationDispatcher.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

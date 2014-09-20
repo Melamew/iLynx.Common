@@ -4,11 +4,6 @@ using System.ComponentModel;
 
 namespace iLynx.Common.Interfaces
 {
-    public interface IRequestRecalculate
-    {
-        event EventHandler RequestRecalculate;
-    }
-
     public interface INode : IRequestRecalculate, INotifyPropertyChanged
     {
         object Compute(params object[] args);

@@ -8,8 +8,6 @@ using System.Windows.Media.Imaging;
 
 namespace iLynx.Common.WPF.Imaging
 {
-    public delegate int ColorForPixel(double x, double y, double linePosition);
-
     public static class Extensions
     {
         public static unsafe void DrawLine(this IntPtr target,

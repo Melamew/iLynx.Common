@@ -104,13 +104,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BooleanOperator.cs" />
+    <Compile Include="Collections\AsynchronourQueryableWrapper.cs" />
     <Compile Include="Collections\AsynchronousEnumerableWrapper.cs" />
+    <Compile Include="Collections\BufferedThreadedEnumerator.cs" />
+    <Compile Include="Collections\CacheEntryBase.cs" />
+    <Compile Include="Collections\DirectThreadedEnumerator.cs" />
+    <Compile Include="Collections\ICacheEntry.cs" />
+    <Compile Include="Collections\IPriorityQueue.cs" />
+    <Compile Include="Collections\IQueue.cs" />
+    <Compile Include="Collections\PassivelyTimedCacheEntry.cs" />
+    <Compile Include="Collections\Priority.cs" />
+    <Compile Include="Collections\PriorityItem.cs" />
     <Compile Include="Collections\TimedCache.cs" />
     <Compile Include="Collections\ActivelyTimedCacheEntry.cs" />
     <Compile Include="Collections\ExtensionMethods.cs" />
     <Compile Include="Collections\ICache.cs" />
     <Compile Include="Collections\IIDentifiable.cs" />
     <Compile Include="Collections\PriorityQueue.cs" />
+    <Compile Include="Configuration\BinaryConfigSection.cs" />
+    <Compile Include="Configuration\ConfigurableValue.cs" />
     <Compile Include="Configuration\SingletonConfigurationManager.cs" />
     <Compile Include="Configuration\ExeConfig.cs" />
     <Compile Include="Configuration\ExeConfigValue.cs" />
@@ -121,7 +133,9 @@
     <Compile Include="Cryptography\IEncryptionAlgorithm.cs" />
     <Compile Include="IFreezable.cs" />
     <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="Interfaces\IRequestRecalculate.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="NonComponentNotificationBase.cs" />
     <Compile Include="Pixels\IPalette.cs" />
     <Compile Include="Pixels\LinearGradientPalette.cs" />
     <Compile Include="Serialization\BigEndianBitConverter.cs" />

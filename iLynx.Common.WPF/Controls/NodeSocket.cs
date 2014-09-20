@@ -7,29 +7,6 @@ using System.Windows.Input;
 
 namespace iLynx.Common.WPF.Controls
 {
-    public class ConnectedEventArgs : EventArgs
-    {
-        public IConnectable Other { get; set; }
-
-        public ConnectedEventArgs()
-        {
-
-        }
-
-        public ConnectedEventArgs(IConnectable other)
-        {
-            Other = other;
-        }
-    }
-
-    public interface IConnectable
-    {
-        void Connect(IConnectable to);
-        void Disconnect(IConnectable item);
-        event EventHandler<ConnectedEventArgs> Connected;
-        event EventHandler<ConnectedEventArgs> Disconnected;
-    }
-
     public class NodeSocket : Control, IPositionable, IConnectable
     {
         public static readonly DependencyProperty GlobalPositionProperty = DependencyProperty.Register("GlobalPosition", typeof(Point), typeof(NodeSocket), new PropertyMetadata(default(Point)));

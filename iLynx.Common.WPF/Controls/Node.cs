@@ -12,12 +12,6 @@ using iLynx.Common.Interfaces;
 
 namespace iLynx.Common.WPF.Controls
 {
-    public interface IPositionable
-    {
-        Point Position { get; set; }
-        event EventHandler PositionChanged;
-    }
-
     public class Node : ContentControl, IPositionable, IConnectable
     {
         public static readonly DependencyProperty PositionProperty = DependencyProperty.Register("Position", typeof(Point), typeof(Node), new PropertyMetadata(default(Point), OnPositionChanged));
