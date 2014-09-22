@@ -31,5 +31,7 @@ namespace iLynx.TestBench.ClientServerDemo
             var result = connection.ReadNext(out size);
             return result.Key == 1;
         }
+
+        public int Strength { get { return (int) AuthenticationStrength.Weak; } }
     }
 }

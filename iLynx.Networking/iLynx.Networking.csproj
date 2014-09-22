@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientServer\AuthenticationStrength.cs" />
     <Compile Include="ClientServer\Client.cs" />
     <Compile Include="ClientServer\ClientActionEventArgs.cs" />
     <Compile Include="ClientServer\ClientBase.cs" />

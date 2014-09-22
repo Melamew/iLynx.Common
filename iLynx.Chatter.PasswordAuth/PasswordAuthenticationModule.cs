@@ -46,5 +46,7 @@ namespace iLynx.Chatter.PasswordAuth
             });
             return accept;
         }
+
+        public int Strength { get { return (int) AuthenticationStrength.Weak; } }
     }
 }

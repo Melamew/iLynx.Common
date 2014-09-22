@@ -4,4 +4,9 @@
     {
         TKey Key { get; }
     }
+
+    public interface IKeyedPayloadMessage<out TKey> : IKeyedMessage<TKey>
+    {
+        byte[] Payload { get; }
+    }
 }

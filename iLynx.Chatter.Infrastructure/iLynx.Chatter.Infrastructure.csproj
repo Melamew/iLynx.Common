@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\MultiAuthenticationHandler.cs" />
     <Compile Include="ChatMessage.cs" />
     <Compile Include="ChatMessageSerializer.cs" />
     <Compile Include="ClientConnectedEvent.cs" />

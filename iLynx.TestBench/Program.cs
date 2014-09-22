@@ -2,18 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
+using System.Text;
 using System.Threading;
-using System.Windows;
-using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
 using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
-using iLynx.Common.WPF;
-using iLynx.Networking.ClientServer;
-using iLynx.PubSub;
-using iLynx.TestBench.ClientServerDemo;
-using Microsoft.Practices.Unity;
 
 // ReSharper disable LocalizableElement
 
@@ -73,8 +66,34 @@ namespace iLynx.TestBench
             menu.AddMenuItem('5', "Run Multi-Dimensional array serialization test", TestMultiDimensionalArray);
             menu.AddMenuItem('6', "Run Tcp connection tests", () => new TcpConnectionTests().Run());
             menu.AddMenuItem('7', "Run timerservice tests", RunTimerServiceTests);
+            menu.AddMenuItem('8', "Run Serializer 'Visualization'", RunSerializerVisualization);
             menu.AddMenuItem('w', "Run the WPF test window", StartDialog);
             menu.ShowMenu();
+        }
+
+        private class VisualizationClass
+        {
+            public string Name { get; set; }
+        }
+
+        private static void RunSerializerVisualization()
+        {
+            const string testString = "abcdefghijklmnopqrstuvwxyz";
+            Console.WriteLine("Serializing: {0}", testString);
+            var instance = new VisualizationClass {Name = testString};
+            byte[] buffer;
+            using (var stream = new MemoryStream())
+            {
+                Serializer.Serialize(instance, stream);
+                buffer = stream.ToArray();
+            }
+            var ascii = Encoding.ASCII.GetString(buffer);
+            Console.WriteLine("Input string Length: {0}", testString.Length);
+            Console.WriteLine("Output byte length:  {0}", buffer.Length);
+            Console.WriteLine("Byte Output: {0}", buffer.ToString(":"));
+            Console.WriteLine("ASCII: {0}", ascii);
+
+            Console.ReadKey();
         }
 
         private static void RunTimerServiceTests()
