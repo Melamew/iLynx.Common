@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using iLynx.Common.Serialization;
 using iLynx.Networking.ClientServer;
@@ -11,18 +9,10 @@ using iLynx.Networking.Interfaces;
 
 namespace iLynx.Chatter.Infrastructure.Authentication
 {
-    public interface IMultiAuthenticationHandler<TMessage, TKey> : IAuthenticationHandler<TMessage, TKey>
-        where TMessage : IKeyedMessage<TKey>
-    {
-        void AddHandler(IAuthenticationHandler<TMessage, TKey> handler);
-        void RemoveHandler(IAuthenticationHandler<TMessage, TKey> handler);
-    }
-
     public abstract class MultiAuthenticationHandler : IMultiAuthenticationHandler<ChatMessage, int>
     {
         private readonly Dictionary<string, IAuthenticationHandler<ChatMessage, int>> handlers = new Dictionary<string, IAuthenticationHandler<ChatMessage, int>>();
         private readonly ReaderWriterLockSlim handlerLock = new ReaderWriterLockSlim();
-        private readonly IBitConverter bitConverter = Serializer.SingletonBitConverter;
 
         public int Strength
         {
@@ -143,42 +133,6 @@ namespace iLynx.Chatter.Infrastructure.Authentication
         protected class AuthenticationHandlerIdentifier
         {
             public string Name { get; set; }
-        }
-    }
-
-    public class ServerMultiAuthenticationHandler : MultiAuthenticationHandler
-    {
-        public override bool Authenticate(IConnectionStub<ChatMessage, int> connection)
-        {
-            SendAuthenticatorList(connection, GetAllHandlers());
-            var remoteAuthMethods = ReceiveAuthenticatorList(connection);
-            var strongest = FindCommonHandlers(remoteAuthMethods).OrderByDescending(x => x.Value.Strength).FirstOrDefault();
-            if (null == strongest.Value)
-                return false;
-            var message = new ChatMessage
-            {
-                Key = MessageKeys.Authentication,
-                ClientId = Guid.Empty,
-                Data = Encoding.Unicode.GetBytes(strongest.Key)
-            };
-            connection.Write(message);
-            return strongest.Value.Authenticate(connection);
-        }
-    }
-
-    public class ClientMultiAuthenticationHandler : MultiAuthenticationHandler
-    {
-        public override bool Authenticate(IConnectionStub<ChatMessage, int> connection)
-        {
-            var list = ReceiveAuthenticatorList(connection);
-            var matches = FindCommonHandlers(list);
-            SendAuthenticatorList(connection, matches);
-            int size;
-            var message = connection.ReadNext(out size);
-            if (null == message) return false;
-            var handlerId = Encoding.Unicode.GetString(message.Data);
-            var handler = GetHandler(handlerId);
-            return null != handler && handler.Authenticate(connection);
         }
     }
 }
