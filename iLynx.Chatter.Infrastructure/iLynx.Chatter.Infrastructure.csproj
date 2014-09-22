@@ -91,6 +91,7 @@
     <Compile Include="NickManagerBase.cs" />
     <Compile Include="ServerNickManagerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IWindowingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">

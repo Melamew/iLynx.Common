@@ -80,10 +80,15 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthModuleBase.cs" />
     <Compile Include="ClientPasswordAuthenticationHandler.cs" />
     <Compile Include="ClientUsernamePasswordAuthenticationHandler.cs" />
     <Compile Include="ServerPasswordAuthenticationHandler.cs" />
     <Compile Include="ServerPasswordAuthModule.cs" />
+    <Compile Include="ViewModels\UsernamePasswordDialogViewModel.cs" />
+    <Compile Include="Views\UsernamePasswordDialogView.xaml.cs">
+      <DependentUpon>UsernamePasswordDialogView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -128,6 +133,17 @@
       <Name>iLynx.Networking</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="Resources\DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UsernamePasswordDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
