@@ -2,7 +2,7 @@
 using iLynx.Chatter.Infrastructure.Authentication;
 using Microsoft.Practices.Unity;
 
-namespace iLynx.Chatter.PasswordAuth
+namespace iLynx.Chatter.AuthenticationModule
 {
     public class ServerPasswordAuthModule : ModuleBase
     {

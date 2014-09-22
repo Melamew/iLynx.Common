@@ -8,7 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iLynx.Chatter.PasswordAuth.Properties {
+namespace iLynx.Chatter.AuthenticationModule.Properties {
+    using System;
     
     
     /// <summary>
@@ -37,8 +38,8 @@ namespace iLynx.Chatter.PasswordAuth.Properties {
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
-                if ((resourceMan == null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iLynx.Chatter.ServerPasswordAuthenticationHandler.Properties.Resources", typeof(Resources).Assembly);
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iLynx.Chatter.AuthenticationModule.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

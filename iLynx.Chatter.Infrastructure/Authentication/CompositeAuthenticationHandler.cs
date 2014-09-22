@@ -9,9 +9,9 @@ using iLynx.Networking.Interfaces;
 
 namespace iLynx.Chatter.Infrastructure.Authentication
 {
-    public abstract class MultiAuthenticationHandler : IMultiAuthenticationHandler<ChatMessage, int>
+    public abstract class CompositeAuthenticationHandler : IMultiAuthenticationHandler<ChatMessage, int>
     {
-        private readonly Dictionary<string, IAuthenticationHandler<ChatMessage, int>> handlers = new Dictionary<string, IAuthenticationHandler<ChatMessage, int>>();
+        private readonly Dictionary<Guid, IAuthenticationHandler<ChatMessage, int>> handlers = new Dictionary<Guid, IAuthenticationHandler<ChatMessage, int>>();
         private readonly ReaderWriterLockSlim handlerLock = new ReaderWriterLockSlim();
 
         public int Strength
@@ -29,14 +29,19 @@ namespace iLynx.Chatter.Infrastructure.Authentication
             }
         }
 
+        /// <summary>
+        /// This authenticator is a composite and thus, will return an empty Id
+        /// </summary>
+        public Guid AuthenticatorId { get { return Guid.Empty; } }
+
         public void AddHandler(IAuthenticationHandler<ChatMessage, int> handler)
         {
             handlerLock.EnterWriteLock();
             try
             {
-                var fullName = handler.GetType().FullName;
-                if (handlers.ContainsKey(fullName)) return;
-                handlers.Add(fullName, handler);
+                var id = handler.AuthenticatorId;
+                if (handlers.ContainsKey(id)) return;
+                handlers.Add(id, handler);
             }
             finally { handlerLock.ExitWriteLock(); }
         }
@@ -46,12 +51,12 @@ namespace iLynx.Chatter.Infrastructure.Authentication
             handlerLock.EnterWriteLock();
             try
             {
-                handlers.Remove(handler.GetType().FullName);
+                handlers.Remove(handler.AuthenticatorId);
             }
             finally { handlerLock.ExitWriteLock(); }
         }
 
-        protected IEnumerable<KeyValuePair<string, IAuthenticationHandler<ChatMessage, int>>> GetAllHandlers()
+        protected IEnumerable<KeyValuePair<Guid, IAuthenticationHandler<ChatMessage, int>>> GetAllHandlers()
         {
             handlerLock.EnterReadLock();
             try
@@ -64,9 +69,9 @@ namespace iLynx.Chatter.Infrastructure.Authentication
 
         public abstract bool Authenticate(IConnectionStub<ChatMessage, int> connection);
 
-        protected static void SendAuthenticatorList(IConnectionStub<ChatMessage, int> connection, IEnumerable<KeyValuePair<string, IAuthenticationHandler<ChatMessage, int>>> handlers)
+        protected static void SendAuthenticatorList(IConnectionStub<ChatMessage, int> connection, IEnumerable<KeyValuePair<Guid, IAuthenticationHandler<ChatMessage, int>>> handlers)
         {
-            var identifiers = handlers.Select(x => new AuthenticationHandlerIdentifier { Name = x.Key });
+            var identifiers = handlers.Select(x => new AuthenticationHandlerIdentifier { AuthenticatorId = x.Key });
             var message = new ChatMessage
             {
                 Key = MessageKeys.Authentication,
@@ -94,19 +99,19 @@ namespace iLynx.Chatter.Infrastructure.Authentication
             }
         }
 
-        protected IEnumerable<KeyValuePair<string, IAuthenticationHandler<ChatMessage, int>>> FindCommonHandlers(
+        protected IEnumerable<KeyValuePair<Guid, IAuthenticationHandler<ChatMessage, int>>> FindCommonHandlers(
             IEnumerable<AuthenticationHandlerIdentifier> identifiers)
         {
             handlerLock.EnterReadLock();
             try
             {
-                return handlers.Join(identifiers, pair => pair.Key, identifier => identifier.Name,
+                return handlers.Join(identifiers, pair => pair.Key, identifier => identifier.AuthenticatorId,
                     (pair, identifier) => pair);
             }
             finally { handlerLock.ExitReadLock(); }
         }
 
-        protected IAuthenticationHandler<ChatMessage, int> GetHandler(string id)
+        protected IAuthenticationHandler<ChatMessage, int> GetHandler(Guid id)
         {
             handlerLock.EnterReadLock();
             try
@@ -121,18 +126,18 @@ namespace iLynx.Chatter.Infrastructure.Authentication
         {
             public bool Equals(AuthenticationHandlerIdentifier x, AuthenticationHandlerIdentifier y)
             {
-                return x.Name == y.Name;
+                return x.AuthenticatorId == y.AuthenticatorId;
             }
 
             public int GetHashCode(AuthenticationHandlerIdentifier obj)
             {
-                return obj.Name.GetHashCode();
+                return obj.AuthenticatorId.GetHashCode();
             }
         }
 
         protected class AuthenticationHandlerIdentifier
         {
-            public string Name { get; set; }
+            public Guid AuthenticatorId { get; set; }
         }
     }
 }

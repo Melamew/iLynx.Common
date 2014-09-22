@@ -1,11 +1,17 @@
 using System;
 using System.Text;
 using iLynx.Chatter.Infrastructure;
+using iLynx.Common;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 
-namespace iLynx.Chatter.PasswordAuth
+namespace iLynx.Chatter.AuthenticationModule
 {
+    public static class Identifiers
+    {
+        public static readonly Guid PreSharedSecretAuth = "Simple Password Auth".CreateGuidV5(RuntimeHelper.LynxSpace);
+    }
+
     public class ClientPasswordAuthenticationHandler : IAuthenticationHandler<ChatMessage, int>
     {
         public bool Authenticate(IConnectionStub<ChatMessage, int> connection)
@@ -33,5 +39,7 @@ namespace iLynx.Chatter.PasswordAuth
         }
 
         public int Strength { get { return (int) AuthenticationStrength.Weak; } }
+
+        public Guid AuthenticatorId { get { return Identifiers.PreSharedSecretAuth; } }
     }
 }

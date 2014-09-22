@@ -135,9 +135,9 @@
       <Project>{ED0CB42A-7D74-4AE4-99FE-6EDC3B8C4143}</Project>
       <Name>iLynx.Chatter.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\iLynx.Chatter.PasswordAuth\iLynx.Chatter.PasswordAuthModule.csproj">
+    <ProjectReference Include="..\iLynx.Chatter.PasswordAuth\iLynx.Chatter.AuthenticationModule.csproj">
       <Project>{54DDF932-AE22-4EE0-A261-97D800E959B8}</Project>
-      <Name>iLynx.Chatter.PasswordAuthModule</Name>
+      <Name>iLynx.Chatter.AuthenticationModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
       <Project>{569111cc-d436-46e5-be9e-32b1bad1b950}</Project>

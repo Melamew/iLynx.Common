@@ -5,7 +5,7 @@ using iLynx.Networking.Interfaces;
 
 namespace iLynx.Chatter.Infrastructure.Authentication
 {
-    public class ServerMultiAuthenticationHandler : MultiAuthenticationHandler
+    public class ServerCompositeAuthenticationHandler : CompositeAuthenticationHandler
     {
         public override bool Authenticate(IConnectionStub<ChatMessage, int> connection)
         {
@@ -18,7 +18,7 @@ namespace iLynx.Chatter.Infrastructure.Authentication
             {
                 Key = MessageKeys.Authentication,
                 ClientId = Guid.Empty,
-                Data = Encoding.Unicode.GetBytes(strongest.Key)
+                Data = strongest.Key.ToByteArray()
             };
             connection.Write(message);
             return strongest.Value.Authenticate(connection);

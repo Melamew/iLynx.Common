@@ -7,13 +7,13 @@ using iLynx.Common.Configuration;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 
-namespace iLynx.Chatter.PasswordAuth
+namespace iLynx.Chatter.AuthenticationModule
 {
     public class ServerPasswordAuthenticationHandler : IAuthenticationHandler<ChatMessage, int>
     {
         private readonly HashAlgorithm hashAlgorithm;
         private readonly IConfigurableValue<string> passwordHashValue;
- 
+
         public ServerPasswordAuthenticationHandler(HashAlgorithm hashAlgorithm, IConfigurationManager configurationManager)
         {
             this.hashAlgorithm = Guard.IsNull(() => hashAlgorithm);
@@ -47,6 +47,7 @@ namespace iLynx.Chatter.PasswordAuth
             return accept;
         }
 
-        public int Strength { get { return (int) AuthenticationStrength.Weak; } }
+        public int Strength { get { return (int)AuthenticationStrength.Weak; } }
+        public Guid AuthenticatorId { get { return Identifiers.PreSharedSecretAuth; } }
     }
 }

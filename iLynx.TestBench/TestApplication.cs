@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Security.Cryptography;
 using System.Windows;
+using iLynx.Chatter.AuthenticationModule;
 using iLynx.Chatter.Infrastructure;
-using iLynx.Chatter.PasswordAuth;
 using iLynx.Common;
 using iLynx.Common.Configuration;
 using iLynx.Common.Serialization;

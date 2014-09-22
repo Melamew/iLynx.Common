@@ -1,3 +1,4 @@
+using System;
 using iLynx.Networking.Interfaces;
 
 namespace iLynx.Networking.ClientServer
@@ -12,5 +13,12 @@ namespace iLynx.Networking.ClientServer
         /// Ie. Username / Password should have a greater strength than a simple pre-shared secret.
         /// </summary>
         int Strength { get; }
+
+        /// <summary>
+        /// Gets a value that can be used to identify this authenticator globally
+        /// <para/>
+        /// Note that this should be the same for both client and server authenticators of the same authentication type.
+        /// </summary>
+        Guid AuthenticatorId { get; }
     }
 }
