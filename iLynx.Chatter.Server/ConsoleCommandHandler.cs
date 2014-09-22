@@ -9,10 +9,15 @@ namespace iLynx.Chatter.Server
         void Run();
         void Break();
     }
+
     public class ConsoleCommandHandler : IConsoleCommandHandler
     {
         private readonly Dictionary<string, Action<string[]>> commandHandlers = new Dictionary<string, Action<string[]>>();
         private bool exit;
+
+        public ConsoleCommandHandler()
+        {
+        }
 
         public void RegisterCommand(string commandString, Action<string[]> callback)
         {
