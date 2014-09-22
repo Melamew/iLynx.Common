@@ -13,10 +13,10 @@ namespace iLynx.Chatter.AuthenticationModule
     {
         public bool Authenticate(IConnectionStub<ChatMessage, int> connection)
         {
-            
+            return false;
         }
 
         public int Strength { get { return (int) AuthenticationStrength.Reasonable; } }
-        public Guid AuthenticatorId { get { return Identifiers.PreSharedSecretAuth} }
+        public Guid AuthenticatorId { get { return Identifiers.UsernamePasswordAuth; } }
     }
 }
