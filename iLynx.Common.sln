@@ -21,6 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.Authenticatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.Server", "iLynx.Chatter.Server\iLynx.Chatter.Server.csproj", "{F2E8985F-F289-4849-88DA-B9D9D417B168}"
 	ProjectSection(ProjectDependencies) = postProject
+		{E4945414-F5FE-46FA-A5FE-D00D7A067F21} = {E4945414-F5FE-46FA-A5FE-D00D7A067F21}
 		{54DDF932-AE22-4EE0-A261-97D800E959B8} = {54DDF932-AE22-4EE0-A261-97D800E959B8}
 	EndProjectSection
 EndProject

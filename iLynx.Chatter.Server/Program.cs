@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iLynx.Chatter.Server
+﻿namespace iLynx.Chatter.Server
 {
     public class Program
     {
@@ -8,8 +6,6 @@ namespace iLynx.Chatter.Server
         {
             var bootstrapper = new ServerBootstrapper();
             bootstrapper.Run(true);
-
-            Console.ReadKey();
         }
     }
 }
