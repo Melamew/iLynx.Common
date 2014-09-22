@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Text;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 
-namespace iLynx.TestBench.ClientServerDemo
+namespace iLynx.Chatter.PasswordAuth
 {
     public class ClientPasswordAuthenticationHandler : IAuthenticationHandler<ChatMessage, int>
     {

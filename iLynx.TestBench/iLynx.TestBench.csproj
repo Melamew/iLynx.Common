@@ -103,7 +103,6 @@
       <DependentUpon>ChatLogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClientServerDemo\ChatLogViewModel.cs" />
-    <Compile Include="ClientServerDemo\ClientPasswordAuthenticationHandler.cs" />
     <Compile Include="ClientServerDemo\ClientServerDemoView.xaml.cs">
       <DependentUpon>ClientServerDemoView.xaml</DependentUpon>
     </Compile>
