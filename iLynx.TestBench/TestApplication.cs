@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-using System.Security.Cryptography;
 using System.Windows;
-using iLynx.Chatter.AuthenticationModule;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
 using iLynx.Common.Configuration;
@@ -24,7 +22,7 @@ namespace iLynx.TestBench
         public ClientContainer()
         {
             TestApplication.SetupContainer(this);
-            this.RegisterType<IAuthenticationHandler<ChatMessage, int>, ClientPasswordAuthenticationHandler>(new ContainerControlledLifetimeManager());
+            //this.RegisterType<IAuthenticationHandler<ChatMessage, int>, ClientPasswordAuthenticationHandler>(new ContainerControlledLifetimeManager());
         }
     }
 
@@ -33,12 +31,13 @@ namespace iLynx.TestBench
         public ServerContainer()
         {
             TestApplication.SetupContainer(this);
-            var authHandler =
-                this.Resolve<ServerPasswordAuthenticationHandler>(
-                    new DependencyOverride<HashAlgorithm>(new SHA512Cng()));
-            this.RegisterInstance<IAuthenticationHandler<ChatMessage, int>>(authHandler);
+            //var authHandler =
+            //    this.Resolve<ServerPasswordAuthenticationHandler>(
+            //        new DependencyOverride<HashAlgorithm>(new SHA512Cng()));
+            //this.RegisterInstance<IAuthenticationHandler<ChatMessage, int>>(authHandler);
         }
     }
+
     public class TestApplication : Application
     {
         protected override void OnStartup(StartupEventArgs e)

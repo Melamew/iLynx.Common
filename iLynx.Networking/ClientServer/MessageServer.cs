@@ -15,7 +15,6 @@ namespace iLynx.Networking.ClientServer
     {
         private readonly IBus<MessageEnvelope<TMessage, TKey>> messageBus;
         private readonly IClientBuilder<TMessage, TKey> clientBuilder;
-        private readonly IAuthenticationHandler<TMessage, TKey> authenticationHandler;
         private readonly IThreadManager threadManager;
         private readonly IConnectionStubListener<TMessage, TKey> listener;
         private IWorker connectionWorker;
@@ -25,13 +24,11 @@ namespace iLynx.Networking.ClientServer
 
         public MessageServer(IConnectionStubListener<TMessage, TKey> listener,
             IClientBuilder<TMessage, TKey> clientBuilder,
-            IAuthenticationHandler<TMessage, TKey> authenticationHandler,
             IThreadManager threadManager,
             IBus<MessageEnvelope<TMessage, TKey>> messageBus)
         {
             this.messageBus = Guard.IsNull(() => messageBus);
             this.clientBuilder = Guard.IsNull(() => clientBuilder);
-            this.authenticationHandler = Guard.IsNull(() => authenticationHandler);
             this.threadManager = Guard.IsNull(() => threadManager);
             this.listener = Guard.IsNull(() => listener);
             this.messageBus.Subscribe<MessageEnvelope<TMessage, TKey>>(HandleMessage);
@@ -68,27 +65,27 @@ namespace iLynx.Networking.ClientServer
             {
                 var connection = listener.AcceptNext();
                 if (null == connection) continue;
-                if (!authenticationHandler.Authenticate(connection))
-                {
-                    connection.Dispose();
-                    continue;
-                }
-                var client = clientBuilder.Build(connection);
-                if (null == client) continue;
-                clientLock.EnterWriteLock();
-                try
-                {
-                    if (connectedClients.ContainsKey(client.ClientId))
-                    {
-                        client.Close();
-                        continue;
-                    }
-                    connectedClients.Add(client.ClientId, client);
-                    client.Disconnected += ClientOnDisconnected;
-                    OnClientConnected(client.ClientId);
-                }
-                finally { clientLock.ExitWriteLock(); }
+                Task.Run(() => EstablishConnection(connection));
             }
+        }
+
+        private void EstablishConnection(IConnectionStub<TMessage, TKey> stub)
+        {
+            var client = clientBuilder.Build(stub);
+            if (null == client) return;
+            clientLock.EnterWriteLock();
+            try
+            {
+                if (connectedClients.ContainsKey(client.ClientId))
+                {
+                    client.Close();
+                    return;
+                }
+                connectedClients.Add(client.ClientId, client);
+                client.Disconnected += ClientOnDisconnected;
+                OnClientConnected(client.ClientId);
+            }
+            finally { clientLock.ExitWriteLock(); }
         }
 
         private void ClientOnDisconnected(object sender, ClientDisconnectedEventArgs clientDisconnectedEventArgs)

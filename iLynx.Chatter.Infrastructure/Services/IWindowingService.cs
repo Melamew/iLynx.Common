@@ -1,7 +1,12 @@
 ﻿namespace iLynx.Chatter.Infrastructure.Services
 {
-    public interface IDialogViewModel
+    public interface IDialog
     {
+        /// <summary>
+        /// Gets the title of this dialog
+        /// </summary>
+        string Title { get; }
+
         /// <summary>
         /// Gets a value that indicates the input result of this dialog.
         /// </summary>
@@ -46,8 +51,7 @@
         /// Shows a window as a dialog and returns the result of the dialog as a boolean.
         /// </summary>
         /// <param name="content"></param>
-        /// <param name="title"></param>
         /// <returns></returns>
-        bool ShowDialog(IDialogViewModel content, string title);
+        bool ShowDialog(IDialog content);
     }
 }

@@ -9,18 +9,15 @@ namespace iLynx.Networking.ClientServer
 {
     public class Client<TMessage, TKey> : ClientBase<TMessage, TKey>, IClientSideClient<TMessage, TKey> where TMessage : IClientMessage<TKey>
     {
-        private readonly IAuthenticationHandler<TMessage, TKey> authenticationHandler;
         private readonly IConnectionStubBuilder<TMessage, TKey> connectionBuilder;
         private IConnectionStub<TMessage, TKey> stub;
         private Guid clientId;
 
         public Client(IConnectionStubBuilder<TMessage, TKey> connectionBuilder,
-            IAuthenticationHandler<TMessage, TKey> authenticationHandler,
             IKeyedSubscriptionManager<TKey, MessageReceivedHandler<TMessage, TKey>> subscriptionManager,
             IThreadManager threadManager)
             : base(subscriptionManager, threadManager)
         {
-            this.authenticationHandler = authenticationHandler;
             this.connectionBuilder = Guard.IsNull(() => connectionBuilder);
         }
 
@@ -30,7 +27,6 @@ namespace iLynx.Networking.ClientServer
         {
             if (IsConnected) Close();
             stub = connectionBuilder.Build(remoteEndPoint);
-            if (!authenticationHandler.Authenticate(stub)) throw new InvalidOperationException("Not authorized");
             int rx;
             var firstMessage = stub.ReadNext(out rx);
             OnMessageRead(rx);

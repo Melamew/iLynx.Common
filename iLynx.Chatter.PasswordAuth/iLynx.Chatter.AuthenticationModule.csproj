@@ -80,12 +80,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthModuleBase.cs" />
-    <Compile Include="ClientPasswordAuthenticationHandler.cs" />
-    <Compile Include="ClientPasswordAuthModule.cs" />
-    <Compile Include="ClientUsernamePasswordAuthenticationHandler.cs" />
-    <Compile Include="ServerPasswordAuthenticationHandler.cs" />
-    <Compile Include="ServerPasswordAuthModule.cs" />
+    <Compile Include="AuthenticationService.cs" />
+    <Compile Include="CredentialAuthenticationService.cs" />
+    <Compile Include="IAuthenticationService.cs" />
     <Compile Include="ViewModels\UsernamePasswordDialogViewModel.cs" />
     <Compile Include="Views\UsernamePasswordDialogView.xaml.cs">
       <DependentUpon>UsernamePasswordDialogView.xaml</DependentUpon>
@@ -132,6 +129,10 @@
     <ProjectReference Include="..\iLynx.Networking\iLynx.Networking.csproj">
       <Project>{FD13EB83-1471-4B59-9FCE-75AB804A0A3F}</Project>
       <Name>iLynx.Networking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.PubSub\iLynx.PubSub.csproj">
+      <Project>{DF55B984-7E5E-447C-9D68-D93F9FB0C227}</Project>
+      <Name>iLynx.PubSub</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

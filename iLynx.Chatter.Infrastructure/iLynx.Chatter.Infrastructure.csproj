@@ -72,16 +72,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication\ClientCompositeAuthenticationHandler.cs" />
-    <Compile Include="Authentication\ICompositeAuthenticationHandler.cs" />
-    <Compile Include="Authentication\CompositeAuthenticationHandler.cs" />
-    <Compile Include="Authentication\ServerCompositeAuthenticationHandler.cs" />
+    <Compile Include="Authentication\ClientAuthenticatedEvent.cs" />
     <Compile Include="ChatMessage.cs" />
     <Compile Include="ChatMessageSerializer.cs" />
     <Compile Include="ClientConnectedEvent.cs" />
     <Compile Include="ClientDisconnectedEvent.cs" />
     <Compile Include="ClientManager.cs" />
     <Compile Include="ClientNickManagerService.cs" />
+    <Compile Include="Domain\User.cs" />
     <Compile Include="IApplicationEvent.cs" />
     <Compile Include="IClientManager.cs" />
     <Compile Include="INickManagerService.cs" />

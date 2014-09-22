@@ -5,7 +5,7 @@ using iLynx.Common.WPF;
 
 namespace iLynx.Chatter.AuthenticationModule.ViewModels
 {
-    public class UsernamePasswordDialogViewModel : NotificationBase, IDialogViewModel
+    public class UsernamePasswordDialogViewModel : NotificationBase
     {
         private readonly IWindowingService windowingService;
         private readonly int windowId;
@@ -65,6 +65,7 @@ namespace iLynx.Chatter.AuthenticationModule.ViewModels
             windowingService.Close(windowId);
         }
 
+        public string Title { get { return "Please authenticate yourself"; } }
         public bool Result { get { return dialogResult; } }
     }
 }
