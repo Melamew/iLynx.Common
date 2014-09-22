@@ -127,6 +127,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
+      <Project>{569111CC-D436-46E5-BE9E-32B1BAD1B950}</Project>
+      <Name>iLynx.Common.WPF</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

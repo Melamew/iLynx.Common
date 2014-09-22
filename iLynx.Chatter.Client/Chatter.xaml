@@ -1,8 +1,11 @@
-﻿<Window x:Class="iLynx.Chatter.Client.MainWindow"
+﻿<wpf:BorderlessWindow x:Class="iLynx.Chatter.Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Chatter Client" Height="350" Width="525">
+        xmlns:wpf="clr-namespace:iLynx.Common.WPF;assembly=iLynx.Common.WPF"
+        Title="Chatter Client" Height="350" Width="525"
+        IsCollapsible="False"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         
     </Grid>
-</Window>
+</wpf:BorderlessWindow>
