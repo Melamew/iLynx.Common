@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.Server", "iLy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Tests", "iLynx.Tests\iLynx.Tests.csproj", "{15870CDC-8294-43C8-BA39-88E1B3A5C6C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsernameAuthenticationModule", "UsernameAuthenticationModule\UsernameAuthenticationModule.csproj", "{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,14 +125,6 @@ Global
 		{15870CDC-8294-43C8-BA39-88E1B3A5C6C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{15870CDC-8294-43C8-BA39-88E1B3A5C6C1}.Release|x64.ActiveCfg = Release|Any CPU
 		{15870CDC-8294-43C8-BA39-88E1B3A5C6C1}.Release|x86.ActiveCfg = Release|Any CPU
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}.Release|x64.ActiveCfg = Release|Any CPU
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +134,5 @@ Global
 		{F3DD69F8-A732-429C-BDF6-3D0F93D3DC75} = {A1A937AE-7D1B-4B9E-BF65-4CF517523596}
 		{54DDF932-AE22-4EE0-A261-97D800E959B8} = {A1A937AE-7D1B-4B9E-BF65-4CF517523596}
 		{F2E8985F-F289-4849-88DA-B9D9D417B168} = {A1A937AE-7D1B-4B9E-BF65-4CF517523596}
-		{3EF1588C-8461-4F64-B469-BAE37DBAD6F8} = {A1A937AE-7D1B-4B9E-BF65-4CF517523596}
 	EndGlobalSection
 EndGlobal

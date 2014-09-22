@@ -9,7 +9,9 @@ namespace iLynx.Chatter.AuthenticationModule
 {
     public static class Identifiers
     {
-        public static readonly Guid PreSharedSecretAuth = "Simple Password Auth".CreateGuidV5(RuntimeHelper.LynxSpace);
+        public static readonly Guid PreSharedSecretAuth = RuntimeHelper.Lynxify("Simple Password Auth");
+
+        public static readonly Guid UsernamePasswordAuth = RuntimeHelper.Lynxify("Username / Password Auth");
     }
 
     public class ClientPasswordAuthenticationHandler : IAuthenticationHandler<ChatMessage, int>

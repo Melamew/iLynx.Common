@@ -203,6 +203,11 @@ namespace iLynx.Common
             return final;
         }
 
+        public static Guid Lynxify(string identifier)
+        {
+            return identifier.CreateGuidV5(LynxSpace);
+        }
+
         #region 16 Bits
 
         /// <summary>

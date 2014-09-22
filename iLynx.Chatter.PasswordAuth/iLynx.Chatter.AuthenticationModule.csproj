@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientPasswordAuthenticationHandler.cs" />
+    <Compile Include="ClientUsernamePasswordAuthenticationHandler.cs" />
     <Compile Include="ServerPasswordAuthenticationHandler.cs" />
     <Compile Include="ServerPasswordAuthModule.cs" />
   </ItemGroup>
