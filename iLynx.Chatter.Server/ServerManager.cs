@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
 using iLynx.Common.Configuration;
-using iLynx.Common.Threading;
 using iLynx.Networking.ClientServer;
 using iLynx.PubSub;
 
