@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authentication\ClientCompositeAuthenticationHandler.cs" />
-    <Compile Include="Authentication\IMultiAuthenticationHandler.cs" />
+    <Compile Include="Authentication\ICompositeAuthenticationHandler.cs" />
     <Compile Include="Authentication\CompositeAuthenticationHandler.cs" />
     <Compile Include="Authentication\ServerCompositeAuthenticationHandler.cs" />
     <Compile Include="ChatMessage.cs" />

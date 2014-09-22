@@ -12,13 +12,13 @@ namespace iLynx.Chatter.AuthenticationModule
 
         protected override void RegisterTypes()
         {
-            var baseHandler = Container.Resolve<IMultiAuthenticationHandler<ChatMessage, int>>();
+            var baseHandler = Container.Resolve<ICompositeAuthenticationHandler<ChatMessage, int>>();
             AddAuthenticationHandler(baseHandler);
         }
 
-        protected virtual void AddAuthenticationHandler(IMultiAuthenticationHandler<ChatMessage, int> multiHandler)
+        protected virtual void AddAuthenticationHandler(ICompositeAuthenticationHandler<ChatMessage, int> compositeHandler)
         {
-            multiHandler.AddHandler(Container.Resolve<ServerPasswordAuthenticationHandler>());
+            compositeHandler.AddHandler(Container.Resolve<ServerPasswordAuthenticationHandler>());
         }
     }
 
@@ -30,13 +30,13 @@ namespace iLynx.Chatter.AuthenticationModule
 
         protected override void RegisterTypes()
         {
-            var baseHandler = Container.Resolve<IMultiAuthenticationHandler<ChatMessage, int>>();
+            var baseHandler = Container.Resolve<ICompositeAuthenticationHandler<ChatMessage, int>>();
             AddAuthenticationHandler(baseHandler);
         }
 
-        protected virtual void AddAuthenticationHandler(IMultiAuthenticationHandler<ChatMessage, int> multiHandler)
+        protected virtual void AddAuthenticationHandler(ICompositeAuthenticationHandler<ChatMessage, int> compositeHandler)
         {
-            multiHandler.AddHandler(Container.Resolve<ClientPasswordAuthenticationHandler>());
+            compositeHandler.AddHandler(Container.Resolve<ClientPasswordAuthenticationHandler>());
         }
     }
 }

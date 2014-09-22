@@ -9,7 +9,7 @@ using iLynx.Networking.Interfaces;
 
 namespace iLynx.Chatter.Infrastructure.Authentication
 {
-    public abstract class CompositeAuthenticationHandler : IMultiAuthenticationHandler<ChatMessage, int>
+    public abstract class CompositeAuthenticationHandler : ICompositeAuthenticationHandler<ChatMessage, int>
     {
         private readonly Dictionary<Guid, IAuthenticationHandler<ChatMessage, int>> handlers = new Dictionary<Guid, IAuthenticationHandler<ChatMessage, int>>();
         private readonly ReaderWriterLockSlim handlerLock = new ReaderWriterLockSlim();

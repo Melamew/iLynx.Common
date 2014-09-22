@@ -3,7 +3,7 @@ using iLynx.Networking.Interfaces;
 
 namespace iLynx.Chatter.Infrastructure.Authentication
 {
-    public interface IMultiAuthenticationHandler<TMessage, TKey> : IAuthenticationHandler<TMessage, TKey>
+    public interface ICompositeAuthenticationHandler<TMessage, TKey> : IAuthenticationHandler<TMessage, TKey>
         where TMessage : IKeyedMessage<TKey>
     {
         void AddHandler(IAuthenticationHandler<TMessage, TKey> handler);
