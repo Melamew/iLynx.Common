@@ -1,5 +1,6 @@
 ﻿using System;
 using iLynx.Chatter.Infrastructure;
+using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
 using iLynx.PubSub;
 

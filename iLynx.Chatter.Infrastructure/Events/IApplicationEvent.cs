@@ -1,4 +1,4 @@
-namespace iLynx.Chatter.Infrastructure
+namespace iLynx.Chatter.Infrastructure.Events
 {
     public interface IApplicationEvent
     {

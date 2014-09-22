@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;

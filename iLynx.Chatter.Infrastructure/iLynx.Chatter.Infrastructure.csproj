@@ -75,20 +75,22 @@
     <Compile Include="Authentication\ClientAuthenticatedEvent.cs" />
     <Compile Include="ChatMessage.cs" />
     <Compile Include="ChatMessageSerializer.cs" />
-    <Compile Include="ClientConnectedEvent.cs" />
-    <Compile Include="ClientDisconnectedEvent.cs" />
     <Compile Include="ClientManager.cs" />
     <Compile Include="ClientNickManagerService.cs" />
     <Compile Include="Domain\User.cs" />
-    <Compile Include="IApplicationEvent.cs" />
+    <Compile Include="Events\ClientConnectedEvent.cs" />
+    <Compile Include="Events\ClientDisconnectedEvent.cs" />
+    <Compile Include="Events\IApplicationEvent.cs" />
+    <Compile Include="Events\NickChangedEvent.cs" />
+    <Compile Include="Events\ShutdownEvent.cs" />
     <Compile Include="IClientManager.cs" />
     <Compile Include="INickManagerService.cs" />
     <Compile Include="MessageKeys.cs" />
     <Compile Include="ModuleBase.cs" />
-    <Compile Include="NickChangedEvent.cs" />
     <Compile Include="NickManagerBase.cs" />
     <Compile Include="ServerNickManagerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IAuthenticationService.cs" />
     <Compile Include="Services\IWindowingService.cs" />
   </ItemGroup>
   <ItemGroup>

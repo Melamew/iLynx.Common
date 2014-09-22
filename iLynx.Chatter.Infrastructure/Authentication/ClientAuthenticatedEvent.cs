@@ -1,4 +1,5 @@
 ﻿using System;
+using iLynx.Chatter.Infrastructure.Events;
 
 namespace iLynx.Chatter.Infrastructure.Authentication
 {

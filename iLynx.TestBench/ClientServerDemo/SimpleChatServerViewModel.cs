@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Windows.Input;
 using iLynx.Chatter.Infrastructure;
+using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
 using iLynx.Common.WPF;
 using iLynx.Networking.ClientServer;

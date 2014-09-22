@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Authentication;
+using iLynx.Chatter.Infrastructure.Events;
+using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Networking.ClientServer;
 using iLynx.PubSub;
 

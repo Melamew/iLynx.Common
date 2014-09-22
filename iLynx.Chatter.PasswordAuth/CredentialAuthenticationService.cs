@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Authentication;
 using iLynx.Chatter.Infrastructure.Domain;
+using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
 using iLynx.Common.Configuration;
 using iLynx.Common.Serialization;
@@ -19,15 +20,6 @@ namespace iLynx.Chatter.AuthenticationModule
         public string Username { get; set; }
         public string Password { get; set; }
     }
-
-    //public class UserRegistrationService : IDisposable
-    //{
-    //    public UserRegistrationService(IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> )
-    //    public void Dispose()
-    //    {
-            
-    //    }
-    //}
 
     public class CredentialAuthenticationService : IDisposable
     {
