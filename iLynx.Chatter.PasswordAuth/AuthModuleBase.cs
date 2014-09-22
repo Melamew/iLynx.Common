@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using iLynx.Chatter.Infrastructure;
+﻿using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Authentication;
+using iLynx.Networking.ClientServer;
 using Microsoft.Practices.Unity;
 
 namespace iLynx.Chatter.AuthenticationModule
 {
     public abstract class AuthModuleBase : ModuleBase
     {
-        protected AuthModuleBase(IUnityContainer container) : base(container)
+        protected AuthModuleBase(IUnityContainer container)
+            : base(container)
         {
         }
 
-        protected override void RegisterTypes()
+        protected sealed override void RegisterTypes()
         {
-            throw new NotImplementedException();
+            Container.RegisterType<IAuthenticationHandler<ChatMessage, int>, CompositeAuthenticationHandler>(new ContainerControlledLifetimeManager());
+            var handler = Container.Resolve<CompositeAuthenticationHandler>();
+            Container.RegisterInstance<ICompositeAuthenticationHandler<ChatMessage, int>>(handler, new ContainerControlledLifetimeManager());
+            RegisterAuthHandlers(handler);
         }
 
-        protected abstract void RegisterAuthHandler(ICompositeAuthenticationHandler<ChatMessage, int> compositeHandler);
+        protected abstract void RegisterAuthHandlers(ICompositeAuthenticationHandler<ChatMessage, int> compositeHandler);
     }
 }

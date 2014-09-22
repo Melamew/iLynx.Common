@@ -4,9 +4,9 @@ using Microsoft.Practices.Unity;
 
 namespace iLynx.Chatter.AuthenticationModule
 {
-    public class ServerPasswordAuthModule : AuthModuleBase
+    public class ClientPasswordAuthModule : AuthModuleBase
     {
-        public ServerPasswordAuthModule(IUnityContainer container) : base(container)
+        public ClientPasswordAuthModule(IUnityContainer container) : base(container)
         {
         }
 

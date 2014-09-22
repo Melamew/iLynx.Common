@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="AuthModuleBase.cs" />
     <Compile Include="ClientPasswordAuthenticationHandler.cs" />
+    <Compile Include="ClientPasswordAuthModule.cs" />
     <Compile Include="ClientUsernamePasswordAuthenticationHandler.cs" />
     <Compile Include="ServerPasswordAuthenticationHandler.cs" />
     <Compile Include="ServerPasswordAuthModule.cs" />
