@@ -52,7 +52,6 @@
     <Compile Include="ClientServer\ClientBuilder.cs" />
     <Compile Include="ClientServer\ClientConnectedEventArgs.cs" />
     <Compile Include="ClientServer\ClientDisconnectedEventArgs.cs" />
-    <None Include="ClientServer\IAuthenticationHandler.cs_" />
     <Compile Include="ClientServer\IClient.cs" />
     <Compile Include="ClientServer\IClientBuilder.cs" />
     <Compile Include="ClientServer\IClientMessage.cs" />
