@@ -5,10 +5,9 @@ using iLynx.Common.WPF;
 
 namespace iLynx.Chatter.AuthenticationModule.ViewModels
 {
-    public class UsernamePasswordDialogViewModel : NotificationBase
+    public class UsernamePasswordDialogViewModel : NotificationBase, IDialog
     {
         private readonly IWindowingService windowingService;
-        private readonly int windowId;
         private string username;
         private string password;
         private ICommand okCommand;
@@ -18,7 +17,6 @@ namespace iLynx.Chatter.AuthenticationModule.ViewModels
         public UsernamePasswordDialogViewModel(IWindowingService windowingService)
         {
             this.windowingService = Guard.IsNull(() => windowingService);
-            windowId = this.windowingService.FindIdByContent(this);
         }
 
         public string Username
@@ -51,6 +49,7 @@ namespace iLynx.Chatter.AuthenticationModule.ViewModels
         private void OnOk()
         {
             dialogResult = true;
+            var windowId = windowingService.FindIdByContent(this);
             windowingService.Close(windowId);
         }
 
@@ -62,6 +61,7 @@ namespace iLynx.Chatter.AuthenticationModule.ViewModels
         private void OnCancel()
         {
             dialogResult = false;
+            var windowId = windowingService.FindIdByContent(this);
             windowingService.Close(windowId);
         }
 

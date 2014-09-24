@@ -38,5 +38,13 @@ namespace iLynx.Chatter.AuthenticationModule
             user = userAdapter.Query().FirstOrDefault(x => x.Username == username);
             return null != user;
         }
+
+        public void SetPassword(User user, string password)
+        {
+            long salt;
+            user.PasswordHash = passwordHashingService.GetPasswordHash(password, out salt);
+            user.PasswordSalt = salt;
+            userAdapter.SaveOrUpdate(user);
+        }
     }
 }

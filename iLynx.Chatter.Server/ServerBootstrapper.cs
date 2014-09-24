@@ -25,8 +25,24 @@ namespace iLynx.Chatter.Server
         }
     }
 
+    public class ConsoleHandlerLogger : ILogger
+    {
+        private readonly IConsoleHandler consoleHandler;
+
+        public ConsoleHandlerLogger(IConsoleHandler consoleHandler)
+        {
+            this.consoleHandler = Guard.IsNull(() => consoleHandler);
+        }
+
+        public void Log(LoggingType type, object sender, string message)
+        {
+            consoleHandler.Log("[{0}:{1}]: {2}", type.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().FullName, message);
+        }
+    }
+
     public class ServerBootstrapper : UnityBootstrapper
     {
+        private readonly ILoggerFacade loggerFacade = new LoggerFacade();
         protected override DependencyObject CreateShell()
         {
             return null;
@@ -48,7 +64,6 @@ namespace iLynx.Chatter.Server
             {
                 ModulePath = pluginDir
             };
-            var loggerFacade = new LoggerFacade();
             var manager = new ModuleManager(new ModuleInitializer(new UnityServiceLocator(Container), loggerFacade),
                 directoryCatalog, loggerFacade);
             manager.Run();
@@ -61,22 +76,28 @@ namespace iLynx.Chatter.Server
             RegisterTypes();
         }
 
+        protected override ILoggerFacade CreateLogger()
+        {
+            return loggerFacade;
+        }
+
         private void RegisterTypes()
         {
+            Container.RegisterType<ICommandHandlerRegistry, CommandHandlerRegistry>(new PerResolveLifetimeManager());
+            Container.RegisterInstance<IConsoleHandler>(Container.Resolve<ConsoleInputHandler>(), new ContainerControlledLifetimeManager());
+            RuntimeCommon.DefaultLogger = Container.Resolve<ConsoleHandlerLogger>();
+
             Container.RegisterType(typeof(IBus<>), typeof(QueuedBus<>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IKeyedSubscriptionManager<,>), typeof(KeyedSubscriptionManager<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IMessageServer<,>), typeof(MessageServer<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IConnectionStubListener<,>), typeof(TcpStubListener<,>));
             Container.RegisterType(typeof(IClientBuilder<,>), typeof(ClientBuilder<,>));
-            Container.RegisterType<ICommandHandlerRegistry, CommandHandlerRegistry>(new PerResolveLifetimeManager());
-            Container.RegisterType<IConsoleHandler, ConsoleInputHandler>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ITimerService, SingleThreadedTimerService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISerializer<ChatMessage>, ChatMessageSerializer>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IThreadManager, ThreadManager>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IBitConverter, BigEndianBitConverter>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IConfigurationManager, SingletonConfigurationManager>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance(RuntimeCommon.DefaultLogger);
-            Container.RegisterInstance(Container.Resolve<ServerManager>(), new ContainerControlledLifetimeManager());
         }
     }
 }

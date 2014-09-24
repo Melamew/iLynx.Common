@@ -6,6 +6,6 @@
         IsCollapsible="False"
         WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Menu></Menu>
     </Grid>
 </wpf:BorderlessWindow>

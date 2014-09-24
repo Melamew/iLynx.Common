@@ -139,6 +139,10 @@
       <Project>{54DDF932-AE22-4EE0-A261-97D800E959B8}</Project>
       <Name>iLynx.Chatter.AuthenticationModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\iLynx.Chatter.ServerServicesModule\iLynx.Chatter.ServerServicesModule.csproj">
+      <Project>{56057B48-A342-4EDC-8F03-3C339B4B8DB2}</Project>
+      <Name>iLynx.Chatter.ServerServicesModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
       <Project>{569111cc-d436-46e5-be9e-32b1bad1b950}</Project>
       <Name>iLynx.Common.WPF</Name>

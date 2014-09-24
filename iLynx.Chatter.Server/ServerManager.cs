@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using iLynx.Chatter.Infrastructure;
+using iLynx.Chatter.Infrastructure.Authentication;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
 using iLynx.Common.Configuration;
@@ -10,6 +11,7 @@ namespace iLynx.Chatter.Server
 {
     public class ServerManager
     {
+        private readonly INickManagerService nickManagerService;
         private readonly IBus<IApplicationEvent> applicationEventBus;
         private readonly IConsoleHandler consoleHandler;
         private readonly IMessageServer<ChatMessage, int> chatMessageServer;
@@ -19,14 +21,48 @@ namespace iLynx.Chatter.Server
         public ServerManager(IConfigurationManager configurationManager,
             IMessageServer<ChatMessage, int> chatMessageServer,
             IBus<IApplicationEvent> applicationEventBus,
-            IConsoleHandler consoleHandler)
+            IConsoleHandler consoleHandler,
+            INickManagerService nickManagerService)
         {
+            this.nickManagerService = Guard.IsNull(() => nickManagerService);
             this.applicationEventBus = Guard.IsNull(() => applicationEventBus);
             this.consoleHandler = Guard.IsNull(() => consoleHandler);
             this.chatMessageServer = Guard.IsNull(() => chatMessageServer);
             this.consoleHandler.RegisterCommand("exit", OnExit, "Shutdown the server and exit");
             bindAddress = configurationManager.GetValue("BindAddress", "0.0.0.0");
             bindPort = configurationManager.GetValue<ushort>("BindPort", 5000);
+            chatMessageServer.ClientConnected += ChatMessageServerOnClientConnected;
+            chatMessageServer.ClientDisconnected += ChatMessageServerOnClientDisconnected;
+            applicationEventBus.Subscribe<ClientConnectedEvent>(OnClientConnected);
+            applicationEventBus.Subscribe<ClientDisconnectedEvent>(OnClientDisconnected);
+            applicationEventBus.Subscribe<ClientAuthenticatedEvent>(OnClientAuthenticated);
+        }
+
+        private void ChatMessageServerOnClientDisconnected(object sender, ClientDisconnectedEventArgs clientDisconnectedEventArgs)
+        {
+            applicationEventBus.Publish(new ClientDisconnectedEvent(clientDisconnectedEventArgs.ClientId));
+        }
+
+        private void ChatMessageServerOnClientConnected(object sender, ClientConnectedEventArgs clientConnectedEventArgs)
+        {
+            applicationEventBus.Publish(new ClientConnectedEvent(clientConnectedEventArgs.ClientId));
+        }
+
+        private void OnClientAuthenticated(ClientAuthenticatedEvent message)
+        {
+            consoleHandler.Log("Client {0} authenticated. {1}", message.ClientId, message.AuthenticationMessage);
+        }
+
+        private void OnClientDisconnected(ClientDisconnectedEvent message)
+        {
+            var nick = nickManagerService.GetNickName(message.ClientId);
+            consoleHandler.Log("Client {0} disconnected.", string.IsNullOrEmpty(nick) ? message.ClientId.ToString() : nick);
+        }
+
+        private void OnClientConnected(ClientConnectedEvent message)
+        {
+            var nick = nickManagerService.GetNickName(message.ClientId);
+            consoleHandler.Log("Client {0} connected.", string.IsNullOrEmpty(nick) ? message.ClientId.ToString() : nick);
         }
 
         private void OnExit(string[] strings)

@@ -10,6 +10,7 @@ namespace iLynx.Chatter.Infrastructure
         string Terminator { get; set; }
         string Path { get; set; }
         void WriteLine(string format, params object[] args);
+        void Log(string format, params object[] args);
         void PrintCommands(CommandDefinition[] commands);
     }
 }

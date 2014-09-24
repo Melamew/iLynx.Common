@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Text;
+using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
 
-namespace iLynx.Chatter.Infrastructure
+namespace iLynx.Chatter.ServerServicesModule
 {
     public class ServerNickManagerService : NickManagerBase
     {

@@ -26,6 +26,22 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             consoleHandler.RegisterCommand("user", OnUserCommand, "Commands relating to users", QuerySubCommandCallback);
             commandRegistry.RegisterCommand("list", OnListUsers, "Lists all users matching the specified criteria");
             commandRegistry.RegisterCommand("register", OnRegisterUser, "Registers a new user, ie. register {username} {password}");
+            commandRegistry.RegisterCommand("passwd", OnChangeUserPassword, "Change the users password, ie. passwd {username} {newpassword}");
+        }
+
+        private void OnChangeUserPassword(string[] obj)
+        {
+            var userName = obj.FirstOrDefault();
+            var password = obj.Skip(1).FirstOrDefault();
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+                return;
+            User user;
+            if (!userRegistrationService.IsRegistered(userName, out user))
+            {
+                consoleHandler.WriteLine("User {0} does not exist", userName);
+                return;
+            }
+            userRegistrationService.SetPassword(user, password);
         }
 
         private void OnRegisterUser(string[] strings)
@@ -48,7 +64,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
         private void OnListUsers(string[] strings)
         {
             foreach (var user in userAdapter.GetAll())
-                consoleHandler.WriteLine("{0}, {1}", user.UniqueId, user.Username);
+                consoleHandler.WriteLine("{0}, {1}, {2}", user.UniqueId, user.Username, user.PasswordHash);
         }
 
         private CommandDefinition[] QuerySubCommandCallback(string s, string[] parameters)
@@ -59,14 +75,6 @@ namespace iLynx.Chatter.AuthenticationModule.Server
         private void OnUserCommand(string[] strings)
         {
             commandRegistry.Execute(strings[0], strings.Skip(1).ToArray());
-            //consoleHandler.PrintCommands(commandRegistry.GetAllCommands()
-            //    .Select(x => new CommandDefinition
-            //    {
-            //        Command = "user " + x.Command,
-            //        HelpText = x.HelpText,
-            //        Callback = x.Callback,
-            //        QuerySubCommand = x.QuerySubCommand
-            //    }).ToArray());
         }
     }
 }

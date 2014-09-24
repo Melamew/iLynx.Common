@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using iLynx.Chatter.AuthenticationModule.ViewModels;
+using iLynx.Chatter.AuthenticationModule.Views;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Authentication;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;
 using iLynx.Networking.ClientServer;
+using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
 
 namespace iLynx.Chatter.AuthenticationModule

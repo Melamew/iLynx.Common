@@ -6,5 +6,6 @@ namespace iLynx.Chatter.AuthenticationModule
     {
         bool RegisterUser(string username, string password);
         bool IsRegistered(string username, out User user);
+        void SetPassword(User user, string password);
     }
 }
