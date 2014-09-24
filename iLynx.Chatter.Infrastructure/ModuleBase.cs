@@ -1,4 +1,6 @@
-﻿using iLynx.Common;
+﻿using System.Reflection;
+using iLynx.Common;
+using iLynx.Common.WPF;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
 
@@ -21,6 +23,12 @@ namespace iLynx.Chatter.Infrastructure
         public void Initialize()
         {
             RegisterTypes();
+        }
+
+        protected virtual void RegisterResource(string path)
+        {
+            var mergeDictionaryService = Container.Resolve<IMergeDictionaryService>();
+            mergeDictionaryService.AddResource(RuntimeHelper.MakePackUri(Assembly.GetCallingAssembly(), path));
         }
 
         protected abstract void RegisterTypes();

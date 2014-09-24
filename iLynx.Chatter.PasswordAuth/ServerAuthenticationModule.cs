@@ -25,4 +25,18 @@ namespace iLynx.Chatter.AuthenticationModule
             Container.RegisterInstance(Container.Resolve<UserListService>());
         }
     }
+
+    public class ClientAuthenticationModule : ModuleBase
+    {
+        public ClientAuthenticationModule(IUnityContainer container) : base(container)
+        {
+
+        }
+
+        protected override void RegisterTypes()
+        {
+            RegisterResource("Resources/DataTemplates.xaml");
+
+        }
+    }
 }

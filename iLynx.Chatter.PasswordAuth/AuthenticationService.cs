@@ -5,6 +5,7 @@ using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Authentication;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Chatter.Infrastructure.Services;
+using iLynx.Common;
 using iLynx.Networking.ClientServer;
 using iLynx.PubSub;
 
@@ -12,13 +13,27 @@ namespace iLynx.Chatter.AuthenticationModule
 {
     public class AuthenticationService : IAuthenticationService<ChatMessage, int>
     {
+        private readonly IBus<MessageEnvelope<ChatMessage, int>> messageBus;
         private readonly List<Guid> authenticatedClients = new List<Guid>();
         private readonly ReaderWriterLockSlim clientLock = new ReaderWriterLockSlim();
 
-        public AuthenticationService(IBus<IApplicationEvent> applicationEventBus)
+        public AuthenticationService(IBus<IApplicationEvent> applicationEventBus,
+            IBus<MessageEnvelope<ChatMessage, int>> messageBus)
         {
+            this.messageBus = Guard.IsNull(() => messageBus);
             applicationEventBus.Subscribe<ClientDisconnectedEvent>(OnClientDisconnected);
             applicationEventBus.Subscribe<ClientAuthenticatedEvent>(OnClientAuthenticated);
+            applicationEventBus.Subscribe<ClientConnectedEvent>(OnClientConnected);
+        }
+
+        private void OnClientConnected(ClientConnectedEvent message)
+        {
+            messageBus.Publish(new MessageEnvelope<ChatMessage, int>(new ChatMessage
+            {
+                Key = MessageKeys.CredentialAuthenticationRequest,
+                ClientId = Guid.Empty,
+                Data = new byte[0]
+            }, message.ClientId));
         }
 
         private void OnClientAuthenticated(ClientAuthenticatedEvent message)

@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\Client\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -28,7 +28,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\Client\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -86,7 +86,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Chatter.xaml">
+    <Compile Include="WindowingService.cs" />
+    <Page Include="ChatterShell.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -94,12 +95,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Chatter.xaml.cs">
-      <DependentUpon>Chatter.xaml</DependentUpon>
+    <Compile Include="ChatterShell.xaml.cs">
+      <DependentUpon>ChatterShell.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientBootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -117,6 +119,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -125,9 +128,21 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\iLynx.Chatter.Infrastructure\iLynx.Chatter.Infrastructure.csproj">
+      <Project>{ED0CB42A-7D74-4AE4-99FE-6EDC3B8C4143}</Project>
+      <Name>iLynx.Chatter.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
       <Project>{569111CC-D436-46E5-BE9E-32B1BAD1B950}</Project>
       <Name>iLynx.Common.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">
+      <Project>{1241AC19-9872-4126-8915-3A34919E1705}</Project>
+      <Name>iLynx.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.PubSub\iLynx.PubSub.csproj">
+      <Project>{DF55B984-7E5E-447C-9D68-D93F9FB0C227}</Project>
+      <Name>iLynx.PubSub</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
