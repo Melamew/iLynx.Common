@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\lib\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\lib\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -91,9 +91,15 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthenticationModule.cs" />
+    <Compile Include="CredentialsPackage.cs" />
+    <Compile Include="IPasswordHashingService.cs" />
+    <Compile Include="IUserRegistrationService.cs" />
+    <Compile Include="PasswordHashingService.cs" />
+    <Compile Include="ServerAuthenticationModule.cs" />
     <Compile Include="AuthenticationService.cs" />
     <Compile Include="CredentialAuthenticationService.cs" />
+    <Compile Include="Server\UserListService.cs" />
+    <Compile Include="UserRegistrationService.cs" />
     <Compile Include="ViewModels\UsernamePasswordDialogViewModel.cs" />
     <Compile Include="Views\UsernamePasswordDialogView.xaml.cs">
       <DependentUpon>UsernamePasswordDialogView.xaml</DependentUpon>
@@ -117,7 +123,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

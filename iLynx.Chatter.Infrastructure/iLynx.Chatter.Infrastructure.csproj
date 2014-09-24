@@ -85,6 +85,7 @@
     <Compile Include="ChatMessageSerializer.cs" />
     <Compile Include="ClientManager.cs" />
     <Compile Include="ClientNickManagerService.cs" />
+    <Compile Include="CommandDefinition.cs" />
     <Compile Include="Domain\IEntity.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Events\ClientConnectedEvent.cs" />
@@ -93,6 +94,8 @@
     <Compile Include="Events\NickChangedEvent.cs" />
     <Compile Include="Events\ShutdownEvent.cs" />
     <Compile Include="IClientManager.cs" />
+    <Compile Include="ICommandHandlerRegistry.cs" />
+    <Compile Include="IConsoleHandler.cs" />
     <Compile Include="INickManagerService.cs" />
     <Compile Include="MessageKeys.cs" />
     <Compile Include="ModuleBase.cs" />

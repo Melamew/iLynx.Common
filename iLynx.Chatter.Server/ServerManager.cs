@@ -11,7 +11,7 @@ namespace iLynx.Chatter.Server
     public class ServerManager
     {
         private readonly IBus<IApplicationEvent> applicationEventBus;
-        private readonly IConsoleCommandHandler consoleCommandHandler;
+        private readonly IConsoleHandler consoleHandler;
         private readonly IMessageServer<ChatMessage, int> chatMessageServer;
         private readonly IConfigurableValue<string> bindAddress;
         private readonly IConfigurableValue<ushort> bindPort;
@@ -19,19 +19,19 @@ namespace iLynx.Chatter.Server
         public ServerManager(IConfigurationManager configurationManager,
             IMessageServer<ChatMessage, int> chatMessageServer,
             IBus<IApplicationEvent> applicationEventBus,
-            IConsoleCommandHandler consoleCommandHandler)
+            IConsoleHandler consoleHandler)
         {
             this.applicationEventBus = Guard.IsNull(() => applicationEventBus);
-            this.consoleCommandHandler = Guard.IsNull(() => consoleCommandHandler);
+            this.consoleHandler = Guard.IsNull(() => consoleHandler);
             this.chatMessageServer = Guard.IsNull(() => chatMessageServer);
-            this.consoleCommandHandler.RegisterCommand("exit", OnExit);
+            this.consoleHandler.RegisterCommand("exit", OnExit, "Shutdown the server and exit");
             bindAddress = configurationManager.GetValue("BindAddress", "0.0.0.0");
             bindPort = configurationManager.GetValue<ushort>("BindPort", 5000);
         }
 
         private void OnExit(string[] strings)
         {
-            consoleCommandHandler.Break();
+            consoleHandler.Break();
         }
 
         private EndPoint GetLocalEndPoint()
@@ -48,7 +48,7 @@ namespace iLynx.Chatter.Server
         public void Run()
         {
             chatMessageServer.Start(GetLocalEndPoint());
-            consoleCommandHandler.Run();
+            consoleHandler.Run();
             applicationEventBus.Publish(new ShutdownEvent());
             chatMessageServer.Stop();
         }

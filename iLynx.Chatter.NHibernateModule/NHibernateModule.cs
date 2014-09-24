@@ -4,7 +4,7 @@ using System.IO;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using iLynx.Chatter.Infrastructure;
-using iLynx.Chatter.Infrastructure.Domain;
+using iLynx.Chatter.NHibernateModule.Mappings;
 using iLynx.Common;
 using iLynx.Common.Configuration;
 using Microsoft.Practices.Unity;
@@ -42,7 +42,7 @@ namespace iLynx.Chatter.NHibernateModule
                         .Database(SQLiteConfiguration.Standard.ConnectionString(connectionString).AdoNetBatchSize(20))
                         .Mappings(
                         mc =>
-                            mc.FluentMappings.AddFromAssemblyOf<User>()).ExposeConfiguration(c => new SchemaUpdate(c).Execute(false, true)).BuildSessionFactory();
+                            mc.FluentMappings.AddFromAssemblyOf<UserMap>()).ExposeConfiguration(c => new SchemaUpdate(c).Execute(false, true)).BuildSessionFactory();
             Container.RegisterInstance(factory, new ContainerControlledLifetimeManager());
         }
     }

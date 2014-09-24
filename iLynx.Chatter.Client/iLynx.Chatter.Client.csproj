@@ -125,9 +125,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
       <Project>{569111CC-D436-46E5-BE9E-32B1BAD1B950}</Project>
       <Name>iLynx.Common.WPF</Name>
