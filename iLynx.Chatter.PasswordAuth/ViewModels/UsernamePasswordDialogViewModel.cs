@@ -1,22 +1,15 @@
-﻿using System.Windows.Input;
-using iLynx.Chatter.Infrastructure.Services;
-using iLynx.Common;
-using iLynx.Common.WPF;
+﻿using iLynx.Chatter.Infrastructure;
 
 namespace iLynx.Chatter.AuthenticationModule.ViewModels
 {
-    public class UsernamePasswordDialogViewModel : NotificationBase, IDialog
+    public class UsernamePasswordDialogViewModel : DialogViewModelBase
     {
-        private readonly IWindowingService windowingService;
         private string username;
         private string password;
-        private ICommand okCommand;
-        private ICommand cancelCommand;
-        private bool dialogResult;
 
-        public UsernamePasswordDialogViewModel(IWindowingService windowingService)
+        public UsernamePasswordDialogViewModel()
+            : base("Please authenticate yourself")
         {
-            this.windowingService = Guard.IsNull(() => windowingService);
         }
 
         public string Username
@@ -40,32 +33,5 @@ namespace iLynx.Chatter.AuthenticationModule.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        public ICommand OkCommand
-        {
-            get { return okCommand ?? (okCommand = new DelegateCommand(OnOk)); }
-        }
-
-        private void OnOk()
-        {
-            dialogResult = true;
-            var windowId = windowingService.FindIdByContent(this);
-            windowingService.Close(windowId);
-        }
-
-        public ICommand CancelCommand
-        {
-            get { return cancelCommand ?? (cancelCommand = new DelegateCommand(OnCancel)); }
-        }
-
-        private void OnCancel()
-        {
-            dialogResult = false;
-            var windowId = windowingService.FindIdByContent(this);
-            windowingService.Close(windowId);
-        }
-
-        public string Title { get { return "Please authenticate yourself"; } }
-        public bool Result { get { return dialogResult; } }
     }
 }

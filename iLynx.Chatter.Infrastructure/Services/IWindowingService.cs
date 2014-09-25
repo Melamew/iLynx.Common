@@ -1,4 +1,6 @@
-﻿namespace iLynx.Chatter.Infrastructure.Services
+﻿using System;
+
+namespace iLynx.Chatter.Infrastructure.Services
 {
     public interface IDialog
     {
@@ -11,6 +13,8 @@
         /// Gets a value that indicates the input result of this dialog.
         /// </summary>
         bool Result { get; }
+
+        event EventHandler ResultReceived;
     }
     
     public interface IWindowingService

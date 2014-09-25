@@ -87,6 +87,7 @@
     <Compile Include="ClientManager.cs" />
     <Compile Include="ClientNickManagerService.cs" />
     <Compile Include="CommandDefinition.cs" />
+    <Compile Include="DialogViewModelBase.cs" />
     <Compile Include="Domain\IEntity.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Events\ClientConnectedEvent.cs" />

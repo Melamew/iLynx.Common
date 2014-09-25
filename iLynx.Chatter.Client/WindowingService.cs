@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Instrumentation;
+using System.Threading;
 using System.Windows;
 using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common.WPF;
@@ -65,8 +67,17 @@ namespace iLynx.Chatter.Client
                 Content = content,
                 Title = content.Title
             };
-            window.ShowDialog();
-            return content.Result;
+            var result = false;
+            var haveResult = false;
+            content.ResultReceived += (sender, args) =>
+            {
+                result = content.Result;
+                haveResult = true;
+            };
+            window.Show();
+            while (!haveResult)
+                Thread.CurrentThread.Join(10);
+            return result;
         }
     }
 }

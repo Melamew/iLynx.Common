@@ -1,4 +1,5 @@
-﻿using iLynx.Chatter.Infrastructure;
+﻿using iLynx.Chatter.AuthenticationModule.Client;
+using iLynx.Chatter.Infrastructure;
 using Microsoft.Practices.Unity;
 
 namespace iLynx.Chatter.AuthenticationModule
@@ -13,7 +14,7 @@ namespace iLynx.Chatter.AuthenticationModule
         protected override void RegisterTypes()
         {
             RegisterResource("Resources/DataTemplates.xaml");
-
+            Container.RegisterInstance(Container.Resolve<CredentialAuthenticationService>());
         }
     }
 }

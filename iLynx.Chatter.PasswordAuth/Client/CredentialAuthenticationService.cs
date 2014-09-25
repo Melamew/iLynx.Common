@@ -30,7 +30,7 @@ namespace iLynx.Chatter.AuthenticationModule.Client
 
         private void OnCredentialAuthenticationRequest(ChatMessage keyedMessage, int totalSize)
         {
-            var dialog = new UsernamePasswordDialogViewModel(windowingService);
+            var dialog = new UsernamePasswordDialogViewModel();
             if (!windowingService.ShowDialog(dialog))
                 return;
             var message = new ChatMessage

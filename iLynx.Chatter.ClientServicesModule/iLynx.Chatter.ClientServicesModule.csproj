@@ -87,12 +87,20 @@
     <Compile Include="ClientServicesModule.cs" />
     <Compile Include="ConnectCommand.cs" />
     <Compile Include="MainMenuService.cs" />
+    <Compile Include="ViewModels\ConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\MenuItemViewModel.cs" />
+    <Compile Include="Views\ConnectionDialogView.xaml.cs">
+      <DependentUpon>ConnectionDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ConnectionDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
