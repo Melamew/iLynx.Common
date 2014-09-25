@@ -8,4 +8,9 @@
     <DataTemplate DataType="{x:Type viewModels:ConnectionDialogViewModel}">
         <views:ConnectionDialogView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:MenuItemViewModel}">
+        <MenuItem Header="{Binding Title}"
+                  Command="{Binding Command}"
+                  ItemsSource="{Binding Children}"/>
+    </DataTemplate>
 </ResourceDictionary>

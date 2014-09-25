@@ -14,7 +14,7 @@ namespace iLynx.Chatter.AuthenticationModule
         protected override void RegisterTypes()
         {
             RegisterResource("Resources/DataTemplates.xaml");
-            Container.RegisterInstance(Container.Resolve<CredentialAuthenticationService>());
+            Container.RegisterInstance(Container.Resolve<CredentialAuthenticationService>(), new ContainerControlledLifetimeManager());
         }
     }
 }

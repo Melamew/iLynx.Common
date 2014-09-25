@@ -139,6 +139,10 @@
       <Project>{ED0CB42A-7D74-4AE4-99FE-6EDC3B8C4143}</Project>
       <Name>iLynx.Chatter.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
+      <Project>{569111CC-D436-46E5-BE9E-32B1BAD1B950}</Project>
+      <Name>iLynx.Common.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">
       <Project>{1241AC19-9872-4126-8915-3A34919E1705}</Project>
       <Name>iLynx.Common</Name>
