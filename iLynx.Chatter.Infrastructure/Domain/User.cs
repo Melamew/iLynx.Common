@@ -1,12 +1,5 @@
-﻿using System;
-
-namespace iLynx.Chatter.Infrastructure.Domain
+﻿namespace iLynx.Chatter.Infrastructure.Domain
 {
-    public class EntityBase : IEntity
-    {
-        public virtual Guid UniqueId { get; set; }
-    }
-    
     public class User : EntityBase
     {
         public virtual string Username { get; set; }

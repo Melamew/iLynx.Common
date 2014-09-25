@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Common;
@@ -24,7 +23,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             this.commandRegistry = Guard.IsNull(() => commandRegistry);
             this.userAdapter = Guard.IsNull(() => userAdapter);
             consoleHandler.RegisterCommand("user", OnUserCommand, "Commands relating to users", QuerySubCommandCallback);
-            commandRegistry.RegisterCommand("list", OnListUsers, "Lists all users matching the specified criteria");
+            commandRegistry.RegisterCommand("list", OnListUsers, "Lists all users");
             commandRegistry.RegisterCommand("register", OnRegisterUser, "Registers a new user, ie. register {username} {password}");
             commandRegistry.RegisterCommand("passwd", OnChangeUserPassword, "Change the users password, ie. passwd {username} {newpassword}");
         }
@@ -64,7 +63,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
         private void OnListUsers(string[] strings)
         {
             foreach (var user in userAdapter.GetAll())
-                consoleHandler.WriteLine("{0}, {1}, {2}", user.UniqueId, user.Username, user.PasswordHash);
+                consoleHandler.WriteLine("{0}, {1}", user.UniqueId, user.Username);
         }
 
         private CommandDefinition[] QuerySubCommandCallback(string s, string[] parameters)

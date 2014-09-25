@@ -89,6 +89,7 @@
     <Compile Include="ClientNickManagerService.cs" />
     <Compile Include="CommandDefinition.cs" />
     <Compile Include="DialogViewModelBase.cs" />
+    <Compile Include="Domain\EntityBase.cs" />
     <Compile Include="Domain\IEntity.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Events\ClientConnectedEvent.cs" />
@@ -108,7 +109,9 @@
     <Compile Include="RegionNames.cs" />
     <Compile Include="RsaDescriptor.cs" />
     <Compile Include="Services\IAuthenticationService.cs" />
+    <Compile Include="Services\IDialog.cs" />
     <Compile Include="Services\IMainMenuService.cs" />
+    <Compile Include="Services\IMenuItem.cs" />
     <Compile Include="Services\IWindowingService.cs" />
   </ItemGroup>
   <ItemGroup>

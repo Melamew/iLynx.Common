@@ -91,7 +91,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandHandlerRegistry.cs" />
+    <Compile Include="ConsoleHandlerLogger.cs" />
     <Compile Include="ConsoleInputHandler.cs" />
+    <Compile Include="LoggerFacade.cs" />
     <Compile Include="ServerBootstrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

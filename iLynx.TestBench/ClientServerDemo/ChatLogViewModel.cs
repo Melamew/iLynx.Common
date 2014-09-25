@@ -9,11 +9,6 @@ using iLynx.PubSub;
 
 namespace iLynx.TestBench.ClientServerDemo
 {
-    public interface IChatLogViewModel
-    {
-        ObservableCollection<LogEntryModel> LogEntries { get; }
-    }
-
     public class ChatLogViewModel : NotificationBase, IChatLogViewModel
     {
         private readonly IDispatcher dispatcher;

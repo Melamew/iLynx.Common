@@ -12,6 +12,4 @@ namespace iLynx.Chatter.ClientServicesModule
             RemoteEndpoint = remoteEndpoint;
         }
     }
-
-    public class DisconnectCommand : IApplicationCommand { }
 }

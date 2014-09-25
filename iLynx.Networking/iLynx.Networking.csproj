@@ -89,6 +89,7 @@
     <Compile Include="Interfaces\IEndPointWrapper.cs" />
     <Compile Include="Interfaces\IKeyedDatagramMessage.cs" />
     <Compile Include="Interfaces\IKeyedMessage.cs" />
+    <Compile Include="Interfaces\IKeyedPayloadMessage.cs" />
     <Compile Include="Interfaces\IListener.cs" />
     <Compile Include="Interfaces\MessageReceivedHandler.cs" />
     <Compile Include="Serialization\SimpleMessageSerializer.cs" />

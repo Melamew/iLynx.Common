@@ -86,8 +86,11 @@
     <Compile Include="ClientConnectionService.cs" />
     <Compile Include="ClientServicesModule.cs" />
     <Compile Include="ConnectCommand.cs" />
+    <Compile Include="ConnectMenuItemViewModel.cs" />
+    <Compile Include="DisconnectCommand.cs" />
     <Compile Include="MainMenuService.cs" />
     <Compile Include="ViewModels\ConnectionDialogViewModel.cs" />
+    <Compile Include="ViewModels\IConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\MenuItemViewModel.cs" />
     <Compile Include="Views\ConnectionDialogView.xaml.cs">

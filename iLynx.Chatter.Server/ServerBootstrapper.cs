@@ -18,29 +18,6 @@ using Microsoft.Practices.Unity;
 
 namespace iLynx.Chatter.Server
 {
-    public class LoggerFacade : ILoggerFacade
-    {
-        public void Log(string message, Category category, Priority priority)
-        {
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, this, message);
-        }
-    }
-
-    public class ConsoleHandlerLogger : ILogger
-    {
-        private readonly IConsoleHandler consoleHandler;
-
-        public ConsoleHandlerLogger(IConsoleHandler consoleHandler)
-        {
-            this.consoleHandler = Guard.IsNull(() => consoleHandler);
-        }
-
-        public void Log(LoggingType type, object sender, string message)
-        {
-            consoleHandler.Log("[{0}:{1}]: {2}", type.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().FullName, message);
-        }
-    }
-
     public class ServerBootstrapper : UnityBootstrapper
     {
         private readonly ILoggerFacade loggerFacade = new LoggerFacade();

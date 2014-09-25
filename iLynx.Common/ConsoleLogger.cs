@@ -58,7 +58,7 @@ namespace iLynx.Common
         /// <param name="message">The message itself</param>
         public void Log(LoggingType type, object sender, string message)
         {
-            var line = string.Format("[{0}:{1}]: {2}", type.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().FullName, message);
+            var line = string.Format("[{0}:{1}]: {2}", type.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().Name, message);
             Console.WriteLine(line);
             if (writer == null) return;
             writer.WriteLine(line);

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Text;
 using System.Windows.Input;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
@@ -135,15 +134,6 @@ namespace iLynx.TestBench.ClientServerDemo
             if (string.IsNullOrEmpty(chatLine)) return;
             client.Send(new TextMessage(chatLine));
             ChatLine = string.Empty;
-        }
-    }
-
-    public class TextMessage : ChatMessage
-    {
-        public TextMessage(string text)
-        {
-            Data = Encoding.Unicode.GetBytes(text);
-            Key = MessageKeys.TextMessage;
         }
     }
 }

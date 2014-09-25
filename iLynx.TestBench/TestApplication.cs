@@ -15,30 +15,6 @@ using Microsoft.Practices.Unity;
 
 namespace iLynx.TestBench
 {
-    public interface IClientContainer : IUnityContainer { }
-    public interface IServerContainer : IUnityContainer { }
-
-    public class ClientContainer : UnityContainer, IClientContainer
-    {
-        public ClientContainer()
-        {
-            TestApplication.SetupContainer(this);
-            //this.RegisterType<IAuthenticationHandler<ChatMessage, int>, ClientPasswordAuthenticationHandler>(new ContainerControlledLifetimeManager());
-        }
-    }
-
-    public class ServerContainer : UnityContainer, IServerContainer
-    {
-        public ServerContainer()
-        {
-            TestApplication.SetupContainer(this);
-            //var authHandler =
-            //    this.Resolve<ServerPasswordAuthenticationHandler>(
-            //        new DependencyOverride<HashAlgorithm>(new SHA512Cng()));
-            //this.RegisterInstance<IAuthenticationHandler<ChatMessage, int>>(authHandler);
-        }
-    }
-
     public class TestApplication : Application
     {
         protected override void OnStartup(StartupEventArgs e)

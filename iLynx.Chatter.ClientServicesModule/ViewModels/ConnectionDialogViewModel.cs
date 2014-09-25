@@ -1,14 +1,7 @@
 ﻿using iLynx.Chatter.Infrastructure;
-using iLynx.Chatter.Infrastructure.Services;
 
 namespace iLynx.Chatter.ClientServicesModule.ViewModels
 {
-    public interface IConnectionDialogViewModel : IDialog
-    {
-        string RemoteHost { get; }
-        ushort RemotePort { get; }
-    }
-
     public class ConnectionDialogViewModel : DialogViewModelBase, IConnectionDialogViewModel
     {
         private string remoteHost;
