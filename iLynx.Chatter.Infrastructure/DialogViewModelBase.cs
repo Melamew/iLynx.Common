@@ -43,6 +43,9 @@ namespace iLynx.Chatter.Infrastructure
             }
         }
 
+        public double Width { get; set; }
+        public double Height { get; set; }
+
         protected virtual void OnResultReceived()
         {
             var handler = ResultReceived;

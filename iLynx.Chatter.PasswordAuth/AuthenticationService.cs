@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using iLynx.Chatter.AuthenticationModule.ViewModels;
-using iLynx.Chatter.AuthenticationModule.Views;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Authentication;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;
 using iLynx.Networking.ClientServer;
-using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
 
 namespace iLynx.Chatter.AuthenticationModule
@@ -46,6 +43,7 @@ namespace iLynx.Chatter.AuthenticationModule
             {
                 if (authenticatedClients.Contains(message.ClientId)) return;
                 authenticatedClients.Add(message.ClientId);
+                RuntimeCommon.DefaultLogger.Log(LoggingType.Information, this, string.Format("Client {0} authenticated as {1}", message.ClientId, message.AuthenticationMessage));
             }
             finally { clientLock.ExitWriteLock(); }
         }

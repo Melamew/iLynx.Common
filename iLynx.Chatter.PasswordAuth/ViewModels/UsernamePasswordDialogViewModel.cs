@@ -10,6 +10,8 @@ namespace iLynx.Chatter.AuthenticationModule.ViewModels
         public UsernamePasswordDialogViewModel()
             : base("Please authenticate yourself")
         {
+            Height = 110;
+            Width = 200;
         }
 
         public string Username

@@ -14,6 +14,10 @@ namespace iLynx.Chatter.Infrastructure.Services
         /// </summary>
         bool Result { get; }
 
+        double Width { get; }
+        
+        double Height { get; }
+
         event EventHandler ResultReceived;
     }
     

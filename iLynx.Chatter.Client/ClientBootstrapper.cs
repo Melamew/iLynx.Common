@@ -36,7 +36,8 @@ namespace iLynx.Chatter.Client
             Container.RegisterType(typeof(IBus<>), typeof(QueuedBus<>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IKeyedSubscriptionManager<,>), typeof(KeyedSubscriptionManager<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IMessageServer<,>), typeof(MessageServer<,>), new ContainerControlledLifetimeManager());
-            Container.RegisterType(typeof(IConnectionStubListener<,>), typeof(TcpStubListener<,>));
+            Container.RegisterType(typeof(IConnectionStubBuilder<,>), typeof(TcpStubBuilder<,>));
+            Container.RegisterType<IClientSideClient<ChatMessage, int>, Client<ChatMessage, int>>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IMergeDictionaryService, MergeDictionaryService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IDispatcher, WPFApplicationDispatcher>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IWindowingService, WindowingService>(new ContainerControlledLifetimeManager());

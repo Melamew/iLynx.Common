@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-using iLynx.Chatter.AuthenticationModule.ViewModels;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Authentication;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Chatter.Infrastructure.Events;
-using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;
 using iLynx.Common.Serialization;
 using iLynx.Networking.ClientServer;
@@ -32,8 +30,19 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             this.passwordHashingService = Guard.IsNull(() => passwordHashingService);
             this.messageBus = Guard.IsNull(() => messageBus);
             this.applicationEventBus = Guard.IsNull(() => applicationEventBus);
+            this.applicationEventBus.Subscribe<ClientConnectedEvent>(OnClientConnected);
             this.messageSubscriptionManager = Guard.IsNull(() => messageSubscriptionManager);
             this.messageSubscriptionManager.Subscribe(MessageKeys.CredentialAuthenticationResponse, OnCredentialsReceived);
+        }
+
+        private void OnClientConnected(ClientConnectedEvent message)
+        {
+            messageBus.Publish(new MessageEnvelope<ChatMessage, int>(new ChatMessage
+            {
+                Key = MessageKeys.CredentialAuthenticationRequest,
+                ClientId = Guid.Empty,
+                Data = new byte[0]
+            }, message.ClientId));
         }
 
         private void OnCredentialsReceived(ChatMessage keyedMessage, int totalSize)

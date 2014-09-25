@@ -10,7 +10,8 @@ namespace iLynx.Chatter.ClientServicesModule.ViewModels
         public ConnectionDialogViewModel()
             : base("Connect")
         {
-
+            Height = 110;
+            Width = 200;
         }
 
         public string RemoteHost

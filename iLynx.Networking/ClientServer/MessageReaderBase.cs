@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System;
+using System.Net.Sockets;
 using iLynx.Common;
 using iLynx.Common.Threading;
 using iLynx.Common.Threading.Unmanaged;
@@ -7,7 +8,7 @@ using iLynx.PubSub;
 
 namespace iLynx.Networking.ClientServer
 {
-    public abstract class MessageReaderBase<TMessage, TKey> where TMessage : IKeyedMessage<TKey>
+    public abstract class MessageReaderBase<TMessage, TKey> : IDisposable where TMessage : IKeyedMessage<TKey>
     {
         private readonly IKeyedSubscriptionManager<TKey, MessageReceivedHandler<TMessage, TKey>> subscriptionManager;
         private readonly IThreadManager threadManager;
@@ -17,6 +18,11 @@ namespace iLynx.Networking.ClientServer
         {
             this.subscriptionManager = Guard.IsNull(() => subscriptionManager);
             this.threadManager = Guard.IsNull(() => threadManager);
+        }
+
+        ~MessageReaderBase()
+        {
+            Dispose(false);
         }
 
         protected void StartReader()
@@ -64,5 +70,14 @@ namespace iLynx.Networking.ClientServer
         protected abstract void OnStubClosed();
         protected abstract void OnMessageRead(int totalSize);
         protected abstract IConnectionStub<TMessage, TKey> Stub { get; }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            
+        }
     }
 }

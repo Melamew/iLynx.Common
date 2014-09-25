@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
@@ -38,6 +39,8 @@ namespace iLynx.Chatter.ClientServicesModule
         {
             try
             {
+                if (client.IsConnected)
+                    client.Disconnect(new ChatMessage { Key = MessageKeys.ExitMessage, ClientId = client.ClientId, Data = Encoding.Unicode.GetBytes("Exiting") });
                 client.Connect(message.RemoteEndpoint);
             }
             finally

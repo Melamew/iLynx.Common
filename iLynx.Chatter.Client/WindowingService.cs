@@ -5,14 +5,21 @@ using System.Management.Instrumentation;
 using System.Threading;
 using System.Windows;
 using iLynx.Chatter.Infrastructure.Services;
+using iLynx.Common;
 using iLynx.Common.WPF;
 
 namespace iLynx.Chatter.Client
 {
     public class WindowingService : IWindowingService
     {
+        private readonly IDispatcher dispatcher;
         private readonly Dictionary<int, BorderlessWindow> openWindows = new Dictionary<int, BorderlessWindow>();
         private int nextId = int.MinValue;
+
+        public WindowingService(IDispatcher dispatcher)
+        {
+            this.dispatcher = Guard.IsNull(() => dispatcher);
+        }
 
         public int Show(object content, string title)
         {
@@ -34,6 +41,11 @@ namespace iLynx.Chatter.Client
 
         public void Minimize(int id)
         {
+            if (!dispatcher.CheckAccess())
+            {
+                dispatcher.Invoke(Minimize, id);
+                return;
+            }
             BorderlessWindow window;
             if (!openWindows.TryGetValue(id, out window)) return;
             window.WindowState = WindowState.Minimized;
@@ -41,6 +53,11 @@ namespace iLynx.Chatter.Client
 
         public void Close(int id)
         {
+            if (!dispatcher.CheckAccess())
+            {
+                dispatcher.Invoke(Close, id);
+                return;
+            }
             BorderlessWindow window;
             if (!openWindows.TryGetValue(id, out window)) return;
             window.Close();
@@ -48,6 +65,11 @@ namespace iLynx.Chatter.Client
 
         public void Maximize(int id)
         {
+            if (!dispatcher.CheckAccess())
+            {
+                dispatcher.Invoke(Maximize, id);
+                return;
+            }
             BorderlessWindow window;
             if (!openWindows.TryGetValue(id, out window)) return;
             window.WindowState = WindowState.Maximized;
@@ -62,21 +84,23 @@ namespace iLynx.Chatter.Client
 
         public bool ShowDialog(IDialog content)
         {
+            if (!dispatcher.CheckAccess())
+                return dispatcher.Invoke(() => ShowDialog(content));
             var window = new BorderlessWindow
             {
                 Content = content,
-                Title = content.Title
+                Title = content.Title,
+                Width = content.Width,
+                Height = content.Height,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
             };
             var result = false;
-            var haveResult = false;
             content.ResultReceived += (sender, args) =>
             {
                 result = content.Result;
-                haveResult = true;
+                window.Close();
             };
-            window.Show();
-            while (!haveResult)
-                Thread.CurrentThread.Join(10);
+            window.ShowDialog();
             return result;
         }
     }
