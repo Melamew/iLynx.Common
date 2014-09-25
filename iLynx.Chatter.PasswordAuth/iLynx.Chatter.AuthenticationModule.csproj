@@ -95,7 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAuthenticationModule.cs" />
-    <Compile Include="Client\ClientAuthenticationService.cs" />
+    <Compile Include="Client\CredentialAuthenticationService.cs" />
     <Compile Include="CredentialsPackage.cs" />
     <Compile Include="IPasswordHashingService.cs" />
     <Compile Include="IUserRegistrationService.cs" />

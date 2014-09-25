@@ -82,45 +82,4 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             messageSubscriptionManager.Unsubscribe(MessageKeys.CredentialAuthenticationResponse, OnCredentialsReceived);
         }
     }
-
-    public class ClientAuthenticationService : IDisposable
-    {
-        private readonly IWindowingService windowingService;
-        private readonly IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> messageSubscriptionManager;
-        private readonly IBus<MessageEnvelope<ChatMessage, int>> messageBus;
-
-        public ClientAuthenticationService(
-            IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> messageSubscriptionManager,
-            IBus<MessageEnvelope<ChatMessage, int>> messageBus,
-            IWindowingService windowingService)
-        {
-            this.windowingService = windowingService;
-            this.messageSubscriptionManager = Guard.IsNull(() => messageSubscriptionManager);
-            this.messageBus = Guard.IsNull(() => messageBus);
-            this.messageSubscriptionManager.Subscribe(MessageKeys.CredentialAuthenticationRequest, OnCredentialAuthenticationRequest);
-        }
-
-        private void OnCredentialAuthenticationRequest(ChatMessage keyedMessage, int totalSize)
-        {
-            var dialog = new UsernamePasswordDialogViewModel(windowingService);
-            if (!windowingService.ShowDialog(dialog))
-                return;
-            var message = new ChatMessage
-            {
-                Key = MessageKeys.CredentialAuthenticationResponse,
-                ClientId = keyedMessage.ClientId,
-            };
-            using (var output = new MemoryStream())
-            {
-                Serializer.Serialize(new CredentialsPackage { Username = dialog.Username, Password = dialog.Password }, output);
-                message.Data = output.ToArray();
-            }
-            messageBus.Publish(new MessageEnvelope<ChatMessage, int>(message));
-        }
-
-        public void Dispose()
-        {
-            messageSubscriptionManager.Unsubscribe(MessageKeys.CredentialAuthenticationRequest, OnCredentialAuthenticationRequest);
-        }
-    }
 }
