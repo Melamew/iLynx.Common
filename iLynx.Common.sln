@@ -16,6 +16,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.Infrastructure", "iLynx.Chatter.Infrastructure\iLynx.Chatter.Infrastructure.csproj", "{ED0CB42A-7D74-4AE4-99FE-6EDC3B8C4143}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.Client", "iLynx.Chatter.Client\iLynx.Chatter.Client.csproj", "{F3DD69F8-A732-429C-BDF6-3D0F93D3DC75}"
+	ProjectSection(ProjectDependencies) = postProject
+		{54DDF932-AE22-4EE0-A261-97D800E959B8} = {54DDF932-AE22-4EE0-A261-97D800E959B8}
+		{295D0CA4-AB32-4523-9CC5-AC99E3E48F8A} = {295D0CA4-AB32-4523-9CC5-AC99E3E48F8A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.AuthenticationModule", "iLynx.Chatter.PasswordAuth\iLynx.Chatter.AuthenticationModule.csproj", "{54DDF932-AE22-4EE0-A261-97D800E959B8}"
 EndProject

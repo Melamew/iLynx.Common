@@ -168,7 +168,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(TargetDir)iLynx.Chatter.AuthenticationModule.dll $(TargetDir)Server\</PostBuildEvent>
+    <PostBuildEvent>xcopy /y $(TargetDir)iLynx.Chatter.AuthenticationModule.dll $(TargetDir)Server\
+xcopy /y $(TargetDir)iLynx.Chatter.AuthenticationModule.dll $(TargetDir)Client\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

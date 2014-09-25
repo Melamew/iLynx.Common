@@ -12,7 +12,7 @@ namespace iLynx.Chatter.ClientServicesModule.ViewModels
         public MenuItemViewModel(string title, Action callback, params IMenuItem[] children)
         {
             Title = Guard.IsNull(() => title);
-            Callback = Guard.IsNull(() => callback);
+            Callback = callback;
             this.children = new ObservableCollection<IMenuItem>(children);
         }
 

@@ -16,6 +16,7 @@ namespace iLynx.Chatter.ClientServicesModule
 
         protected override void RegisterTypes()
         {
+            RegisterResource("Resources/DataTemplates.xaml");
             Container.RegisterType<IMainMenuService, MainMenuService>(new ContainerControlledLifetimeManager());
             var menuService = Container.Resolve<IMainMenuService>();
             menuService.RegisterMenuItem(new MenuItemViewModel("Chatter", null, new MenuItemViewModel("Connect", OnConnect)));

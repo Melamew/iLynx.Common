@@ -25,6 +25,7 @@ namespace iLynx.Chatter.Client
         protected override void ConfigureContainer()
         {
             base.ConfigureContainer();
+            Container.RegisterType<IMergeDictionaryService, MergeDictionaryService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IDispatcher, WPFApplicationDispatcher>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IWindowingService, WindowingService>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance(RuntimeCommon.DefaultLogger);

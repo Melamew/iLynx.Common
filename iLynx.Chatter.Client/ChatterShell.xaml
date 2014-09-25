@@ -4,10 +4,14 @@
         xmlns:wpf="clr-namespace:iLynx.Common.WPF;assembly=iLynx.Common.WPF"
         xmlns:regions="http://www.codeplex.com/CompositeWPF"
         xmlns:infrastructure="clr-namespace:iLynx.Chatter.Infrastructure;assembly=iLynx.Chatter.Infrastructure"
+        xmlns:themes="clr-namespace:iLynx.Common.WPF.Themes;assembly=iLynx.Common.WPF"
         Title="Chatter Client" Height="350" Width="525"
         IsCollapsible="False"
         WindowStartupLocation="CenterScreen"
         x:Name="Shell">
+    <themes:ThemeManager.Theme>
+        <themes:FlatTheme/>
+    </themes:ThemeManager.Theme>
     <wpf:BorderlessWindow.Header>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -15,7 +19,6 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <ContentControl regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.HeaderRegion}"/>
-            <TextBlock Grid.Column="1" Text="{Binding Title, ElementName=Shell}"/>
         </Grid>
     </wpf:BorderlessWindow.Header>
     <Grid>

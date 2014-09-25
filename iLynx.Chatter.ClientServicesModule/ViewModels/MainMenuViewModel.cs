@@ -35,7 +35,7 @@ namespace iLynx.Chatter.ClientServicesModule.ViewModels
             var result = new MenuItem
             {
                 Header = item.Title,
-                Command = new DelegateCommand(item.Callback),
+                Command = item.Callback == null ? null : new DelegateCommand(item.Callback),
             };
             foreach (var child in item.Children)
                 result.Items.Add(MakeMenuItem(child));
