@@ -12,7 +12,7 @@ using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
 
-namespace iLynx.Chatter.AuthenticationModule
+namespace iLynx.Chatter.AuthenticationModule.Server
 {
     public class CredentialAuthenticationService : IDisposable
     {

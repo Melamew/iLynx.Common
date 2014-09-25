@@ -94,13 +94,15 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientAuthenticationModule.cs" />
+    <Compile Include="Client\ClientAuthenticationService.cs" />
     <Compile Include="CredentialsPackage.cs" />
     <Compile Include="IPasswordHashingService.cs" />
     <Compile Include="IUserRegistrationService.cs" />
     <Compile Include="PasswordHashingService.cs" />
     <Compile Include="ServerAuthenticationModule.cs" />
     <Compile Include="AuthenticationService.cs" />
-    <Compile Include="CredentialAuthenticationService.cs" />
+    <Compile Include="Server\CredentialAuthenticationService.cs" />
     <Compile Include="Server\UserListService.cs" />
     <Compile Include="UserRegistrationService.cs" />
     <Compile Include="ViewModels\UsernamePasswordDialogViewModel.cs" />

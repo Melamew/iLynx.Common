@@ -83,7 +83,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientConnectionService.cs" />
     <Compile Include="ClientServicesModule.cs" />
+    <Compile Include="ConnectCommand.cs" />
     <Compile Include="MainMenuService.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\MenuItemViewModel.cs" />
@@ -132,6 +134,14 @@
     <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">
       <Project>{1241AC19-9872-4126-8915-3A34919E1705}</Project>
       <Name>iLynx.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.Networking\iLynx.Networking.csproj">
+      <Project>{FD13EB83-1471-4B59-9FCE-75AB804A0A3F}</Project>
+      <Name>iLynx.Networking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.PubSub\iLynx.PubSub.csproj">
+      <Project>{DF55B984-7E5E-447C-9D68-D93F9FB0C227}</Project>
+      <Name>iLynx.PubSub</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

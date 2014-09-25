@@ -94,6 +94,7 @@
     <Compile Include="Events\IApplicationEvent.cs" />
     <Compile Include="Events\NickChangedEvent.cs" />
     <Compile Include="Events\ShutdownEvent.cs" />
+    <Compile Include="IApplicationCommand.cs" />
     <Compile Include="IClientManager.cs" />
     <Compile Include="ICommandHandlerRegistry.cs" />
     <Compile Include="IConsoleHandler.cs" />

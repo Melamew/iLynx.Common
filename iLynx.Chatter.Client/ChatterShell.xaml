@@ -21,7 +21,5 @@
             <ContentControl regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.HeaderRegion}"/>
         </Grid>
     </wpf:BorderlessWindow.Header>
-    <Grid>
-        <Menu></Menu>
-    </Grid>
+    <ContentControl regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainRegion}"/>
 </wpf:BorderlessWindow>
