@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
 using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
@@ -46,49 +46,6 @@ namespace iLynx.TestBench
                 new StubConnection<SimpleMessage<int>, int>(new ThreadManager(),
                     new CryptoConnectionStubBuilder<SimpleMessage<int>, int>(serializer, keyExchangeNegotiator)),
                 listener, 5392);
-        }
-
-        public class RsaDescriptor : IKeyExchangeAlgorithmDescriptor
-        {
-            public RsaDescriptor(int keySize)
-            {
-                KeySize = keySize;
-            }
-
-            public int KeySize { get; private set; }
-            public string AlgorithmIdentifier { get { return typeof(RSACryptoServiceProvider).FullName; } }
-            public int Strength { get { return KeySize * 1000; } }
-            public IKeyExchangeAlgorithm Build()
-            {
-                return new RsaKeyExchangeAlgorithm(KeySize);
-            }
-        }
-
-        public class AesDescriptor : ISymmetricAlgorithmDescriptor
-        {
-            public AesDescriptor(int keySize)
-            {
-                KeySize = keySize;
-            }
-
-            public int KeySize { get; private set; }
-            public string AlgorithmIdentifier { get { return typeof(AesCryptoServiceProvider).FullName; } }
-            public int Strength { get { return KeySize * 100; } }
-            public int BlockSize { get { return 128; } }
-            public SymmetricAlgorithm Build()
-            {
-                var rijndael = Rijndael.Create();
-                rijndael.BlockSize = 128;
-                rijndael.KeySize = KeySize;
-                rijndael.Padding = PaddingMode.None;
-                return rijndael;
-                //return new Rij
-                //{
-                //    BlockSize = 128,
-                //    KeySize = KeySize,
-                //    Mode = CipherMode.CBC,
-                //};
-            }
         }
 
         private void RunSubscriberTest()

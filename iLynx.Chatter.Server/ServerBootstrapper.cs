@@ -7,6 +7,7 @@ using iLynx.Common.Configuration;
 using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
 using iLynx.Networking.ClientServer;
+using iLynx.Networking.Cryptography;
 using iLynx.Networking.Interfaces;
 using iLynx.Networking.TCP;
 using iLynx.PubSub;
@@ -86,11 +87,13 @@ namespace iLynx.Chatter.Server
             Container.RegisterType<ICommandHandlerRegistry, CommandHandlerRegistry>(new PerResolveLifetimeManager());
             Container.RegisterInstance<IConsoleHandler>(Container.Resolve<ConsoleInputHandler>(), new ContainerControlledLifetimeManager());
             RuntimeCommon.DefaultLogger = Container.Resolve<ConsoleHandlerLogger>();
-
+            Container.RegisterType(typeof(IAlgorithmContainer<>), typeof(AlgorithmContainer<>), new ContainerControlledLifetimeManager());
+            Container.RegisterType<ILinkNegotiator, KeyExchangeLinkNegotiator>(new ContainerControlledLifetimeManager());
+            SetupEncryptionContainers(Container);
             Container.RegisterType(typeof(IBus<>), typeof(QueuedBus<>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IKeyedSubscriptionManager<,>), typeof(KeyedSubscriptionManager<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IMessageServer<,>), typeof(MessageServer<,>), new ContainerControlledLifetimeManager());
-            Container.RegisterType(typeof(IConnectionStubListener<,>), typeof(TcpStubListener<,>));
+            Container.RegisterType(typeof(IConnectionStubListener<,>), typeof(CryptoConnectionStubListener<,>));
             Container.RegisterType(typeof(IClientBuilder<,>), typeof(ClientBuilder<,>));
             Container.RegisterType<ITimerService, SingleThreadedTimerService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISerializer<ChatMessage>, ChatMessageSerializer>(new ContainerControlledLifetimeManager());
@@ -98,6 +101,14 @@ namespace iLynx.Chatter.Server
             Container.RegisterType<IBitConverter, BigEndianBitConverter>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IConfigurationManager, SingletonConfigurationManager>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance(RuntimeCommon.DefaultLogger);
+        }
+
+        private static void SetupEncryptionContainers(IUnityContainer container)
+        {
+            var symmetricContainer = container.Resolve<IAlgorithmContainer<ISymmetricAlgorithmDescriptor>>();
+            symmetricContainer.AddAlgorithm(new AesDescriptor(256));
+            var asymmetricContainer = container.Resolve<IAlgorithmContainer<IKeyExchangeAlgorithmDescriptor>>();
+            asymmetricContainer.AddAlgorithm(new RsaDescriptor(3072));
         }
     }
 }

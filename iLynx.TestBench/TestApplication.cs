@@ -75,12 +75,14 @@ namespace iLynx.TestBench
                 new ContainerControlledLifetimeManager());
             container.RegisterType<ISerializer<ChatMessage>, ChatMessageSerializer>(
                 new ContainerControlledLifetimeManager());
+            
             container.RegisterType(typeof(IAlgorithmContainer<>), typeof(AlgorithmContainer<>), new ContainerControlledLifetimeManager());
-            container.RegisterType<ITimerService, SingleThreadedTimerService>(new ContainerControlledLifetimeManager());
+            container.RegisterType<ILinkNegotiator, KeyExchangeLinkNegotiator>(new ContainerControlledLifetimeManager());
             SetupEncryptionContainers(container);
+
+            container.RegisterType<ITimerService, SingleThreadedTimerService>(new ContainerControlledLifetimeManager());
             container.RegisterType<IChatLogViewModel, ChatLogViewModel>(new PerResolveLifetimeManager());
             container.RegisterType<IClientManager, ClientManager>(new ContainerControlledLifetimeManager());
-            container.RegisterType<ILinkNegotiator, KeyExchangeLinkNegotiator>(new ContainerControlledLifetimeManager());
             container.RegisterType(typeof (IClientSideClient<,>), typeof (Client<,>));
             container.RegisterType(typeof(IBus<>), typeof(Bus<>), new ContainerControlledLifetimeManager());
             container.RegisterType(typeof(IKeyedSubscriptionManager<,>), typeof(KeyedSubscriptionManager<,>), new ContainerControlledLifetimeManager());
@@ -95,9 +97,9 @@ namespace iLynx.TestBench
         private static void SetupEncryptionContainers(IUnityContainer container)
         {
             var symmetricContainer = container.Resolve<IAlgorithmContainer<ISymmetricAlgorithmDescriptor>>();
-            symmetricContainer.AddAlgorithm(new TcpConnectionTests.AesDescriptor(256));
+            symmetricContainer.AddAlgorithm(new AesDescriptor(256));
             var asymmetricContainer = container.Resolve<IAlgorithmContainer<IKeyExchangeAlgorithmDescriptor>>();
-            asymmetricContainer.AddAlgorithm(new TcpConnectionTests.RsaDescriptor(1024));
+            asymmetricContainer.AddAlgorithm(new RsaDescriptor(1024));
         }
     }
 }

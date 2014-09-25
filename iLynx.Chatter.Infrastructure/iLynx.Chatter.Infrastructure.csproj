@@ -81,6 +81,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AesDescriptor.cs" />
     <Compile Include="Authentication\ClientAuthenticatedEvent.cs" />
     <Compile Include="ChatMessage.cs" />
     <Compile Include="ChatMessageSerializer.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="NickManagerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />
+    <Compile Include="RsaDescriptor.cs" />
     <Compile Include="Services\IAuthenticationService.cs" />
     <Compile Include="Services\IMainMenuService.cs" />
     <Compile Include="Services\IWindowingService.cs" />

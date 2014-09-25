@@ -18,6 +18,7 @@ namespace iLynx.Networking.Cryptography
         public override IConnectionStub<TMessage, TKey> AcceptNext()
         {
             var socket = AcceptSocket();
+            if (null == socket) return null;
             var stub = new CryptoConnectionStub<TMessage, TKey>(Serializer, socket, linkNegotiator);
             stub.NegotiateTransportKeys();
             return stub;

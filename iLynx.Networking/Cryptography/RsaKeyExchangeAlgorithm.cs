@@ -82,7 +82,7 @@ namespace iLynx.Networking.Cryptography
                     Array.Copy(dataSlice, temp, read);
                     dataSlice = temp;
                 }
-                var encryptedSlice = privateProvider.Encrypt(dataSlice, true);
+                var encryptedSlice = publicProvider.Encrypt(dataSlice, true);
                 target.Write(encryptedSlice, 0, encryptedSlice.Length);
                 dataSlice = new byte[maxInputBytes];
             }
