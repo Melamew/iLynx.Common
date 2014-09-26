@@ -18,7 +18,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             IDataAdapter<User> userAdapter,
             IUserRegistrationService userRegistrationService)
         {
-            this.userRegistrationService = userRegistrationService;
+            this.userRegistrationService = Guard.IsNull(() => userRegistrationService);
             this.consoleHandler = Guard.IsNull(() => consoleHandler);
             this.commandRegistry = Guard.IsNull(() => commandRegistry);
             this.userAdapter = Guard.IsNull(() => userAdapter);
