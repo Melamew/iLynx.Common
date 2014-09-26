@@ -32,8 +32,8 @@ namespace iLynx.Chatter.NHibernateModule
         /// <param name="value">The value.</param>
         public void Save(T value)
         {
-            //sessionScoper.GetSession().Save(value);
-            sessionScoper.GetSession().Insert(value);
+            Transact(() => sessionScoper.GetSession().Save(value), true);
+            //sessionScoper.GetSession().Insert(value);
         }
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace iLynx.Chatter.NHibernateModule
         /// <param name="value">The value.</param>
         public void SaveOrUpdate(T value)
         {
-            //sessionScoper.GetSession().SaveOrUpdate(value);
-            sessionScoper.GetSession().Insert(value);
+            Transact(() => sessionScoper.GetSession().SaveOrUpdate(value), true);
+            //sessionScoper.GetSession().Insert(value);
         }
 
         public IEnumerable<T> DistinctBy<TK>(Expression<Func<T, TK>> keyExpression)
@@ -57,7 +57,8 @@ namespace iLynx.Chatter.NHibernateModule
         /// <param name="value">The value.</param>
         public void Delete(T value)
         {
-            sessionScoper.GetSession().Delete(value);
+            Transact(() => sessionScoper.GetSession().Delete(value), true);
+            //sessionScoper.GetSession().Delete(value);
         }
 
         /// <summary>
@@ -120,10 +121,10 @@ namespace iLynx.Chatter.NHibernateModule
             using (var transaction = session.BeginTransaction())
             {
                 foreach (var item in data)
-                    session.Insert(item);
+                    session.SaveOrUpdate(item);
                 transaction.Commit();
             }
-            //session.Flush();
+            session.Flush();
         }
 
         /// <summary>

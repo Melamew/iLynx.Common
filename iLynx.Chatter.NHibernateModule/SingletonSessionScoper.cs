@@ -17,14 +17,14 @@ namespace iLynx.Chatter.NHibernateModule
             this.factory = factory;
         }
 
-        private static IStatelessSession session;
+        private static ISession session;
         /// <summary>
         /// Gets the session.
         /// </summary>
         /// <returns></returns>
-        public IStatelessSession GetSession()
+        public ISession GetSession()
         {
-            return session ?? (session = factory.OpenStatelessSession());
+            return session ?? (session = factory.OpenSession());
         }
     }
 }

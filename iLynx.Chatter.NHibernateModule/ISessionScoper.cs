@@ -7,6 +7,6 @@ namespace iLynx.Chatter.NHibernateModule
     /// </summary>
     public interface ISessionScoper
     {
-        IStatelessSession GetSession();
+        ISession GetSession();
     }
 }
