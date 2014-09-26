@@ -33,6 +33,24 @@ namespace iLynx.Chatter.ClientServicesModule
         private void Subscribe()
         {
             commandBus.Subscribe<ConnectCommand>(OnConnect);
+            commandBus.Subscribe<DisconnectCommand>(OnDisconnected);
+        }
+
+        private void OnDisconnected(DisconnectCommand message)
+        {
+            var clientId = Guid.Empty;
+            try
+            {
+                if (!client.IsConnected) return;
+                clientId = client.ClientId;
+                client.Disconnect(new ChatMessage
+                {
+                    ClientId = clientId,
+                    Key = MessageKeys.ExitMessage,
+                    Data = Encoding.Unicode.GetBytes("Disconnecting")
+                });
+            }
+            finally { eventBus.Publish(new ClientDisconnectedEvent(clientId));}
         }
 
         private void OnConnect(ConnectCommand message)

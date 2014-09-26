@@ -20,14 +20,14 @@ namespace iLynx.Chatter.AuthenticationModule
             keySizeValue = configurationManager.GetValue("PasswordHashSize", 1024, "Server");
         }
 
-        public string GetPasswordHash(string password, out long salt)
+        public byte[] GetPasswordHash(string password, out long salt)
         {
             var saltBytes = new byte[sizeof (long)];
             cryptoRng.GetBytes(saltBytes);
             var derriveBytes = new Rfc2898DeriveBytes(password, saltBytes);
             var bytes = derriveBytes.GetBytes(keySizeValue.Value);
             salt = bitConverter.ToInt64(saltBytes);
-            return Convert.ToBase64String(bytes);
+            return bytes;
         }
 
         public bool PasswordMatches(string password, User user)
@@ -35,7 +35,8 @@ namespace iLynx.Chatter.AuthenticationModule
             var saltBytes = bitConverter.GetBytes(user.PasswordSalt);
             var derriveBytes = new Rfc2898DeriveBytes(password, saltBytes);
             var bytes = derriveBytes.GetBytes(keySizeValue.Value);
-            var storedHash = Convert.FromBase64String(user.PasswordHash);
+            var storedHash = user.PasswordHash;
+            RuntimeCommon.DefaultLogger.Log(LoggingType.Debug, this, string.Format("Comparing Hashes:\r\n{0}\r\n{1}", storedHash.ToString(":"), bytes.ToString(":")));
             return bytes.SequenceEqual(storedHash);
         }
     }

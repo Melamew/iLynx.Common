@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Common;
@@ -30,6 +31,7 @@ namespace iLynx.Chatter.AuthenticationModule
                 PasswordSalt = salt,
             };
             userAdapter.Save(user);
+            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, this, string.Format("Inserted user {0} with password {1}", username, user.PasswordHash.ToString(":")));
             return true;
         }
 
