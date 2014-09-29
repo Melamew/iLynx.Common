@@ -75,7 +75,7 @@ namespace iLynx.Networking.Cryptography
 
         private static int WriteBlocks(byte[] data, int blockSize, RandomNumberGenerator reasonablySecurePrng, Stream target)
         {
-            var paddingSize = (blockSize - (data.Length % blockSize)) - sizeof(int);
+            var paddingSize = (blockSize - ((data.Length + sizeof(int)) % blockSize));
             var rnd = new byte[paddingSize]; // Padding
             reasonablySecurePrng.GetBytes(rnd);
             var lengthField = Serializer.SingletonBitConverter.GetBytes(data.Length);

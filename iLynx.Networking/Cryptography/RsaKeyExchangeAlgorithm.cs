@@ -20,22 +20,23 @@ namespace iLynx.Networking.Cryptography
             provider = new RSACryptoServiceProvider(keySize, parameters);
         }
 
-        private static CspParameters GenKeys(int keySize)
+        private static RSACryptoServiceProvider GenKeys(int keySize)
         {
             var parameters = new CspParameters();
-            var provider = new RSACryptoServiceProvider();
+            RSACryptoServiceProvider provider;
             parameters.Flags = CspProviderFlags.NoPrompt | CspProviderFlags.UseMachineKeyStore | CspProviderFlags.UseExistingKey;
             parameters.KeyNumber = (int)KeyNumber.Exchange;
-            parameters.KeyContainerName = System.Reflection.Assembly.GetCallingAssembly().FullName;
+            parameters.KeyContainerName = System.Reflection.Assembly.GetEntryAssembly().FullName;
             try
             {
                 //RSAHelper: Attempting to open existing key container
                 provider = new RSACryptoServiceProvider(parameters);
                 var pa = provider.ExportParameters(false);
-                if (pa.Modulus.Length * 8 == keySize) return parameters;
+                if (pa.Modulus.Length * 8 == keySize) return provider;
                 //Found existing key, but not of the correct size
                 provider.PersistKeyInCsp = false;
                 provider.Clear();
+                provider.Dispose();
                 GenerateRsaKeys(parameters, keySize, out provider);
             }
             catch
@@ -45,12 +46,10 @@ namespace iLynx.Networking.Cryptography
             }
             finally
             {
-                provider.Clear();
-                provider.Dispose();
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-            return parameters;
+            return provider;
         }
 
         public RsaKeyExchangeAlgorithm(int keySize)
@@ -126,8 +125,7 @@ namespace iLynx.Networking.Cryptography
 
         public void GenerateKeys()
         {
-            var parameters = GenKeys(keySize);
-            privateProvider = new RSACryptoServiceProvider(parameters);
+            privateProvider = GenKeys(keySize);
             rsaParameters = privateProvider.ExportParameters(false);
         }
 
