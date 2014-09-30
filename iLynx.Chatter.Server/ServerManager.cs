@@ -35,7 +35,6 @@ namespace iLynx.Chatter.Server
             chatMessageServer.ClientDisconnected += ChatMessageServerOnClientDisconnected;
             applicationEventBus.Subscribe<ClientConnectedEvent>(OnClientConnected);
             applicationEventBus.Subscribe<ClientDisconnectedEvent>(OnClientDisconnected);
-            //applicationEventBus.Subscribe<ClientAuthenticatedEvent>(OnClientAuthenticated);
         }
 
         private void ChatMessageServerOnClientDisconnected(object sender, ClientDisconnectedEventArgs clientDisconnectedEventArgs)
@@ -48,21 +47,16 @@ namespace iLynx.Chatter.Server
             applicationEventBus.Publish(new ClientConnectedEvent(clientConnectedEventArgs.ClientId));
         }
 
-        //private void OnClientAuthenticated(ClientAuthenticatedEvent message)
-        //{
-        //    consoleHandler.Log("Client {0} authenticated. {1}", message.ClientId, message.AuthenticationMessage);
-        //}
-
         private void OnClientDisconnected(ClientDisconnectedEvent message)
         {
             var nick = nickManagerService.GetNickName(message.ClientId);
-            consoleHandler.Log("Client {0} disconnected.", string.IsNullOrEmpty(nick) ? message.ClientId.ToString() : nick);
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, this, string.Format("Client {0} disconnected.", string.IsNullOrEmpty(nick) ? message.ClientId.ToString() : nick));
         }
 
         private void OnClientConnected(ClientConnectedEvent message)
         {
             var nick = nickManagerService.GetNickName(message.ClientId);
-            consoleHandler.Log("Client {0} connected.", string.IsNullOrEmpty(nick) ? message.ClientId.ToString() : nick);
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, this, string.Format("Client {0} connected.", string.IsNullOrEmpty(nick) ? message.ClientId.ToString() : nick));
         }
 
         private void OnExit(string[] strings)

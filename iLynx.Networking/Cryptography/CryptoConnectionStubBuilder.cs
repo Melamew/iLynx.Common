@@ -2,17 +2,20 @@
 using System.Net.Sockets;
 using iLynx.Common;
 using iLynx.Common.Serialization;
+using iLynx.Common.Threading;
 using iLynx.Networking.Interfaces;
 
 namespace iLynx.Networking.Cryptography
 {
     public class CryptoConnectionStubBuilder<TMessage, TKey> : IConnectionStubBuilder<TMessage, TKey> where TMessage : IKeyedMessage<TKey>
     {
+        private readonly ITimerService timerService;
         private readonly ILinkNegotiator negotiator;
         private readonly ISerializer<TMessage> serializer;
 
-        public CryptoConnectionStubBuilder(ISerializer<TMessage> serializer, ILinkNegotiator negotiator)
+        public CryptoConnectionStubBuilder(ISerializer<TMessage> serializer, ILinkNegotiator negotiator, ITimerService timerService)
         {
+            this.timerService = Guard.IsNull(() => timerService);
             this.negotiator = Guard.IsNull(() => negotiator);
             this.serializer = Guard.IsNull(() => serializer);
         }
@@ -21,7 +24,7 @@ namespace iLynx.Networking.Cryptography
         {
             var socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(endpoint);
-            var stub = new CryptoConnectionStub<TMessage, TKey>(serializer, socket, negotiator);
+            var stub = new CryptoConnectionStub<TMessage, TKey>(serializer, socket, negotiator, timerService);
             stub.NegotiateTransportKeys();
             return stub;
         }

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Authentication;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Chatter.Infrastructure.Events;
+using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;
 using iLynx.Common.Serialization;
 using iLynx.Networking.ClientServer;
@@ -12,13 +15,15 @@ using iLynx.PubSub;
 
 namespace iLynx.Chatter.AuthenticationModule.Server
 {
-    public class CredentialAuthenticationService : IDisposable
+    public class CredentialAuthenticationService : IDisposable, IAuthenticationService<ChatMessage, int>
     {
         private readonly IUserRegistrationService userRegistrationService;
         private readonly IPasswordHashingService passwordHashingService;
         private readonly IBus<MessageEnvelope<ChatMessage, int>> messageBus;
         private readonly IBus<IApplicationEvent> applicationEventBus;
         private readonly IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> messageSubscriptionManager;
+        private readonly Dictionary<Guid, User> authenticatedClients = new Dictionary<Guid, User>();
+        private readonly ReaderWriterLockSlim clientLock = new ReaderWriterLockSlim();
 
         public CredentialAuthenticationService(IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> messageSubscriptionManager,
             IBus<MessageEnvelope<ChatMessage, int>> messageBus,
@@ -31,6 +36,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             this.messageBus = Guard.IsNull(() => messageBus);
             this.applicationEventBus = Guard.IsNull(() => applicationEventBus);
             this.applicationEventBus.Subscribe<ClientConnectedEvent>(OnClientConnected);
+            this.applicationEventBus.Subscribe<ClientDisconnectedEvent>(OnClientDisconnected);
             this.messageSubscriptionManager = Guard.IsNull(() => messageSubscriptionManager);
             this.messageSubscriptionManager.Subscribe(MessageKeys.CredentialAuthenticationResponse, OnCredentialsReceived);
         }
@@ -59,19 +65,34 @@ namespace iLynx.Chatter.AuthenticationModule.Server
                 RejectClient(clientId);
                 return;
             }
-            if (passwordHashingService.PasswordMatches(package.Password, user)) AcceptClient(clientId, user.Username);
+            if (passwordHashingService.PasswordMatches(package.Password, user)) AcceptClient(clientId, user);
             else RejectClient(clientId);
         }
 
-        private void AcceptClient(Guid clientId, string username)
+        private void AcceptClient(Guid clientId, User user)
         {
             var message = new ChatMessage
             {
                 ClientId = Guid.Empty,
                 Key = MessageKeys.CredentialAuthenticationAccepted
             };
-            applicationEventBus.Publish(new ClientAuthenticatedEvent(clientId, username));
+            AddOrUpdateClientAuthentication(clientId, user);
             messageBus.Publish(new MessageEnvelope<ChatMessage, int>(message, clientId));
+        }
+
+        private void AddOrUpdateClientAuthentication(Guid client, User user)
+        {
+            clientLock.EnterReadLock();
+            try
+            {
+                if (authenticatedClients.ContainsKey(client))
+                    authenticatedClients[client] = user;
+                else
+                    authenticatedClients.Add(client, user);
+            }
+            finally { clientLock.ExitReadLock(); }
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, this, string.Format("Client {0} authenticated as {1}", client, user.Username));
+            applicationEventBus.Publish(new ClientAuthenticatedEvent(client, user.Username));
         }
 
         private void RejectClient(Guid clientId)
@@ -89,6 +110,42 @@ namespace iLynx.Chatter.AuthenticationModule.Server
         public void Dispose()
         {
             messageSubscriptionManager.Unsubscribe(MessageKeys.CredentialAuthenticationResponse, OnCredentialsReceived);
+        }
+
+        private void OnClientDisconnected(ClientDisconnectedEvent message)
+        {
+            clientLock.EnterWriteLock();
+            try
+            {
+                authenticatedClients.Remove(message.ClientId);
+            }
+            finally { clientLock.ExitWriteLock(); }
+        }
+
+        public bool IsClientAuthenticated(IClient<ChatMessage, int> client)
+        {
+            return IsClientAuthenticated(client.ClientId);
+        }
+
+        public bool IsClientAuthenticated(Guid clientId)
+        {
+            clientLock.EnterReadLock();
+            try
+            {
+                return authenticatedClients.ContainsKey(clientId);
+            }
+            finally { clientLock.ExitReadLock(); }
+        }
+
+        public User GetAuthenticatedUser(Guid clientId)
+        {
+            clientLock.EnterReadLock();
+            try
+            {
+                User result;
+                return authenticatedClients.TryGetValue(clientId, out result) ? result : null;
+            }
+            finally { clientLock.ExitReadLock(); }
         }
     }
 }

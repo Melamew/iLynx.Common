@@ -101,7 +101,6 @@
     <Compile Include="IUserRegistrationService.cs" />
     <Compile Include="PasswordHashingService.cs" />
     <Compile Include="ServerAuthenticationModule.cs" />
-    <Compile Include="AuthenticationService.cs" />
     <Compile Include="Server\CredentialAuthenticationService.cs" />
     <Compile Include="Server\UserListService.cs" />
     <Compile Include="UserRegistrationService.cs" />

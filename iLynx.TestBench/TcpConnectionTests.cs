@@ -44,7 +44,7 @@ namespace iLynx.TestBench
                     timerService);
             RunClientSubscriber(
                 new StubConnection<SimpleMessage<int>, int>(new ThreadManager(),
-                    new CryptoConnectionStubBuilder<SimpleMessage<int>, int>(serializer, keyExchangeNegotiator)),
+                    new CryptoConnectionStubBuilder<SimpleMessage<int>, int>(serializer, keyExchangeNegotiator, timerService)),
                 listener, 5392);
         }
 

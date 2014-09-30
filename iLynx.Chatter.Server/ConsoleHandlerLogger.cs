@@ -1,4 +1,3 @@
-using System;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
 using iLynx.Common.Configuration;
@@ -29,7 +28,7 @@ namespace iLynx.Chatter.Server
         {
             var value = (int) level;
             if (value >= logLevel)
-                consoleHandler.Log("[{0}:{1}]: {2}", level.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().FullName, message);
+                consoleHandler.Log("[{0}:{1}]: {2}", level.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().Name, message);
         }
     }
 }

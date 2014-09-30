@@ -7,12 +7,12 @@ namespace iLynx.Networking.TCP
 {
     public class TcpStubListener<TMessage, TMessageKey> : SocketListenerBase, IConnectionStubListener<TMessage, TMessageKey> where TMessage : IKeyedMessage<TMessageKey>
     {
-        private readonly ITimerService timerService;
+        protected readonly ITimerService TimerService;
         protected readonly ISerializer<TMessage> Serializer;
 
         public TcpStubListener(ISerializer<TMessage> serializer, ITimerService timerService)
         {
-            this.timerService = Guard.IsNull(() => timerService);
+            TimerService = Guard.IsNull(() => timerService);
             Serializer = Guard.IsNull(() => serializer);
         }
 
@@ -20,7 +20,7 @@ namespace iLynx.Networking.TCP
         {
             var socket = AcceptSocket();
             if (null == socket) return null;
-            return new StreamedSocketConnectionStub<TMessage, TMessageKey>(Serializer, socket, timerService);
+            return new StreamedSocketConnectionStub<TMessage, TMessageKey>(Serializer, socket, TimerService);
         }
     }
 }

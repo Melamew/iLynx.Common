@@ -76,19 +76,30 @@
     <Compile Include="ClientBroadcastMessagingModule.cs" />
     <Compile Include="ServerBroadcastMessagingModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\BroadcastMessagingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\iLynx.Chatter.Infrastructure\iLynx.Chatter.Infrastructure.csproj">
       <Project>{ED0CB42A-7D74-4AE4-99FE-6EDC3B8C4143}</Project>
       <Name>iLynx.Chatter.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">
+      <Project>{1241AC19-9872-4126-8915-3A34919E1705}</Project>
+      <Name>iLynx.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.Networking\iLynx.Networking.csproj">
+      <Project>{FD13EB83-1471-4B59-9FCE-75AB804A0A3F}</Project>
+      <Name>iLynx.Networking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.PubSub\iLynx.PubSub.csproj">
+      <Project>{DF55B984-7E5E-447C-9D68-D93F9FB0C227}</Project>
+      <Name>iLynx.PubSub</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Server\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

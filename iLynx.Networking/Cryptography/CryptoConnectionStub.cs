@@ -3,8 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Security.Cryptography;
+using System.Threading;
 using iLynx.Common;
 using iLynx.Common.Serialization;
+using iLynx.Common.Threading;
 using iLynx.Networking.Interfaces;
 
 namespace iLynx.Networking.Cryptography
@@ -12,21 +14,36 @@ namespace iLynx.Networking.Cryptography
     public class CryptoConnectionStub<TMessage, TMessageKey> : ICryptoConnectionStub<TMessage, TMessageKey>
         where TMessage : IKeyedMessage<TMessageKey>
     {
+        private readonly int pollingInterval;
+        private readonly ITimerService timerService;
         private readonly Socket socket;
         private readonly ILinkNegotiator linkNegotiator;
         private readonly ISerializer<TMessage> serializer;
         private readonly Stream baseStream;
+        private bool isDisposed;
+        private readonly int connectionTimer;
         private readonly RandomNumberGenerator reasonablySecurePrng = RandomNumberGenerator.Create();
         private int blockSize = -1;
         private Stream outputStream;
         private Stream inputStream;
 
-        public CryptoConnectionStub(ISerializer<TMessage> serializer, Socket socket, ILinkNegotiator linkNegotiator)
+        public CryptoConnectionStub(ISerializer<TMessage> serializer, Socket socket, ILinkNegotiator linkNegotiator, ITimerService timerService, int pollingInterval = 1000)
         {
+            this.pollingInterval = pollingInterval;
+            this.timerService = Guard.IsNull(() => timerService);
             this.socket = Guard.IsNull(() => socket);
             this.linkNegotiator = Guard.IsNull(() => linkNegotiator);
             this.serializer = Guard.IsNull(() => serializer);
             baseStream = new NetworkStream(socket);
+            connectionTimer = this.timerService.StartNew(OnCheckConnectionStatus, pollingInterval, Timeout.Infinite);
+        }
+
+        private void OnCheckConnectionStatus()
+        {
+            if (socket.IsConnected())
+                timerService.Change(connectionTimer, pollingInterval, Timeout.Infinite);
+            else
+                Dispose();
         }
 
         public bool NegotiateTransportKeys()
@@ -35,7 +52,6 @@ namespace iLynx.Networking.Cryptography
             return linkNegotiator.SetupConnection(baseStream, out inputStream, out outputStream, out blockSize);
         }
 
-        private bool isDisposed;
         public void Dispose()
         {
             if (isDisposed) return;

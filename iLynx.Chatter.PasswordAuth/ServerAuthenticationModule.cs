@@ -15,13 +15,12 @@ namespace iLynx.Chatter.AuthenticationModule
 
         protected override void RegisterTypes()
         {
-            Container.RegisterInstance<IAuthenticationService<ChatMessage, int>>(
-                Container.Resolve<AuthenticationService>());
             Container.RegisterType<IPasswordHashingService, PasswordHashingService>(
                 new ContainerControlledLifetimeManager());
             Container.RegisterType<IUserRegistrationService, UserRegistrationService>(
                 new ContainerControlledLifetimeManager());
-            Container.RegisterInstance(Container.Resolve<CredentialAuthenticationService>());
+            Container.RegisterInstance<IAuthenticationService<ChatMessage, int>>(
+                Container.Resolve<CredentialAuthenticationService>());
             Container.RegisterInstance(Container.Resolve<UserListService>());
         }
     }
