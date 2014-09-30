@@ -7,13 +7,25 @@ namespace iLynx.Chatter.NHibernateModule.Mappings
     {
         public UserMap()
         {
-            Id(x => x.UniqueId);
+            Id(x => x.UniqueId).GeneratedBy.GuidNative();
             Map(x => x.Username)
+                .Index("idx_UserName")
                 .Not.Nullable();
             Map(x => x.PasswordHash)
                 .Not.Nullable();
             Map(x => x.PasswordSalt)
                 .Not.Nullable();
+            HasMany(x => x.Permissions)
+                .Cascade.None();
+        }
+    }
+
+    public class PermissionMap : ClassMap<Permission>
+    {
+        public PermissionMap()
+        {
+            Id(x => x.UniqueId).GeneratedBy.GuidNative();
+            Map(x => x.PermissionIdentifier);
         }
     }
 }

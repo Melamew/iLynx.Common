@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Domain;
@@ -25,8 +26,34 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             this.userAdapter = Guard.IsNull(() => userAdapter);
             consoleHandler.RegisterCommand("user", OnUserCommand, "Commands relating to users", QuerySubCommandCallback);
             commandRegistry.RegisterCommand("list", OnListUsers, "Lists all users");
-            commandRegistry.RegisterCommand("register", OnRegisterUser, "Registers a new user, ie. register {username} {password}");
-            commandRegistry.RegisterCommand("passwd", OnChangeUserPassword, "Change the users password, ie. passwd {username} {newpassword}");
+            commandRegistry.RegisterCommand("register", OnRegisterUser, "Registers a new user. register {username} {password}");
+            commandRegistry.RegisterCommand("passwd", OnChangeUserPassword, "Change the users password. passwd {username} {newpassword}");
+            commandRegistry.RegisterCommand("permissions", OnListPermissions, "Lists the permissions of the specified user");
+        }
+
+        private string GetUsername(IEnumerable<string> source)
+        {
+            return source.FirstOrDefault();
+        }
+
+        private void OnListPermissions(string[] obj)
+        {
+            var userName = GetUsername(obj);
+            var user = userAdapter.GetFirst(x => x.Username == userName);
+            if (null == user)
+            {
+                consoleHandler.WriteLine("Could not find a user with username {0}", userName);
+                return;
+            }
+            var perms = user.Permissions;
+            if (null == perms)
+            {
+                consoleHandler.WriteLine("User {0} does not have any permissions", userName);
+                return;
+            }
+            consoleHandler.WriteLine("User {0} has the following permissions:", userName);
+            foreach (var permission in user.Permissions)
+                consoleHandler.WriteLine("  {0}", permission.PermissionIdentifier);
         }
 
         private void OnChangeUserPassword(string[] obj)
