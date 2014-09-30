@@ -31,7 +31,7 @@ namespace iLynx.PubSub
                     continue;
                 }
                 var item = messageQueue.Dequeue();
-                RuntimeCommon.DefaultLogger.Log(LoggingType.Debug, this, string.Format("Publish: {0}", item.Item1));
+                RuntimeCommon.DefaultLogger.Log(LogLevel.Debug, this, string.Format("Publish: {0}", item.Item1));
                 Publish(item.Item1, item.Item2);
             }
         }
@@ -42,7 +42,7 @@ namespace iLynx.PubSub
             if (null == subscribers) return;
             foreach (var subscriber in subscribers.Where(x => null != x))
                 try { subscriber.Invoke(message); }
-                catch (Exception e) { RuntimeCommon.DefaultLogger.Log(LoggingType.Error, this, string.Format("Unable to send {0} to {1}, got Exception {2}", message, subscriber, e)); }
+                catch (Exception e) { RuntimeCommon.DefaultLogger.Log(LogLevel.Error, this, string.Format("Unable to send {0} to {1}, got Exception {2}", message, subscriber, e)); }
         }
 
         public override void Publish<TMessage>(TMessage message)

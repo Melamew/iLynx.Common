@@ -28,13 +28,13 @@
         /// <summary>
         /// Writes the specified message to the contained <see cref="ILogger"/>
         /// </summary>
-        /// <param name="type">The <see cref="LoggingType"/> of the message</param>
+        /// <param name="level">The <see cref="LogLevel"/> of the message</param>
         /// <param name="sender">The component that sent the message</param>
         /// <param name="message">The actual message</param>
-        public void Log(LoggingType type, object sender, string message)
+        public void Log(LogLevel level, object sender, string message)
         {
             if (logger != null)
-                logger.Log(type, sender, message);
+                logger.Log(level, sender, message);
         }
     }
 }

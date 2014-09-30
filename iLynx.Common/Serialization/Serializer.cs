@@ -202,7 +202,7 @@ namespace iLynx.Common.Serialization
 
         private static void OnGetSerializerError<T>()
         {
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Error, null, string.Format("Something went wrong here... Tried to get Serializer for Type: {0}, but was unsuccesful", typeof(T)));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Error, null, string.Format("Something went wrong here... Tried to get Serializer for Type: {0}, but was unsuccesful", typeof(T)));
         }
 
         /// <summary>

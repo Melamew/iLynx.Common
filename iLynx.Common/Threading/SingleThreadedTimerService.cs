@@ -64,7 +64,7 @@ namespace iLynx.Common.Threading
             var delta = nextDue - DateTime.Now;
             if (delta.TotalMilliseconds < 0)
             {
-                RuntimeCommon.DefaultLogger.Log(LoggingType.Warning, this, string.Format("Next timer interval is < 0 milliseconds away ({0}), restarting at 0", delta));
+                RuntimeCommon.DefaultLogger.Log(LogLevel.Warning, this, string.Format("Next timer interval is < 0 milliseconds away ({0}), restarting at 0", delta));
                 delta = TimeSpan.FromMilliseconds(0);
             }
             mainTimer.Change(delta, Timeout.InfiniteTimeSpan);
@@ -87,7 +87,7 @@ namespace iLynx.Common.Threading
         public int StartNew(Action callback, int timeout, int interval)
         {
             Guard.IsNull(() => callback);
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, this, string.Format("StartNew from {0}, timeout {1} ms, interval {2} ms", callback.Target, timeout, interval));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, this, string.Format("StartNew from {0}, timeout {1} ms, interval {2} ms", callback.Target, timeout, interval));
             TimeSpan dueIn;
             var definition = MakeDefinition(callback, timeout, interval, out dueIn);
             callbackLock.EnterWriteLock();

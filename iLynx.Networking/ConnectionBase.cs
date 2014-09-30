@@ -45,7 +45,7 @@ namespace iLynx.Networking
                 }
                 catch (Exception e)
                 {
-                    RuntimeCommon.DefaultLogger.Log(LoggingType.Error, this,
+                    RuntimeCommon.DefaultLogger.Log(LogLevel.Error, this,
                         string.Format("Unable to notify {0} of keyedMessage received, key was {1}, exception was {2}",
                             subscriber, keyedMessage.Key, e));
                 }

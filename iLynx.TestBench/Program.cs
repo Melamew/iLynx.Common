@@ -160,7 +160,7 @@ namespace iLynx.TestBench
             var errors = 0;
             var totalAverages = new double[2];
             var started = DateTime.Now;
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, null, string.Format("Started Test at {0}", started));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, null, string.Format("Started Test at {0}", started));
             foreach (var random in CreateSomething(count))
             {
                 ++i;
@@ -199,9 +199,9 @@ namespace iLynx.TestBench
                 totalBytes = 0;
                 lastUpdate = DateTime.Now;
             }
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, null, "Completed Test run at {0}");
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, null, string.Format("Average Serialize Speed:   {0} MiB/s", totalAverages[0] / count));
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, null, string.Format("Average Deserialize Speed: {0} MiB/s", totalAverages[1] / count));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, null, "Completed Test run at {0}");
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, null, string.Format("Average Serialize Speed:   {0} MiB/s", totalAverages[0] / count));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, null, string.Format("Average Deserialize Speed: {0} MiB/s", totalAverages[1] / count));
             //for (var i = 0; i < 10; ++i)
             //    Console.WriteLine("Pass: {0}", pass);
         }

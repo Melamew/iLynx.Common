@@ -25,7 +25,7 @@ namespace iLynx.Common.WPF
         /// <param name="uri">The URI.</param>
         public void AddResource(Uri uri)
         {
-            logger.Log(LoggingType.Information, this, string.Format("Attempting to add resource: {0}", uri));
+            logger.Log(LogLevel.Information, this, string.Format("Attempting to add resource: {0}", uri));
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = uri });
         }
 

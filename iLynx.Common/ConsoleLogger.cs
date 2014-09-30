@@ -53,12 +53,12 @@ namespace iLynx.Common
         /// <summary>
         /// Writes the specified message to the console
         /// </summary>
-        /// <param name="type">The type of message</param>
+        /// <param name="level">The level of message</param>
         /// <param name="sender">The sender of the message</param>
         /// <param name="message">The message itself</param>
-        public void Log(LoggingType type, object sender, string message)
+        public void Log(LogLevel level, object sender, string message)
         {
-            var line = string.Format("[{0}:{1}]: {2}", type.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().Name, message);
+            var line = string.Format("[{0}:{1}]: {2}", level.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().Name, message);
             Console.WriteLine(line);
             if (writer == null) return;
             writer.WriteLine(line);

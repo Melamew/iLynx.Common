@@ -114,12 +114,12 @@ namespace iLynx.Common.WPF.Themes
                         //target.Resources.MergedDictionaries.Remove(dict);
                         return;
                     target.Resources.MergedDictionaries.Add(dict);
-                    RuntimeCommon.DefaultLogger.Log(LoggingType.Information, null, string.Format("Applied theme: {0}", theme));
+                    RuntimeCommon.DefaultLogger.Log(LogLevel.Information, null, string.Format("Applied theme: {0}", theme));
                 }
             }
             catch (Exception e)
             {
-                RuntimeCommon.DefaultLogger.Log(LoggingType.Error, null, e.ToString());
+                RuntimeCommon.DefaultLogger.Log(LogLevel.Error, null, e.ToString());
             }
         }
 

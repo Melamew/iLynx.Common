@@ -14,6 +14,7 @@ namespace iLynx.Chatter.Server
         private readonly Dictionary<ConsoleKey, Action> keyHandlers = new Dictionary<ConsoleKey, Action>();
         private readonly List<string> commandHistory = new List<string>();
         private int currentHistoryIndex = -1;
+        private bool isExecuting;
 
         public ConsoleInputHandler(ICommandHandlerRegistry registry)
         {
@@ -105,15 +106,15 @@ namespace iLynx.Chatter.Server
         private void HandleTab()
         {
             SuggestAutoComplete(currentLine);
-            Console.WriteLine();
             ReWriteLine();
         }
 
         private void HandleEnter()
         {
-            ExecuteCommand(currentLine);
-            currentLine = string.Empty;
-            Console.WriteLine();
+            isExecuting = true;
+            ExecuteCommand();
+            //Console.WriteLine();
+            isExecuting = false;
             ReWriteLine();
         }
 
@@ -135,13 +136,23 @@ namespace iLynx.Chatter.Server
 
         private void ReWriteLine()
         {
+            ClearLine();
+            WritePrompt();
+        }
+
+        private void WritePrompt()
+        {
+            var line = path + terminator + currentLine;
+            Console.Write(line);
+            SetCursorToEnd(line);
+        }
+
+        private static void ClearLine()
+        {
             var top = Console.CursorTop;
             Console.SetCursorPosition(0, top);
             Console.Write(" ".Repeat(Console.BufferWidth - 1).CombineToString());
             Console.SetCursorPosition(0, top);
-            var line = path + terminator + currentLine;
-            Console.Write(line);
-            SetCursorToEnd(line);
         }
 
         private void HandleDelete()
@@ -166,13 +177,15 @@ namespace iLynx.Chatter.Server
             Console.Write(keyInfo.KeyChar);
         }
 
-        private void ExecuteCommand(string line)
+        private void ExecuteCommand()
         {
+            var line = currentLine;
+            currentLine = string.Empty;
+            Console.WriteLine();
             // TODO: Move this down to bottom; only here for testing purposes
             var commandLine = GetCommandLine(line);
-            Console.WriteLine();
             if (registry.Execute(commandLine.Item1, commandLine.Item2))
-                commandHistory.Add(line);
+                commandHistory.Insert(0, line);
             else
             {
                 if (string.IsNullOrEmpty(commandLine.Item1)) return;
@@ -194,13 +207,13 @@ namespace iLynx.Chatter.Server
             if (0 >= matches.Length) return;
             if (matches.Length == 1)
                 currentLine = matches[0].Command;
+            Console.WriteLine();
             PrintCommands(matches);
         }
 
         public void PrintCommands(CommandDefinition[] commands)
         {
             var maxLength = commands.Max(x => x.Command.Length) + 4;
-            Console.WriteLine();
             foreach (var command in commands)
             {
                 Console.Write(command.Command);
@@ -253,14 +266,15 @@ namespace iLynx.Chatter.Server
 
         public void Log(string format, params object[] args)
         {
-            Console.WriteLine();
-            Console.WriteLine(format, args);
-            ReWriteLine();
+            WriteLine(format, args);
         }
 
         public void WriteLine(string format, params object[] args)
         {
+            ClearLine();
             Console.WriteLine(format, args);
+            if (isExecuting) return;
+            WritePrompt();
         }
     }
 }

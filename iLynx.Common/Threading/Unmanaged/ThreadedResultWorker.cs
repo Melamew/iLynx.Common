@@ -40,7 +40,7 @@ namespace iLynx.Common.Threading.Unmanaged
             {
                 if (!completed)
                 {
-                    logger.Log(LoggingType.Critical, this, "Attempted to retrieve result before worker had finished");
+                    logger.Log(LogLevel.Critical, this, "Attempted to retrieve result before worker had finished");
                     throw new NotSupportedException(
                         "The results cannot be retrieved before the worker has completed executing");
                 }
@@ -84,18 +84,18 @@ namespace iLynx.Common.Threading.Unmanaged
         {
             if (worker != null && !completed)
             {
-                logger.Log(LoggingType.Critical, this, "Attempted to start a running worker");
+                logger.Log(LogLevel.Critical, this, "Attempted to start a running worker");
                 throw new NotSupportedException(
                     "This worker has already been started and cannot be started again until it has completed, failed or has been aborted");
             }
             if (worker != null && completed)
             {
-                logger.Log(LoggingType.Debug, this, "Ensuring worker thread is dead");
+                logger.Log(LogLevel.Debug, this, "Ensuring worker thread is dead");
                 Abort();
                 result = default(TCompletedArgs);
             }
             worker = new Thread(DoWork) { Name = ToString() };
-            logger.Log(LoggingType.Information, this, string.Format("Starting worker at {0}", DateTime.Now));
+            logger.Log(LogLevel.Information, this, string.Format("Starting worker at {0}", DateTime.Now));
             worker.Start(args);
         }
 
@@ -132,7 +132,7 @@ namespace iLynx.Common.Threading.Unmanaged
         /// </summary>
         private void OnStarted()
         {
-            logger.Log(LoggingType.Information, this, string.Format("Worker started at {0}", DateTime.Now));
+            logger.Log(LogLevel.Information, this, string.Format("Worker started at {0}", DateTime.Now));
             if (WorkStarted != null)
                 WorkStarted.BeginInvoke(this, iar => WorkStarted.EndInvoke(iar), null);
         }
@@ -143,7 +143,7 @@ namespace iLynx.Common.Threading.Unmanaged
         /// <param name="args">The TCompletedArgs to send in the event</param>
         private void OnCompleted(TCompletedArgs args)
         {
-            logger.Log(LoggingType.Information, this, string.Format("Worker completed at {0}", DateTime.Now));
+            logger.Log(LogLevel.Information, this, string.Format("Worker completed at {0}", DateTime.Now));
             if (WorkCompleted != null)
                 WorkCompleted.BeginInvoke(this, args, iar => WorkCompleted.EndInvoke(iar), null);
         }
@@ -162,7 +162,7 @@ namespace iLynx.Common.Threading.Unmanaged
         /// </summary>
         private void OnFailed(Exception e)
         {
-            logger.Log(LoggingType.Error, this, string.Format("{0}: {1}", MethodBase.GetCurrentMethod(), e));
+            logger.Log(LogLevel.Error, this, string.Format("{0}: {1}", MethodBase.GetCurrentMethod(), e));
             if (WorkFailed != null)
                 WorkFailed.BeginInvoke(this, e, iar => WorkFailed.EndInvoke(iar), null);
         }
@@ -203,7 +203,7 @@ namespace iLynx.Common.Threading.Unmanaged
             }
             catch (Exception e)
             {
-                logger.Log(LoggingType.Error, this, string.Format("{0}: {1}", MethodBase.GetCurrentMethod(), e));
+                logger.Log(LogLevel.Error, this, string.Format("{0}: {1}", MethodBase.GetCurrentMethod(), e));
             }
         }
 

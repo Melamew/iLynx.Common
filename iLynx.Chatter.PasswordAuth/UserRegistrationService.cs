@@ -31,7 +31,7 @@ namespace iLynx.Chatter.AuthenticationModule
                 PasswordSalt = salt,
             };
             userAdapter.Save(user);
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, this, string.Format("Inserted user {0} with password {1}", username, user.PasswordHash.ToString(":")));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, this, string.Format("Inserted user {0} with password {1}", username, user.PasswordHash.ToString(":")));
             return true;
         }
 

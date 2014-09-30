@@ -23,12 +23,12 @@ namespace iLynx.Common.WPF.Behaviours
         {
             var textBox = sender as TextBox;
             if (null == textBox) return;
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, typeof(TextBoxSelectionBehaviour), string.Format("Text Changed: {0}", textBox.Text));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, typeof(TextBoxSelectionBehaviour), string.Format("Text Changed: {0}", textBox.Text));
         }
 
         private static void TextBoxOnGotFocus(object sender, RoutedEventArgs routedEventArgs)
         {
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, typeof(TextBoxSelectionBehaviour), string.Format("GotFocus: {0}", routedEventArgs));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, typeof(TextBoxSelectionBehaviour), string.Format("GotFocus: {0}", routedEventArgs));
             var textField = sender as TextBox;
             if (null == textField) return;
             textField.SelectAll();

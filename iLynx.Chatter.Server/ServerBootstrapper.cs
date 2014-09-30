@@ -9,7 +9,6 @@ using iLynx.Common.Threading;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Cryptography;
 using iLynx.Networking.Interfaces;
-using iLynx.Networking.TCP;
 using iLynx.PubSub;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
@@ -63,6 +62,7 @@ namespace iLynx.Chatter.Server
         {
             Container.RegisterType<ICommandHandlerRegistry, CommandHandlerRegistry>(new PerResolveLifetimeManager());
             Container.RegisterInstance<IConsoleHandler>(Container.Resolve<ConsoleInputHandler>(), new ContainerControlledLifetimeManager());
+            Container.RegisterType<IConfigurationManager, SingletonConfigurationManager>(new ContainerControlledLifetimeManager());
             RuntimeCommon.DefaultLogger = Container.Resolve<ConsoleHandlerLogger>();
             Container.RegisterType(typeof(IAlgorithmContainer<>), typeof(AlgorithmContainer<>), new ContainerControlledLifetimeManager());
             Container.RegisterType<ILinkNegotiator, KeyExchangeLinkNegotiator>(new ContainerControlledLifetimeManager());
@@ -76,7 +76,6 @@ namespace iLynx.Chatter.Server
             Container.RegisterType<ISerializer<ChatMessage>, ChatMessageSerializer>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IThreadManager, ThreadManager>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IBitConverter, BigEndianBitConverter>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<IConfigurationManager, SingletonConfigurationManager>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance(RuntimeCommon.DefaultLogger);
         }
 

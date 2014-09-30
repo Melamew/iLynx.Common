@@ -36,7 +36,7 @@ namespace iLynx.Chatter.AuthenticationModule
             var derriveBytes = new Rfc2898DeriveBytes(password, saltBytes);
             var bytes = derriveBytes.GetBytes(keySizeValue.Value);
             var storedHash = user.PasswordHash;
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Debug, this, string.Format("Comparing Hashes:\r\n{0}\r\n{1}", storedHash.ToString(":"), bytes.ToString(":")));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Debug, this, string.Format("Comparing Hashes:\r\n{0}\r\n{1}", storedHash.ToString(":"), bytes.ToString(":")));
             return bytes.SequenceEqual(storedHash);
         }
     }

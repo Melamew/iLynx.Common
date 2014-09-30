@@ -3,31 +3,31 @@
     /// <summary>
     /// 
     /// </summary>
-    public enum LoggingType
+    public enum LogLevel
     {
         /// <summary>
         /// 
         /// </summary>
-        Error,
+        Error = 10,
 
         /// <summary>
         /// 
         /// </summary>
-        Warning,
+        Warning = 5,
 
         /// <summary>
         /// 
         /// </summary>
-        Critical,
+        Critical = 50,
 
         /// <summary>
         /// 
         /// </summary>
-        Debug,
+        Debug = 0,
 
         /// <summary>
         /// 
         /// </summary>
-        Information,
+        Information = 1,
     }
 }

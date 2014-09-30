@@ -30,14 +30,14 @@ namespace iLynx.PubSub
             if (null == subscribers) return;
             foreach (var subscriber in subscribers.Where(x => null != x))
                 try { subscriber.Invoke(message); }
-                catch (Exception e) { RuntimeCommon.DefaultLogger.Log(LoggingType.Error, this, string.Format("Unable to send {0} to {1}, got Exception {2}", message, subscriber, e)); }
+                catch (Exception e) { RuntimeCommon.DefaultLogger.Log(LogLevel.Error, this, string.Format("Unable to send {0} to {1}, got Exception {2}", message, subscriber, e)); }
         }
 
         private void Publish<TMessage>(TMessage message, IEnumerable<dynamic> subscribers)
         {
             foreach (var subscriber in subscribers)
                 try { subscriber.Invoke(message); }
-                catch (Exception e) { RuntimeCommon.DefaultLogger.Log(LoggingType.Error, this, string.Format("Unable to send {0} to {1}, got Exception {2}", message, subscriber, e)); }
+                catch (Exception e) { RuntimeCommon.DefaultLogger.Log(LogLevel.Error, this, string.Format("Unable to send {0} to {1}, got Exception {2}", message, subscriber, e)); }
         }
 
         public virtual async Task PublishAsync<TMessage>(TMessage message) where TMessage : T

@@ -8,9 +8,9 @@
 		/// <summary>
 		/// Writes a line to the log (Whichever that would be)
 		/// </summary>
-		/// <param name="type">The Type of logging</param>
+		/// <param name="level">The Type of logging</param>
 		/// <param name="sender">Should contain the sending object</param>
 		/// <param name="message">The message to post to the log</param>
-		void Log(LoggingType type, object sender, string message);
+		void Log(LogLevel level, object sender, string message);
 	}
 }

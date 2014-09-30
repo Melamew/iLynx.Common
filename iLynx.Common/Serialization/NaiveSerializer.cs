@@ -141,8 +141,8 @@ namespace iLynx.Common.Serialization
         /// <param name="m">The m.</param>
         private void PostQuit(Exception e, MethodBase m)
         {
-            logger.Log(LoggingType.Error, this, string.Format("{0}: {1}", e, m));
-            logger.Log(LoggingType.Critical, this, "Last Error was unrecoverable. Giving up");
+            logger.Log(LogLevel.Error, this, string.Format("{0}: {1}", e, m));
+            logger.Log(LogLevel.Critical, this, "Last Error was unrecoverable. Giving up");
         }
 
         // ReSharper disable StaticFieldInGenericType

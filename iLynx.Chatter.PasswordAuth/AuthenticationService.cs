@@ -43,7 +43,7 @@ namespace iLynx.Chatter.AuthenticationModule
             {
                 if (authenticatedClients.Contains(message.ClientId)) return;
                 authenticatedClients.Add(message.ClientId);
-                RuntimeCommon.DefaultLogger.Log(LoggingType.Information, this, string.Format("Client {0} authenticated as {1}", message.ClientId, message.AuthenticationMessage));
+                RuntimeCommon.DefaultLogger.Log(LogLevel.Information, this, string.Format("Client {0} authenticated as {1}", message.ClientId, message.AuthenticationMessage));
             }
             finally { clientLock.ExitWriteLock(); }
         }

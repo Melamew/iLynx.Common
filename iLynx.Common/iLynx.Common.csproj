@@ -159,7 +159,7 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="IValidatable.cs" />
     <Compile Include="LoggingProxy.cs" />
-    <Compile Include="LoggingType.cs" />
+    <Compile Include="LogLevel.cs" />
     <Compile Include="NotificationBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -59,7 +59,7 @@ namespace iLynx.Common.Threading
             catch (ThreadAbortException) { }
             catch (Exception e)
             {
-                logger.Log(LoggingType.Error, this, string.Format("Thread has crashed: {0}", e));
+                logger.Log(LogLevel.Error, this, string.Format("Thread has crashed: {0}", e));
                 exception = e;
             }
             OnThreadExit();

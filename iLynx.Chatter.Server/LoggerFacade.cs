@@ -7,7 +7,7 @@ namespace iLynx.Chatter.Server
     {
         public void Log(string message, Category category, Priority priority)
         {
-            RuntimeCommon.DefaultLogger.Log(LoggingType.Information, this, message);
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, this, message);
         }
     }
 }
