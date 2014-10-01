@@ -4,6 +4,6 @@ namespace iLynx.Chatter.Infrastructure.Services
 {
     public interface IUserPermissionService
     {
-        bool HasPermission(User user, Permission permission);
+        bool HasPermission(User user, string permissionIdentifier);
     }
 }

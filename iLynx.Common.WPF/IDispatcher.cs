@@ -48,6 +48,20 @@ namespace iLynx.Common.WPF
         void Invoke<TParam>(Action<TParam> action, TParam param);
 
         /// <summary>
+        /// Invokes the specified action if it is required by the underlying dispatcher.
+        /// </summary>
+        /// <typeparam name="TParam"></typeparam>
+        /// <param name="action"></param>
+        /// <param name="param"></param>
+        void InvokeIfRequired<TParam>(Action<TParam> action, TParam param);
+
+        /// <summary>
+        /// Invokes the specified action if it is required by the underlying dispatcher.
+        /// </summary>
+        /// <param name="action"></param>
+        void InvokeIfRequired(Action action);
+
+        /// <summary>
         /// Invokes the specified func.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>

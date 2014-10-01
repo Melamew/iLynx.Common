@@ -86,6 +86,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MainRegionView.xaml.cs">
+      <DependentUpon>MainRegionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowingService.cs" />
     <Page Include="ChatterShell.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -99,6 +102,10 @@
       <DependentUpon>ChatterShell.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MainRegionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientBootstrapper.cs" />
@@ -131,6 +138,10 @@
     <ProjectReference Include="..\iLynx.Chatter.Infrastructure\iLynx.Chatter.Infrastructure.csproj">
       <Project>{ED0CB42A-7D74-4AE4-99FE-6EDC3B8C4143}</Project>
       <Name>iLynx.Chatter.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.Chatter.WPF\iLynx.Chatter.WPF.csproj">
+      <Project>{E488D852-E94C-472E-AB74-DC0E9B5C42B7}</Project>
+      <Name>iLynx.Chatter.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
       <Project>{569111CC-D436-46E5-BE9E-32B1BAD1B950}</Project>

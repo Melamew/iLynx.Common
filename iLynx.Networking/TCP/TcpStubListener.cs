@@ -19,8 +19,7 @@ namespace iLynx.Networking.TCP
         public virtual IConnectionStub<TMessage, TMessageKey> AcceptNext()
         {
             var socket = AcceptSocket();
-            if (null == socket) return null;
-            return new StreamedSocketConnectionStub<TMessage, TMessageKey>(Serializer, socket, TimerService);
+            return null == socket ? null : new StreamedSocketConnectionStub<TMessage, TMessageKey>(Serializer, socket, TimerService);
         }
     }
 }

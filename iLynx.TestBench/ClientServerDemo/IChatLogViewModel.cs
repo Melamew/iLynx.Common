@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using iLynx.Chatter.BroadcastMessaging;
 
 namespace iLynx.TestBench.ClientServerDemo
 {

@@ -39,14 +39,24 @@ namespace iLynx.Common
             handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        ~NotificationBase()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            
+        }
+
         #region Implementation of IDisposable
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-
+            Dispose(true);
         }
 
         #endregion

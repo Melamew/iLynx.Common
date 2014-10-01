@@ -1,7 +1,6 @@
 using System.Text;
-using iLynx.Chatter.Infrastructure;
 
-namespace iLynx.TestBench.ClientServerDemo
+namespace iLynx.Chatter.Infrastructure
 {
     public class TextMessage : ChatMessage
     {

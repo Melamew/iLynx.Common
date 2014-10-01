@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Windows;
+using iLynx.Chatter.BroadcastMessaging;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.ServerServicesModule;
 using iLynx.Common;

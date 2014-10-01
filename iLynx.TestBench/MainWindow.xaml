@@ -6,6 +6,8 @@
              xmlns:wpf="clr-namespace:iLynx.Common.WPF;assembly=iLynx.Common.WPF"
              xmlns:testBench="clr-namespace:iLynx.TestBench"
              xmlns:extensions="clr-namespace:iLynx.Common.WPF.Extensions;assembly=iLynx.Common.WPF"
+             xmlns:broadcastMessaging="clr-namespace:iLynx.Chatter.BroadcastMessaging;assembly=iLynx.Chatter.BroadcastMessaging"
+             xmlns:broadcastMessaging1="clr-namespace:iLynx.Chatter.WPF;assembly=iLynx.Chatter.WPF"
              mc:Ignorable="d"
              HeaderSize="36"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -53,7 +55,7 @@
             </Style>
         </ListView.ItemContainerStyle>
         <ListView.ItemTemplate>
-            <DataTemplate DataType="{x:Type testBench:ContainerViewModel}">
+            <DataTemplate DataType="{x:Type broadcastMessaging1:ContainerViewModel}">
                 <Expander Content="{Binding Content}"
                           IsExpanded="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"
                           MinWidth="{Binding ContentWidth}"

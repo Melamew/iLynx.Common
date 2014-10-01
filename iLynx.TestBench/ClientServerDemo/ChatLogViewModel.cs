@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Text;
+using iLynx.Chatter.BroadcastMessaging;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
 using iLynx.Common.WPF;
@@ -28,9 +29,10 @@ namespace iLynx.TestBench.ClientServerDemo
             logEntries = new ObservableCollection<LogEntryModel>();
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
+            if (!disposing) return;
             subscriptionManager.Unsubscribe(MessageKeys.TextMessage, OnTextMessageReceived);
         }
 

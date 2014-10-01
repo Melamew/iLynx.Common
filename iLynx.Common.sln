@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.ServerService
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.ClientServicesModule", "iLynx.Chatter.ClientServicesModule\iLynx.Chatter.ClientServicesModule.csproj", "{295D0CA4-AB32-4523-9CC5-AC99E3E48F8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Chatter.WPF", "iLynx.Chatter.WPF\iLynx.Chatter.WPF.csproj", "{E488D852-E94C-472E-AB74-DC0E9B5C42B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +175,14 @@ Global
 		{295D0CA4-AB32-4523-9CC5-AC99E3E48F8A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{295D0CA4-AB32-4523-9CC5-AC99E3E48F8A}.Release|x64.ActiveCfg = Release|Any CPU
 		{295D0CA4-AB32-4523-9CC5-AC99E3E48F8A}.Release|x86.ActiveCfg = Release|Any CPU
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7}.Release|x64.ActiveCfg = Release|Any CPU
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,5 +196,6 @@ Global
 		{3ADE8D8F-3708-43C7-B88D-E77AA96BFAF5} = {A1A937AE-7D1B-4B9E-BF65-4CF517523596}
 		{56057B48-A342-4EDC-8F03-3C339B4B8DB2} = {A1A937AE-7D1B-4B9E-BF65-4CF517523596}
 		{295D0CA4-AB32-4523-9CC5-AC99E3E48F8A} = {A1A937AE-7D1B-4B9E-BF65-4CF517523596}
+		{E488D852-E94C-472E-AB74-DC0E9B5C42B7} = {A1A937AE-7D1B-4B9E-BF65-4CF517523596}
 	EndGlobalSection
 EndGlobal

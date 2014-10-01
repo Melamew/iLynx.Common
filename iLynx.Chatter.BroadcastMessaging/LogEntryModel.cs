@@ -1,6 +1,6 @@
 using System;
 
-namespace iLynx.TestBench.ClientServerDemo
+namespace iLynx.Chatter.BroadcastMessaging
 {
     public class LogEntryModel
     {

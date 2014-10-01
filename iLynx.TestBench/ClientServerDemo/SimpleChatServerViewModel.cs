@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using System.Windows.Automation;
 using System.Windows.Input;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Events;
@@ -74,9 +75,10 @@ namespace iLynx.TestBench.ClientServerDemo
             connectedClients.Remove(vm);
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
+            if (!disposing) return;
             messageSubscriptionManager.Unsubscribe(MessageKeys.TextMessage, OnTextMessageReceived);
             applicationEventBus.Unsubscribe<ClientConnectedEvent>(OnClientConnected);
             applicationEventBus.Unsubscribe<ClientDisconnectedEvent>(OnClientDisconnected);

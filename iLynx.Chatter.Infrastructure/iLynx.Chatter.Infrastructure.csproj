@@ -114,6 +114,7 @@
     <Compile Include="Services\IMenuItem.cs" />
     <Compile Include="Services\IUserPermissionService.cs" />
     <Compile Include="Services\IWindowingService.cs" />
+    <Compile Include="TextMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">

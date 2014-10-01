@@ -1,7 +1,7 @@
 ﻿using System;
 using iLynx.Common;
 
-namespace iLynx.TestBench
+namespace iLynx.Chatter.WPF
 {
     public class ContainerViewModel : NotificationBase
     {

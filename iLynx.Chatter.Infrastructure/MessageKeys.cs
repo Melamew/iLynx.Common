@@ -9,5 +9,6 @@
         public const int CredentialAuthenticationResponse = int.MinValue + 4;
         public const int CredentialAuthenticationRejected = int.MinValue + 5;
         public const int CredentialAuthenticationAccepted = int.MinValue + 6;
+        public const int RequestDenied = int.MinValue + 100;
     }
 }

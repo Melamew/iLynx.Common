@@ -83,6 +83,22 @@ namespace iLynx.Common.WPF
             Dispatcher.Invoke(action, param);
         }
 
+        public void InvokeIfRequired<TParam>(Action<TParam> action, TParam param)
+        {
+            if (!Dispatcher.CheckAccess())
+                Invoke(action, param);
+            else
+                action.Invoke(param);
+        }
+
+        public void InvokeIfRequired(Action action)
+        {
+            if (!Dispatcher.CheckAccess())
+                Invoke(action);
+            else
+                action.Invoke();
+        }
+
         /// <summary>
         /// Invokes the specified func.
         /// </summary>

@@ -27,6 +27,8 @@ namespace iLynx.Common.Collections
 
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+            if (!disposing) return;
             if (-1 == timerId) return;
             timerService.Stop(timerId);
             timerId = -1;
