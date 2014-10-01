@@ -15,7 +15,7 @@ namespace iLynx.TestBench.ClientServerDemo
         private readonly IDispatcher dispatcher;
         private readonly INickManagerService nickManagerService;
         private readonly IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> subscriptionManager;
-        private readonly ObservableCollection<LogEntryModel> logEntries;
+        private readonly ObservableCollection<LogEntry> logEntries;
 
         public ChatLogViewModel(
             IDispatcher dispatcher,
@@ -26,7 +26,7 @@ namespace iLynx.TestBench.ClientServerDemo
             this.nickManagerService = Guard.IsNull(() => nickManagerService);
             this.subscriptionManager = Guard.IsNull(() => subscriptionManager);
             this.subscriptionManager.Subscribe(MessageKeys.TextMessage, OnTextMessageReceived);
-            logEntries = new ObservableCollection<LogEntryModel>();
+            logEntries = new ObservableCollection<LogEntry>();
         }
 
         protected override void Dispose(bool disposing)
@@ -44,11 +44,11 @@ namespace iLynx.TestBench.ClientServerDemo
             {
                 var text = Encoding.Unicode.GetString(keyedMessage.Data);
                 var clientId = keyedMessage.ClientId;
-                logEntries.Add(new LogEntryModel(clientId, nickManagerService.GetNickName(clientId), DateTime.Now, text));
+                logEntries.Add(new LogEntry(clientId, nickManagerService.GetNickName(clientId), DateTime.Now, text));
             }
         }
 
-        public ObservableCollection<LogEntryModel> LogEntries
+        public ObservableCollection<LogEntry> LogEntries
         {
             get { return logEntries; }
         }

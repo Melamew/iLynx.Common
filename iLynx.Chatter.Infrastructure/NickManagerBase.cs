@@ -37,7 +37,7 @@ namespace iLynx.Chatter.Infrastructure
             message.Data = Encoding.Unicode.GetBytes(nickName);
         }
 
-        public string GetNickName(Guid clientId)
+        public virtual string GetNickName(Guid clientId)
         {
             string nick;
             nickLock.EnterReadLock();

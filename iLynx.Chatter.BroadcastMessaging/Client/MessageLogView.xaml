@@ -19,7 +19,7 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type broadcastMessaging:LogEntryModel}">
+                    <DataTemplate DataType="{x:Type broadcastMessaging:LogEntry}">
                         <TextBox IsReadOnly="True"
                              AcceptsReturn="True"
                              TextWrapping="Wrap"

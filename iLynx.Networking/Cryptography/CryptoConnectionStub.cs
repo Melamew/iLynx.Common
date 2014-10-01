@@ -148,8 +148,9 @@ namespace iLynx.Networking.Cryptography
                 }
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                RuntimeCommon.DefaultLogger.Log(LogLevel.Error, this, string.Format("Caught exception {0} when trying to read data", e));
                 totalSize = -1;
                 return default(TMessage);
             }

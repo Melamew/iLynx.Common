@@ -16,7 +16,8 @@ namespace iLynx.Chatter.NHibernateModule.Mappings
             Map(x => x.PasswordSalt)
                 .Not.Nullable();
             HasMany(x => x.Permissions)
-                .Cascade.None();
+                .Cascade
+                .SaveUpdate();
         }
     }
 

@@ -30,7 +30,7 @@ namespace iLynx.Chatter.ServerServicesModule
         
         private CommandDefinition[] QuerySubCommandCallback(string s, string[] strings)
         {
-            return new CommandDefinition[] { new CommandDefinition { Callback = null, Command = s, HelpText = "Blah", QuerySubCommand = null } };
+            return new[] { new CommandDefinition { Callback = null, Command = s, HelpText = "Blah", QuerySubCommand = null } };
         }
 
         private bool TryParse(string[] arguments, out User user, out Permission permission, bool createMissingPermission = false)
@@ -97,7 +97,7 @@ namespace iLynx.Chatter.ServerServicesModule
                 consoleHandler.WriteLine("User {0} has no permissions", userName);
                 return;
             }
-            consoleHandler.WriteLine("User {0} has the following permissions");
+            consoleHandler.WriteLine("User {0} has the following permissions", userName);
             foreach (var permission in user.Permissions)
                 consoleHandler.WriteLine("  {0}", permission.PermissionIdentifier);
         }

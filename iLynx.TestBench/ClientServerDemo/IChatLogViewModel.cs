@@ -5,6 +5,6 @@ namespace iLynx.TestBench.ClientServerDemo
 {
     public interface IChatLogViewModel
     {
-        ObservableCollection<LogEntryModel> LogEntries { get; }
+        ObservableCollection<LogEntry> LogEntries { get; }
     }
 }

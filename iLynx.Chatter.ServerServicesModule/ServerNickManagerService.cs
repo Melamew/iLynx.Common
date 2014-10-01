@@ -26,7 +26,22 @@ namespace iLynx.Chatter.ServerServicesModule
             this.messageBus = Guard.IsNull(() => messageBus);
             messageSubscriptionManager = Guard.IsNull(() => subscriptionManager);
             messageSubscriptionManager.Subscribe(MessageKeys.ChangeNickMessage, HandleChangeNickMessage);
+            messageSubscriptionManager.Subscribe(MessageKeys.RequestNick, OnRequestNick);
             applicationEventBus.Subscribe<ClientAuthenticatedEvent>(OnClientAuthenticated);
+        }
+
+        private void OnRequestNick(ChatMessage keyedMessage, int totalSize)
+        {
+            var requestedClient = new Guid(keyedMessage.Data);
+            var nickName = GetNickName(requestedClient);
+            if (string.IsNullOrEmpty(nickName)) return;
+            messageBus.Publish(new MessageEnvelope<ChatMessage, int>(
+                new ChatMessage
+                {
+                    Key = MessageKeys.ChangeNickMessage,
+                    ClientId = requestedClient,
+                    Data = Encoding.Unicode.GetBytes(nickName)
+                }, keyedMessage.ClientId));
         }
 
         private void OnClientAuthenticated(ClientAuthenticatedEvent message)
@@ -48,10 +63,7 @@ namespace iLynx.Chatter.ServerServicesModule
             if (string.IsNullOrEmpty(nick) || NickExists(nick))
                 SendRequestDenied(client);
             else
-            {
                 NotifyNickChanged(client, nick);
-                applicationEventBus.Publish(new NickChangedEvent(client));
-            }
         }
 
         private void NotifyNickChanged(Guid client, string nick)
@@ -63,6 +75,9 @@ namespace iLynx.Chatter.ServerServicesModule
                 Data = Encoding.Unicode.GetBytes(nick)
             };
             messageBus.Publish(new MessageEnvelope<ChatMessage, int>(message)); // Also send to all other clients to notify them of the change
+            
+            // Remember to notify localy as well
+            applicationEventBus.Publish(new NickChangedEvent(client, nick));
         }
 
         private void SendRequestDenied(Guid client)
