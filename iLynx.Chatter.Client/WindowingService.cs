@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Management.Instrumentation;
-using System.Threading;
 using System.Windows;
 using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;

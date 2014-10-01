@@ -25,7 +25,9 @@ namespace iLynx.Chatter.NHibernateModule.Mappings
         public PermissionMap()
         {
             Id(x => x.UniqueId).GeneratedBy.GuidNative();
-            Map(x => x.PermissionIdentifier);
+            Map(x => x.PermissionIdentifier)
+                .Index("idx_permissionIdentifier")
+                .Unique();
         }
     }
 }

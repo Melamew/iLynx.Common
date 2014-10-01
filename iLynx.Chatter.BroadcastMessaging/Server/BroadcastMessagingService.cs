@@ -13,6 +13,7 @@ namespace iLynx.Chatter.BroadcastMessaging.Server
     {
         public const string CanBroadcast = "BroadcastPermissions.Broadcast";
     }
+
     public class BroadcastMessagingService : IDisposable
     {
         private readonly IUserPermissionService permissionService;
@@ -30,7 +31,13 @@ namespace iLynx.Chatter.BroadcastMessaging.Server
             this.authenticationService = Guard.IsNull(() => authenticationService);
             this.messageSubscriptionManager = Guard.IsNull(() => messageSubscriptionManager);
             this.messageBus = Guard.IsNull(() => messageBus);
+            RegisterPermissions();
             Subscribe();
+        }
+
+        private void RegisterPermissions()
+        {
+            permissionService.CreatePermission(BroadcastPermissions.CanBroadcast);
         }
 
         ~BroadcastMessagingService()
@@ -41,6 +48,11 @@ namespace iLynx.Chatter.BroadcastMessaging.Server
         private void Subscribe()
         {
             messageSubscriptionManager.Subscribe(MessageKeys.TextMessage, OnMessageReceived);
+        }
+
+        private void Unsubscribe()
+        {
+            messageSubscriptionManager.Unsubscribe(MessageKeys.TextMessage, OnMessageReceived);
         }
 
         private void OnMessageReceived(ChatMessage keyedMessage, int totalSize)
@@ -77,7 +89,7 @@ namespace iLynx.Chatter.BroadcastMessaging.Server
 
         protected virtual void Dispose(bool disposing)
         {
-            
+            Unsubscribe();
         }
     }
 }

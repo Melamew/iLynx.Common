@@ -1,4 +1,5 @@
 ﻿using iLynx.Chatter.Infrastructure;
+using iLynx.Chatter.Infrastructure.Services;
 using Microsoft.Practices.Unity;
 
 namespace iLynx.Chatter.ServerServicesModule
@@ -13,6 +14,7 @@ namespace iLynx.Chatter.ServerServicesModule
         {
             Container.RegisterInstance<INickManagerService>(Container.Resolve<ServerNickManagerService>(),
                 new ContainerControlledLifetimeManager());
+            Container.RegisterInstance<IUserPermissionService>(Container.Resolve<UserPermissionService>(), new ContainerControlledLifetimeManager());
         }
     }
 }

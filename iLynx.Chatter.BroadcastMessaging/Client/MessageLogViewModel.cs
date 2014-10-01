@@ -81,6 +81,7 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
         private async void OnSend()
         {
             await messageBus.PublishAsync(new MessageEnvelope<ChatMessage, int>(new TextMessage(chatLine)));
+            ChatLine = string.Empty;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using iLynx.Chatter.Infrastructure;
+using iLynx.Chatter.Infrastructure.Authentication;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
 using iLynx.Networking.ClientServer;
@@ -25,6 +26,13 @@ namespace iLynx.Chatter.ServerServicesModule
             this.messageBus = Guard.IsNull(() => messageBus);
             messageSubscriptionManager = Guard.IsNull(() => subscriptionManager);
             messageSubscriptionManager.Subscribe(MessageKeys.ChangeNickMessage, HandleChangeNickMessage);
+            applicationEventBus.Subscribe<ClientAuthenticatedEvent>(OnClientAuthenticated);
+        }
+
+        private void OnClientAuthenticated(ClientAuthenticatedEvent message)
+        {
+            SetNick(message.ClientId, message.Identity);
+            NotifyNickChanged(message.ClientId, message.Identity);
         }
 
         protected override void Dispose(bool disposing)
@@ -41,12 +49,12 @@ namespace iLynx.Chatter.ServerServicesModule
                 SendRequestDenied(client);
             else
             {
-                SendRequestGranted(client, nick);
+                NotifyNickChanged(client, nick);
                 applicationEventBus.Publish(new NickChangedEvent(client));
             }
         }
 
-        private void SendRequestGranted(Guid client, string nick)
+        private void NotifyNickChanged(Guid client, string nick)
         {
             var message = new ChatMessage
             {

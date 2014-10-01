@@ -78,6 +78,7 @@
     <Compile Include="ServerNickManagerService.cs" />
     <Compile Include="ServerServicesModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserPermissionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

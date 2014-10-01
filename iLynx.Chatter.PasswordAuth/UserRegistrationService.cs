@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Linq;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Common;

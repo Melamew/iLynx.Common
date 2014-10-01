@@ -1,4 +1,5 @@
-﻿using iLynx.Chatter.Infrastructure;
+﻿using iLynx.Chatter.BroadcastMessaging.Server;
+using iLynx.Chatter.Infrastructure;
 using Microsoft.Practices.Unity;
 
 namespace iLynx.Chatter.BroadcastMessaging
@@ -11,6 +12,7 @@ namespace iLynx.Chatter.BroadcastMessaging
 
         protected override void RegisterTypes()
         {
+            Container.RegisterInstance(Container.Resolve<BroadcastMessagingService>());
         }
     }
 }
