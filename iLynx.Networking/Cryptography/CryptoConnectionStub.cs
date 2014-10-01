@@ -56,9 +56,11 @@ namespace iLynx.Networking.Cryptography
         {
             if (isDisposed) return;
             isDisposed = true;
-            outputStream.Close();
+            try { outputStream.Close(); }
+            catch (IOException) { }
             outputStream.Dispose();
-            inputStream.Close();
+            try { inputStream.Close(); }
+            catch (IOException) { }
             inputStream.Dispose();
             try
             {

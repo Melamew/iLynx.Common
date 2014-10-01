@@ -110,6 +110,7 @@
     <Compile Include="Behaviours\ListViewAutoScrollBehaviour.cs" />
     <Compile Include="Behaviours\PasswordBehaviour.cs" />
     <Compile Include="Behaviours\TextBoxSelectionBehaviour.cs" />
+    <Compile Include="Behaviours\ElementSubmitBehaviour.cs" />
     <Compile Include="BorderlessWindow.cs" />
     <Compile Include="Controls\AutoSizingCanvas.cs" />
     <Compile Include="Controls\ColorPicker.cs" />

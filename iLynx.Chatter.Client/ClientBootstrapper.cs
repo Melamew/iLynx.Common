@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Services;
@@ -59,6 +60,8 @@ namespace iLynx.Chatter.Client
         public override void Run(bool runWithDefaultConfiguration)
         {
             base.Run(runWithDefaultConfiguration);
+            if (!Directory.Exists(@".\Plugins"))
+                Directory.CreateDirectory(@".\Plugins");
             var manager = new ModuleManager(new ModuleInitializer(new UnityServiceLocator(Container), loggerFacade),
                                             new DirectoryModuleCatalog { ModulePath = @".\Plugins" }, loggerFacade);
             manager.Run();

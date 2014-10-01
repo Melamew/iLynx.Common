@@ -117,11 +117,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DataTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(TargetDir)iLynx.Chatter.BroadcastMessaging.dll $(TargetDir)Server\Plugins\
-xcopy /y $(TargetDir)iLynx.Chatter.BroadcastMessaging.dll $(TargetDir)Client\Plugins\</PostBuildEvent>
+    <PostBuildEvent>xcopy /y $(TargetDir)iLynx.Chatter.BroadcastMessaging.dll $(TargetDir)Server\
+xcopy /y $(TargetDir)iLynx.Chatter.BroadcastMessaging.dll $(TargetDir)Client\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,6 +1,4 @@
-﻿using iLynx.Chatter.BroadcastMessaging.Client;
-using iLynx.Chatter.Infrastructure;
-using iLynx.Chatter.Infrastructure.Services;
+﻿using iLynx.Chatter.Infrastructure;
 using Microsoft.Practices.Unity;
 
 namespace iLynx.Chatter.BroadcastMessaging
@@ -13,8 +11,6 @@ namespace iLynx.Chatter.BroadcastMessaging
 
         protected override void RegisterTypes()
         {
-            var tabRegionService = Container.Resolve<ITabRegionService>();
-            tabRegionService.RegisterView(Container.Resolve<MessageLogViewModel>(), "Broadcast");
         }
     }
 }

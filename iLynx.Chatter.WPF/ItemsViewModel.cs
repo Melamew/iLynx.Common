@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Windows.Controls;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using iLynx.Common;
 using iLynx.Common.WPF;
 
 namespace iLynx.Chatter.WPF
 {
-    public interface IItemsContainer<TItem>
-    {
-        void AddItem(TItem item);
-        void RemoveItem(TItem item);
-        TItem SelectedItem { get; set; }
-        void ClearItems();
-    }
-
     public class ItemsViewModel<TItem> : NotificationBase, IItemsContainer<TItem>
     {
         private readonly IDispatcher dispatcher;
@@ -54,6 +43,11 @@ namespace iLynx.Chatter.WPF
             items.Clear();
         }
 
+        public ObservableCollection<TItem> Items
+        {
+            get { return items; }
+        }
+
         public ICommand RemoveItemCommand
         {
             get { return removeItemCommand ?? (removeItemCommand = new DelegateCommand<TItem>(OnRemoveItem)); }
@@ -62,13 +56,6 @@ namespace iLynx.Chatter.WPF
         private void OnRemoveItem(TItem item)
         {
             RemoveItem(item);
-        }
-    }
-
-    public class  ContainerItemsViewModel : ItemsViewModel<ContainerViewModel>
-    {
-        public ContainerItemsViewModel(IDispatcher dispatcher) : base(dispatcher)
-        {
         }
     }
 }

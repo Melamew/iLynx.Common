@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewModels="clr-namespace:iLynx.Chatter.ClientServicesModule.ViewModels"
-                    xmlns:views="clr-namespace:iLynx.Chatter.ClientServicesModule.Views">
+                    xmlns:views="clr-namespace:iLynx.Chatter.ClientServicesModule.Views"
+                    xmlns:wpf="clr-namespace:iLynx.Chatter.WPF;assembly=iLynx.Chatter.WPF">
     <DataTemplate DataType="{x:Type viewModels:MainMenuViewModel}">
         <views:MainMenuView/>
     </DataTemplate>
@@ -12,5 +13,8 @@
         <MenuItem Header="{Binding Title}"
                   Command="{Binding Command}"
                   ItemsSource="{Binding Children}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type wpf:ContainerItemsViewModel}">
+        <wpf:MultiPaneView/>
     </DataTemplate>
 </ResourceDictionary>

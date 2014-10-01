@@ -52,14 +52,16 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Behaviours\ClosableTabItemBehaviour.cs" />
+    <Compile Include="ContainerItemsViewModel.cs" />
     <Compile Include="ContainerViewModel.cs" />
+    <Compile Include="IItemsContainer.cs" />
     <Compile Include="MultiPaneView.xaml.cs">
       <DependentUpon>MultiPaneView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MultiPaneViewModel.cs" />
+    <Compile Include="ItemsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

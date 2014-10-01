@@ -89,6 +89,7 @@
     <Compile Include="ConnectMenuItemViewModel.cs" />
     <Compile Include="DisconnectCommand.cs" />
     <Compile Include="MainMenuService.cs" />
+    <Compile Include="TabRegionService.cs" />
     <Compile Include="ViewModels\ConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\IConnectionDialogViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
@@ -141,6 +142,10 @@
     <ProjectReference Include="..\iLynx.Chatter.Infrastructure\iLynx.Chatter.Infrastructure.csproj">
       <Project>{ED0CB42A-7D74-4AE4-99FE-6EDC3B8C4143}</Project>
       <Name>iLynx.Chatter.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iLynx.Chatter.WPF\iLynx.Chatter.WPF.csproj">
+      <Project>{E488D852-E94C-472E-AB74-DC0E9B5C42B7}</Project>
+      <Name>iLynx.Chatter.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
       <Project>{569111CC-D436-46E5-BE9E-32B1BAD1B950}</Project>
