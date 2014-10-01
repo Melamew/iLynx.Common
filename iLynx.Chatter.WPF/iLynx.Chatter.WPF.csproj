@@ -47,17 +47,19 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="PaneView.xaml">
+    <Page Include="MultiPaneView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Behaviours\ClosableTabItemBehaviour.cs" />
     <Compile Include="ContainerViewModel.cs" />
-    <Compile Include="PaneView.xaml.cs">
-      <DependentUpon>PaneView.xaml</DependentUpon>
+    <Compile Include="MultiPaneView.xaml.cs">
+      <DependentUpon>MultiPaneView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MultiPaneViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -82,6 +84,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
+      <Project>{569111cc-d436-46e5-be9e-32b1bad1b950}</Project>
+      <Name>iLynx.Common.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">
       <Project>{1241AC19-9872-4126-8915-3A34919E1705}</Project>
       <Name>iLynx.Common</Name>

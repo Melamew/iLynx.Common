@@ -7,8 +7,6 @@ namespace iLynx.Chatter.WPF
     {
         private string header;
         private object content;
-        private double contentWidth;
-        private double headerSize = 16;
 
         public string Header
         {
@@ -29,28 +27,6 @@ namespace iLynx.Chatter.WPF
                 if (value == content)
                     return;
                 content = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public double HeaderSize
-        {
-            get { return headerSize; }
-            set
-            {
-                if (Math.Abs(value - headerSize) < double.Epsilon) return;
-                headerSize = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public double ContentWidth
-        {
-            get { return contentWidth; }
-            set
-            {
-                if (Math.Abs(value - contentWidth) < double.Epsilon) return;
-                contentWidth = value;
                 OnPropertyChanged();
             }
         }

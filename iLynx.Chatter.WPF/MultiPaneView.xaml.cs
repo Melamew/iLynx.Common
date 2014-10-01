@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace iLynx.Chatter.WPF
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for MultiPaneView.xaml
     /// </summary>
-    public partial class UserControl1 : UserControl
+    public partial class MultiPaneView : UserControl
     {
-        public UserControl1()
+        public MultiPaneView()
         {
             InitializeComponent();
         }

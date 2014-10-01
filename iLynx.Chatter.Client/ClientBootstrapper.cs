@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;
@@ -10,15 +11,35 @@ using iLynx.Networking.ClientServer;
 using iLynx.Networking.Cryptography;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
+using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
 
 namespace iLynx.Chatter.Client
 {
+    internal class LoggerFacade : ILoggerFacade
+    {
+        private static readonly Dictionary<Category, LogLevel> LevelMap = new Dictionary<Category, LogLevel>
+        {
+            {Category.Debug, LogLevel.Debug},
+            {Category.Exception, LogLevel.Error},
+            {Category.Info, LogLevel.Information},
+            {Category.Warn, LogLevel.Warning}
+        };
+
+        public void Log(string message, Category category, Priority priority)
+        {
+            LogLevel level;
+            if (!LevelMap.TryGetValue(category, out level))
+                level = LogLevel.Critical;
+            RuntimeCommon.DefaultLogger.Log(level, this, message);
+        }
+    }
     public class ClientBootstrapper : UnityBootstrapper
     {
         private ChatterShell shell;
+        private ILoggerFacade loggerFacade;
 
         protected override DependencyObject CreateShell()
         {
@@ -28,6 +49,19 @@ namespace iLynx.Chatter.Client
         protected override IModuleCatalog CreateModuleCatalog()
         {
             return new ConfigurationModuleCatalog();
+        }
+
+        protected override ILoggerFacade CreateLogger()
+        {
+            return (loggerFacade = new LoggerFacade());
+        }
+
+        public override void Run(bool runWithDefaultConfiguration)
+        {
+            base.Run(runWithDefaultConfiguration);
+            var manager = new ModuleManager(new ModuleInitializer(new UnityServiceLocator(Container), loggerFacade),
+                                            new DirectoryModuleCatalog { ModulePath = @".\Plugins" }, loggerFacade);
+            manager.Run();
         }
 
         protected override void ConfigureContainer()

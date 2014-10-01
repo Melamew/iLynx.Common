@@ -112,6 +112,7 @@
     <Compile Include="Services\IDialog.cs" />
     <Compile Include="Services\IMainMenuService.cs" />
     <Compile Include="Services\IMenuItem.cs" />
+    <Compile Include="Services\ITabRegionService.cs" />
     <Compile Include="Services\IUserPermissionService.cs" />
     <Compile Include="Services\IWindowingService.cs" />
     <Compile Include="TextMessage.cs" />

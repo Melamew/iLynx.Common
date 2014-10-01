@@ -19,13 +19,6 @@ namespace iLynx.Common.WPF.Behaviours
                 textField.PreviewGotKeyboardFocus -= TextBoxOnGotFocus;
         }
 
-        private static void TextFieldOnTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
-        {
-            var textBox = sender as TextBox;
-            if (null == textBox) return;
-            RuntimeCommon.DefaultLogger.Log(LogLevel.Information, typeof(TextBoxSelectionBehaviour), string.Format("Text Changed: {0}", textBox.Text));
-        }
-
         private static void TextBoxOnGotFocus(object sender, RoutedEventArgs routedEventArgs)
         {
             RuntimeCommon.DefaultLogger.Log(LogLevel.Information, typeof(TextBoxSelectionBehaviour), string.Format("GotFocus: {0}", routedEventArgs));
