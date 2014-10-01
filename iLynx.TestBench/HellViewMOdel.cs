@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using iLynx.Chatter.BroadcastMessaging;
+using iLynx.Chatter.WPF;
 using iLynx.Common;
 
 namespace iLynx.TestBench

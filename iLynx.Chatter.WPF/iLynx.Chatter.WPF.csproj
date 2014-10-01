@@ -58,7 +58,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PaneViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
