@@ -11,7 +11,7 @@ namespace iLynx.Networking.Cryptography
         private RSACryptoServiceProvider publicProvider;
         private RSAParameters rsaParameters;
         private int maxInputBytes;
-        private readonly int keySize = 3072;
+        private readonly int keySize;
 
 
         private static void GenerateRsaKeys(CspParameters parameters, int keySize, out RSACryptoServiceProvider provider)

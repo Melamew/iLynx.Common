@@ -120,7 +120,12 @@ namespace iLynx.Chatter.Server
 
         private int LineIndex
         {
-            get { return Console.CursorLeft - PreCommandLength; }
+            get
+            {
+                if (CurrentLineLength >= Console.BufferWidth)
+                    return CurrentLineLength - Console.BufferWidth;
+                return Console.CursorLeft - PreCommandLength;
+            }
         }
 
         private void HandleBackspace()
@@ -227,7 +232,10 @@ namespace iLynx.Chatter.Server
         private static void SetCursorToEnd(string line)
         {
             var currentTop = Console.CursorTop;
-            Console.SetCursorPosition(line.Length, currentTop);
+            var targetIndex = line.Length;
+            if (targetIndex >= Console.BufferWidth)
+                targetIndex = targetIndex - Console.BufferWidth;
+            Console.SetCursorPosition(targetIndex, currentTop);
         }
 
         public void Break()

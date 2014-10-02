@@ -14,19 +14,15 @@ namespace iLynx.Chatter.Infrastructure
         public string AlgorithmIdentifier { get { return typeof(AesCryptoServiceProvider).FullName; } }
         public int Strength { get { return KeySize * 100; } }
         public int BlockSize { get { return 128; } }
+        
         public SymmetricAlgorithm Build()
         {
             var rijndael = Rijndael.Create();
+            rijndael.Mode = CipherMode.CBC;
             rijndael.BlockSize = 128;
             rijndael.KeySize = KeySize;
             rijndael.Padding = PaddingMode.None;
             return rijndael;
-            //return new Rij
-            //{
-            //    BlockSize = 128,
-            //    KeySize = KeySize,
-            //    Mode = CipherMode.CBC,
-            //};
         }
     }
 }

@@ -23,6 +23,7 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
         private readonly ObservableCollection<LogEntry> entries = new ObservableCollection<LogEntry>();
         private ICommand sendCommand;
         private string chatLine;
+        private Guid clientId;
 
         public MessageLogViewModel(INickManagerService nickManagerService,
             IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> messageSubscriptionManager,
@@ -49,12 +50,19 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
         {
             messageSubscriptionManager.Unsubscribe(MessageKeys.TextMessage, OnTextMessageReceived);
             applicationEventBus.Unsubscribe<NickChangedEvent>(OnNickChanged);
+            applicationEventBus.Unsubscribe<ClientConnectedEvent>(OnClientConnected);
+        }
+
+        private void OnClientConnected(ClientConnectedEvent message)
+        {
+            clientId = message.ClientId;
         }
 
         private void Subscribe()
         {
             messageSubscriptionManager.Subscribe(MessageKeys.TextMessage, OnTextMessageReceived);
             applicationEventBus.Subscribe<NickChangedEvent>(OnNickChanged);
+            applicationEventBus.Subscribe<ClientConnectedEvent>(OnClientConnected);
         }
 
         private void OnNickChanged(NickChangedEvent message)
@@ -66,7 +74,7 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
         private void OnTextMessageReceived(ChatMessage message, int totalSize)
         {
             dispatcher.InvokeIfRequired(
-                msg => entries.Add(new LogEntry(msg.ClientId, nickManagerService.GetNickName(msg.ClientId), DateTime.Now, Encoding.Unicode.GetString(msg.Data))),
+                msg => entries.Add(new LogEntry(msg.ClientId, nickManagerService.GetNickName(msg.ClientId), DateTime.Now, Encoding.Unicode.GetString(msg.Data), message.ClientId == clientId)),
                 message);
         }
 

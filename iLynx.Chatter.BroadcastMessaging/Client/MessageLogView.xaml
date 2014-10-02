@@ -11,31 +11,53 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Entries}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type broadcastMessaging:LogEntry}">
-                        <TextBox IsReadOnly="True"
+        <ListView ItemsSource="{Binding Entries}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="OverridesDefaultStyle" Value="True"/>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Border HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type broadcastMessaging:LogEntry}">
+                    <TextBox IsReadOnly="True"
                              AcceptsReturn="True"
                              TextWrapping="Wrap"
-                             Margin="8,16,4,0">
-                            <TextBox.Text>
-                                <MultiBinding StringFormat="{}[{0} - {1:t}]: {2}" Mode="OneWay">
-                                    <Binding Path="Nick" Mode="OneWay"/>
-                                    <Binding Path="TimeStamp" Mode="OneWay"/>
-                                    <Binding Path="Content" Mode="OneWay"/>
-                                </MultiBinding>
-                            </TextBox.Text>
-                        </TextBox>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                             Margin="8,16,4,0"
+                             x:Name="ContentBox">
+                        <TextBox.Text>
+                            <MultiBinding StringFormat="{}[{0} - {1:t}]: {2}" Mode="OneWay">
+                                <Binding Path="Nick" Mode="OneWay"/>
+                                <Binding Path="TimeStamp" Mode="OneWay"/>
+                                <Binding Path="Content" Mode="OneWay"/>
+                            </MultiBinding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsSelf}" Value="True">
+                            <Setter TargetName="ContentBox" Property="HorizontalAlignment" Value="Right"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

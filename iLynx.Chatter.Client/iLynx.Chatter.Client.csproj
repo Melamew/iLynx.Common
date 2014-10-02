@@ -87,6 +87,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClientShellModule.cs" />
+    <Compile Include="ConnectionStatusColorConverter.cs" />
     <Compile Include="ViewModels\ConnectionStatusViewModel.cs" />
     <Compile Include="Views\ConnectionStatusView.xaml.cs">
       <DependentUpon>ConnectionStatusView.xaml</DependentUpon>

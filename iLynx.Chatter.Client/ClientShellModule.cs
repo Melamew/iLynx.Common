@@ -1,4 +1,5 @@
-﻿using iLynx.Chatter.Infrastructure;
+﻿using iLynx.Chatter.Client.ViewModels;
+using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.WPF;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
@@ -14,9 +15,10 @@ namespace iLynx.Chatter.Client
 
         protected override void RegisterTypes()
         {
+            RegisterResource("DataTemplates.xaml");
             var regionManager = Container.Resolve<IRegionManager>();
             regionManager.RegisterViewWithRegion(RegionNames.MainRegion, () => Container.Resolve<ContainerItemsViewModel>());
-            //regionManager.RequestNavigate();
+            regionManager.RegisterViewWithRegion(RegionNames.StatusRegion, () => Container.Resolve<ConnectionStatusViewModel>());
         }
     }
 }

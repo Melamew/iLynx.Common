@@ -128,6 +128,7 @@
     <Compile Include="Controls\SocketType.cs" />
     <Compile Include="Controls\TextBoxWithOverlay.cs" />
     <Compile Include="Controls\ValuePicker.cs" />
+    <Compile Include="Converters\ByteSizeConverter.cs" />
     <Compile Include="Converters\ColorToBrushConverter.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\MathConverter.cs" />
