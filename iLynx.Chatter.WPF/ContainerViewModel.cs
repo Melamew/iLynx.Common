@@ -1,5 +1,4 @@
-﻿using System;
-using iLynx.Common;
+﻿using iLynx.Common;
 
 namespace iLynx.Chatter.WPF
 {
@@ -7,6 +6,7 @@ namespace iLynx.Chatter.WPF
     {
         private string header;
         private object content;
+        private bool canClose = true;
 
         public string Header
         {
@@ -27,6 +27,18 @@ namespace iLynx.Chatter.WPF
                 if (value == content)
                     return;
                 content = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool CanClose
+        {
+            get { return canClose; }
+            set
+            {
+                if (value == canClose)
+                    return;
+                canClose = value;
                 OnPropertyChanged();
             }
         }

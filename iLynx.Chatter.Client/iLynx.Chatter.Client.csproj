@@ -87,6 +87,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClientShellModule.cs" />
+    <Compile Include="ViewModels\ConnectionStatusViewModel.cs" />
+    <Compile Include="Views\ConnectionStatusView.xaml.cs">
+      <DependentUpon>ConnectionStatusView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowingService.cs" />
     <Page Include="ChatterShell.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -101,6 +105,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ConnectionStatusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

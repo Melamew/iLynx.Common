@@ -22,7 +22,24 @@ namespace iLynx.Networking.ClientServer
         {
             this.messageBus = Guard.IsNull(() => messageBus);
             this.connectionBuilder = Guard.IsNull(() => connectionBuilder);
-            this.messageBus.Subscribe<MessageEnvelope<TMessage, TKey>>(OnSendMessage);
+            Subscribe();
+        }
+
+        private void Subscribe()
+        {
+            messageBus.Subscribe<MessageEnvelope<TMessage, TKey>>(OnSendMessage);
+        }
+
+        private void Unsubscribe()
+        {
+            messageBus.Unsubscribe<MessageEnvelope<TMessage, TKey>>(OnSendMessage);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (!disposing) return;
+            Unsubscribe();
         }
 
         private void OnSendMessage(MessageEnvelope<TMessage, TKey> envelope)

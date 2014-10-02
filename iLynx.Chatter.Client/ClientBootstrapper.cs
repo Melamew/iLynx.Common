@@ -77,7 +77,6 @@ namespace iLynx.Chatter.Client
             Container.RegisterType(typeof(IAlgorithmContainer<>), typeof(AlgorithmContainer<>), new ContainerControlledLifetimeManager());
             Container.RegisterType<ILinkNegotiator, KeyExchangeLinkNegotiator>(new ContainerControlledLifetimeManager());
             SetupEncryptionContainers(Container);
-            Container.RegisterType<IClientSideClient<ChatMessage, int>, Client<ChatMessage, int>>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IMergeDictionaryService, MergeDictionaryService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IDispatcher, WPFApplicationDispatcher>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IWindowingService, WindowingService>(new ContainerControlledLifetimeManager());
@@ -87,6 +86,8 @@ namespace iLynx.Chatter.Client
             Container.RegisterType<IBitConverter, BigEndianBitConverter>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IConfigurationManager, SingletonConfigurationManager>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance(RuntimeCommon.DefaultLogger);
+            Container.RegisterType<IClientSideClient<ChatMessage, int>, Client<ChatMessage, int>>(new ContainerControlledLifetimeManager());
+            Container.RegisterInstance<IClient<ChatMessage, int>>(Container.Resolve<IClientSideClient<ChatMessage, int>>(), new ContainerControlledLifetimeManager());
         }
 
         private static void SetupEncryptionContainers(IUnityContainer container)

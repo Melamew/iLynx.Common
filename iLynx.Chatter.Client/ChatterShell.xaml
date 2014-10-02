@@ -21,5 +21,12 @@
             <ContentControl regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.HeaderRegion}"/>
         </Grid>
     </wpf:BorderlessWindow.Header>
-    <ContentControl regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainRegion}"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ContentControl Grid.Row="0" regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainRegion}"/>
+        <ContentControl Grid.Row="1" regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.StatusRegion}"/>
+    </Grid>
 </wpf:BorderlessWindow>

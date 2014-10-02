@@ -4,5 +4,6 @@
     {
         public const string MainRegion = "Main Region";
         public const string HeaderRegion = "Header Region";
+        public const string StatusRegion = "Status Region";
     }
 }

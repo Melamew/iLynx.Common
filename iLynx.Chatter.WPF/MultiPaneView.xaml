@@ -7,6 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              x:Name="Root">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
     <TabControl ItemsSource="{Binding Items}"
                 SelectedItem="{Binding SelectedItem}">
         <TabControl.ItemContainerStyle>
@@ -29,9 +32,10 @@
                                     <ContentPresenter Content="{TemplateBinding Header}"/>
                                     <Button Grid.Column="1" Content="r" FontFamily="Webdings"
                                             Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
-                                            Command="{Binding Path=RemoveItemCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type wpf:ContainerItemsViewModel}}}"/>
+                                            Command="{Binding Path=DataContext.(wpf:ContainerItemsViewModel.RemoveItemCommand), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            CommandParameter="{Binding}"
+                                            Visibility="{Binding CanClose, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                 </Grid>
-                                
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
