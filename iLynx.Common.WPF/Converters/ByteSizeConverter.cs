@@ -24,9 +24,9 @@ namespace iLynx.Common.WPF.Converters
             {
                 var bytes = Conv.ToDouble(value);
                 var iterations = 0;
-                var size = Sizes[iterations];
                 while (bytes > 1024d && ++iterations < Sizes.Length)
                     bytes /= 1024d;
+                var size = Sizes.ElementAtOrDefault(iterations);
                 return string.Format("{0:F2} {1}", bytes, size);
             }
             catch (Exception)
