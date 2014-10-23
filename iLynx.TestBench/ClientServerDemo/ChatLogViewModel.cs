@@ -44,7 +44,7 @@ namespace iLynx.TestBench.ClientServerDemo
             {
                 var text = Encoding.Unicode.GetString(keyedMessage.Data);
                 var clientId = keyedMessage.ClientId;
-                logEntries.Add(new LogEntry(clientId, nickManagerService.GetNickName(clientId), DateTime.Now, text));
+                logEntries.Add(new LogEntry(clientId, nickManagerService.GetNickName(clientId), DateTime.Now, text, false));
             }
         }
 
