@@ -103,6 +103,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations\Jetbrains.cs" />
     <Compile Include="BooleanOperator.cs" />
     <Compile Include="Collections\AsynchronourQueryableWrapper.cs" />
     <Compile Include="Collections\AsynchronousEnumerableWrapper.cs" />
