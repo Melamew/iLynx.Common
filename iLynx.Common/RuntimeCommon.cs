@@ -1,6 +1,7 @@
-﻿
-
+﻿using System;
+using System.Reflection;
 using iLynx.Common.Serialization;
+using JetBrains.Annotations;
 
 namespace iLynx.Common
 {
@@ -36,6 +37,41 @@ namespace iLynx.Common
         public static IBitConverter DefaultBitConverter
         {
             get { return defaultBitConverter ?? (defaultBitConverter = new BigEndianBitConverter()); }
+        }
+
+        [StringFormatMethod("format")]
+        public static void LogWarning(this object sender, string format, params object[] args)
+        {
+            Proxy.Log(LogLevel.Warning, sender, string.Format(format, args));
+        }
+
+        [StringFormatMethod("format")]
+        public static void LogError(this object sender, string format, params object[] args)
+        {
+            Proxy.Log(LogLevel.Error, sender, string.Format(format, args));
+        }
+
+        public static void LogException(this object sender, Exception e, MethodBase method)
+        {
+            Proxy.Log(LogLevel.Critical, sender, string.Format("{0} Caugh Exception: {1}", method, e));
+        }
+
+        [StringFormatMethod("format")]
+        public static void LogInformation(this object sender, string format, params object[] args)
+        {
+            Proxy.Log(LogLevel.Information, sender, string.Format(format, args));
+        }
+
+        [StringFormatMethod("format")]
+        public static void LogDebug(this object sender, string format, params object[] args)
+        {
+            Proxy.Log(LogLevel.Debug, sender, string.Format(format, args));
+        }
+
+        [StringFormatMethod("format")]
+        public static void LogCritical(this object sender, string format, params object[] args)
+        {
+            Proxy.Log(LogLevel.Critical, sender, string.Format(format, args));
         }
     }
 }
