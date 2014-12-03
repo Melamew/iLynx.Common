@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Windows.Media;
 
@@ -930,6 +931,54 @@ namespace iLynx.Common.Serialization
             {
                 if (!(item is Color)) throw new InvalidCastException();
                 return 4;
+            }
+        }
+
+        public abstract class SerializerBase<T> : ISerializer<T>
+        {
+            public void Serialize(object item, Stream target)
+            {
+                Serialize((T) item, target);
+            }
+
+            public abstract T Deserialize(Stream source);
+            public abstract void Serialize(T item, Stream target);
+            public abstract int GetOutputSize(T item);
+
+            object ISerializer.Deserialize(Stream source)
+            {
+                return Deserialize(source);
+            }
+
+            public int GetOutputSize(object item)
+            {
+                return GetOutputSize((T) item);
+            }
+        }
+
+        public class IPAddressSerializer : SerializerBase<IPAddress>
+        {
+            public override int GetOutputSize(IPAddress item)
+            {
+                return item.GetAddressBytes().Length;
+            }
+
+            public override IPAddress Deserialize(Stream source)
+            {
+                var lengthBytes = new byte[sizeof(int)];
+                source.Read(lengthBytes, 0, lengthBytes.Length);
+                var length = Serializer.SingletonBitConverter.ToInt32(lengthBytes);
+                var bytes = new byte[length];
+                source.Read(bytes, 0, bytes.Length);
+                return new IPAddress(bytes);
+            }
+
+            public override void Serialize(IPAddress item, Stream target)
+            {
+                var addressBytes = item.GetAddressBytes();
+                var lengthBytes = Serializer.SingletonBitConverter.GetBytes(addressBytes.Length);
+                target.Write(lengthBytes, 0, lengthBytes.Length);
+                target.Write(addressBytes, 0, addressBytes.Length);
             }
         }
     }

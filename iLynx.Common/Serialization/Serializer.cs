@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Reflection;
 
 namespace iLynx.Common.Serialization
@@ -34,6 +35,7 @@ namespace iLynx.Common.Serialization
                                                                                              { typeof(TimeSpan), new Primitives.TimeSpanSerializer() },
                                                                                              { typeof(DateTime), new Primitives.DateTimeSerializer() },
                                                                                              { typeof(System.Windows.Media.Color), new Primitives.ColorSerializer() },
+                                                                                             { typeof(IPAddress), new Primitives.IPAddressSerializer() }
                                                                                          };
 
         private static readonly Dictionary<Type, ISerializer> ObjectSerializers = new Dictionary<Type, ISerializer>();
