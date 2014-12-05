@@ -53,7 +53,7 @@ namespace iLynx.Common
 
         public static void LogException(this object sender, Exception e, MethodBase method)
         {
-            Proxy.Log(LogLevel.Critical, sender, string.Format("{0} Caugh Exception: {1}", method, e));
+            Proxy.Log(LogLevel.Critical, sender, string.Format("{0} Caught Exception: {1}", method, e));
         }
 
         [StringFormatMethod("format")]
