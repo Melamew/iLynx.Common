@@ -24,8 +24,11 @@ namespace iLynx.Networking.Cryptography
         {
             var socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(endpoint);
-            var stub = new CryptoConnectionStub<TMessage, TKey>(serializer, socket, negotiator, timerService);
+            //var stub = new CryptoConnectionStub<TMessage, TKey>(serializer, socket, negotiator, timerService);
+            var stub = new ManualCryptoConnectionStub<TMessage, TKey>(serializer, socket, negotiator, timerService);
+            this.LogDebug("==> BUILDER: Begin Negotiate");
             stub.NegotiateTransportKeys();
+            this.LogDebug("<== BUILDER: End Negotiate");
             return stub;
         }
     }

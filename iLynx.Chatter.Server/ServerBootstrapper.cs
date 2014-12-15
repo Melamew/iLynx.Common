@@ -70,8 +70,8 @@ namespace iLynx.Chatter.Server
             Container.RegisterType(typeof(IBus<>), typeof(QueuedBus<>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IKeyedSubscriptionManager<,>), typeof(KeyedSubscriptionManager<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IMessageServer<,>), typeof(MessageServer<,>), new ContainerControlledLifetimeManager());
-            Container.RegisterType(typeof(IConnectionStubListener<,>), typeof(CryptoConnectionStubListener<,>));
-            Container.RegisterType(typeof(IClientBuilder<,>), typeof(ClientBuilder<,>));
+            Container.RegisterType(typeof(IConnectionStubListener<,>), typeof(CryptoConnectionStubListener<,>), new ContainerControlledLifetimeManager());
+            Container.RegisterType(typeof(IClientBuilder<,>), typeof(ClientBuilder<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType<ITimerService, SingleThreadedTimerService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISerializer<ChatMessage>, ChatMessageSerializer>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IThreadManager, ThreadManager>(new ContainerControlledLifetimeManager());

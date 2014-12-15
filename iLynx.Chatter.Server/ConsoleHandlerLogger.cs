@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
 using iLynx.Common.Configuration;
@@ -14,7 +15,7 @@ namespace iLynx.Chatter.Server
             IConfigurationManager configurationManager)
         {
             this.consoleHandler = Guard.IsNull(() => consoleHandler);
-            logLevelValue = configurationManager.GetValue("LogLevel", LogLevel.Information, "Logging");
+            logLevelValue = configurationManager.GetValue("LogLevel", LogLevel.Debug, "Logging");
             logLevel = (int)logLevelValue.Value;
             logLevelValue.ValueChanged += LogLevelValueOnValueChanged;
         }
@@ -27,8 +28,13 @@ namespace iLynx.Chatter.Server
         public void Log(LogLevel level, object sender, string message)
         {
             var value = (int) level;
+            
+            var line = string.Format("[{0}:{1}]: {2}", level.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().Name, message);
             if (value >= logLevel)
-                consoleHandler.Log("[{0}:{1}]: {2}", level.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().Name, message);
+                consoleHandler.Log(line);
+#if DEBUG
+            Trace.WriteLine(line);
+#endif
         }
     }
 }

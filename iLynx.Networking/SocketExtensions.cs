@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using iLynx.Common;
@@ -16,6 +17,21 @@ namespace iLynx.Networking
             {
                 var buffer = new byte[length - totalReceived];
                 var received = socket.Receive(buffer, SocketFlags.None);
+                Buffer.BlockCopy(buffer, 0, target, totalReceived, received);
+                totalReceived += received;
+            }
+            return totalReceived;
+        }
+
+        public static int FillRead(this Stream stream, byte[] target)
+        {
+            Guard.IsNull(() => target);
+            var length = target.Length;
+            var totalReceived = 0;
+            while (totalReceived < length)
+            {
+                var buffer = new byte[length - totalReceived];
+                var received = stream.Read(buffer, 0, buffer.Length);
                 Buffer.BlockCopy(buffer, 0, target, totalReceived, received);
                 totalReceived += received;
             }

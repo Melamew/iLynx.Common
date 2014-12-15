@@ -15,6 +15,8 @@ namespace iLynx.Chatter.Server
             var handler = handlers[0];
             if (null == handler.QuerySubCommand)
                 return handlers;
+            if (handler.Command != text)
+                return handlers;
             parameters = null == parameters || parameters.Length < 1 ? new[] { "" } : parameters;
             return handler.QuerySubCommand.Invoke(parameters[0], parameters.Skip(1).ToArray())
                 .Select(definition => new CommandDefinition

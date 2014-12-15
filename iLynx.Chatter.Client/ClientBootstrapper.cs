@@ -73,7 +73,7 @@ namespace iLynx.Chatter.Client
             Container.RegisterType(typeof(IBus<>), typeof(QueuedBus<>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IKeyedSubscriptionManager<,>), typeof(KeyedSubscriptionManager<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IMessageServer<,>), typeof(MessageServer<,>), new ContainerControlledLifetimeManager());
-            Container.RegisterType(typeof(IConnectionStubBuilder<,>), typeof(CryptoConnectionStubBuilder<,>));
+            Container.RegisterType(typeof(IConnectionStubBuilder<,>), typeof(CryptoConnectionStubBuilder<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IAlgorithmContainer<>), typeof(AlgorithmContainer<>), new ContainerControlledLifetimeManager());
             Container.RegisterType<ILinkNegotiator, KeyExchangeLinkNegotiator>(new ContainerControlledLifetimeManager());
             SetupEncryptionContainers(Container);

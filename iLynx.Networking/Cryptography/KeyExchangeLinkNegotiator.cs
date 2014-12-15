@@ -15,7 +15,7 @@ namespace iLynx.Networking.Cryptography
         private readonly IAlgorithmContainer<IKeyExchangeAlgorithmDescriptor> keyExchangeBuilder;
         private readonly IAlgorithmContainer<ISymmetricAlgorithmDescriptor> transportAlgorithmBuilder;
         private readonly IBitConverter bitConverter = new BigEndianBitConverter();
-
+        private readonly RandomNumberGenerator prng = RandomNumberGenerator.Create();
         public KeyExchangeLinkNegotiator(IAlgorithmContainer<IKeyExchangeAlgorithmDescriptor> keyExchangeBuilder,
                                          IAlgorithmContainer<ISymmetricAlgorithmDescriptor> transportAlgorithmBuilder)
         {
@@ -25,24 +25,41 @@ namespace iLynx.Networking.Cryptography
 
         public bool SetupConnection(Stream baseStream, out Stream reader, out Stream writer, out int blockSize)
         {
+            ICryptoTransform encryptor;
+            ICryptoTransform decryptor;
+            var result = SetupConnection(baseStream, out decryptor, out encryptor, out blockSize);
+            writer = new CryptoStream(baseStream, encryptor, CryptoStreamMode.Write);
+            reader = new CryptoStream(baseStream, encryptor, CryptoStreamMode.Read);
+            return result;
+        }
+
+        public bool SetupConnection(Stream baseStream, out ICryptoTransform decryptor, out ICryptoTransform encryptor,
+            out int blockSize)
+        {
             var exchangeAlgorithm = GetKeyExchangeAlgorithm(baseStream);
             var transportAlgorithm = GetStrongestDescriptor(baseStream, transportAlgorithmBuilder, exchangeAlgorithm);
             if (null == transportAlgorithm) throw new InvalidOperationException();
-            ExchangeKeys(baseStream, transportAlgorithm, exchangeAlgorithm, out reader, out writer);
+            ExchangeKeys(baseStream, transportAlgorithm, exchangeAlgorithm, out decryptor, out encryptor);
             blockSize = transportAlgorithm.BlockSize / 8;
             return true;
         }
 
-        private void ExchangeKeys(Stream baseStream, ISymmetricAlgorithmDescriptor transportAlgorithmDescriptor, IKeyExchangeAlgorithm keyExchangeAlgorithm, out Stream inputStream, out Stream outputStream)
+        private void ExchangeKeys(Stream baseStream, ISymmetricAlgorithmDescriptor transportAlgorithmDescriptor, IKeyExchangeAlgorithm keyExchangeAlgorithm, out ICryptoTransform decryptor, out ICryptoTransform encryptor)
         {
-            var encryptor = transportAlgorithmDescriptor.Build();
-            encryptor.GenerateKey();
-            encryptor.GenerateIV();
+            var encryptionAlgorithm = transportAlgorithmDescriptor.Build();
+            var key = new byte[encryptionAlgorithm.KeySize/8];
+            var iv = new byte[encryptionAlgorithm.BlockSize/8];
+            prng.GetBytes(key);
+            prng.GetBytes(iv);
+            encryptionAlgorithm.Key = key;
+            encryptionAlgorithm.IV = iv;
             var keyPackage = new KeyPackage
             {
-                Key = encryptor.Key,
-                InitializationVector = encryptor.IV,
+                Key = encryptionAlgorithm.Key,
+                InitializationVector = encryptionAlgorithm.IV,
             };
+            this.LogDebug("TX Key: {0}", keyPackage.Key.CombineToString());
+            this.LogDebug("TX IV : {0}", keyPackage.InitializationVector.CombineToString());
             byte[] keyBuffer;
             using (var memoryStream = new MemoryStream())
             {
@@ -59,14 +76,18 @@ namespace iLynx.Networking.Cryptography
             buffer = new byte[length];
             baseStream.Read(buffer, 0, buffer.Length);
             buffer = keyExchangeAlgorithm.Decrypt(buffer);
-            var decryptor = transportAlgorithmDescriptor.Build();
+            var decryptionAlgorithm = transportAlgorithmDescriptor.Build();
             KeyPackage remoteKeyPackage;
             using (var memoryStream = new MemoryStream(buffer))
                 remoteKeyPackage = Serializer.Deserialize<KeyPackage>(memoryStream);
-            outputStream = new CryptoStream(baseStream, encryptor.CreateEncryptor(), CryptoStreamMode.Write);
-            decryptor.Key = remoteKeyPackage.Key;
-            decryptor.IV = remoteKeyPackage.InitializationVector;
-            inputStream = new CryptoStream(baseStream, decryptor.CreateDecryptor(), CryptoStreamMode.Read);
+            this.LogDebug("RX Key: {0}", remoteKeyPackage.Key.CombineToString());
+            this.LogDebug("RX IV : {0}", remoteKeyPackage.InitializationVector.CombineToString());
+            decryptionAlgorithm.Key = remoteKeyPackage.Key;
+            decryptionAlgorithm.IV = remoteKeyPackage.InitializationVector;
+            encryptor = encryptionAlgorithm.CreateEncryptor();
+            decryptor = decryptionAlgorithm.CreateDecryptor();
+            //encryptor = new CryptoStream(baseStream, encryptor.CreateEncryptor(), CryptoStreamMode.Write);
+            //decryptor = new CryptoStream(baseStream, decryptor.CreateDecryptor(), CryptoStreamMode.Read);
         }
 
         private IKeyExchangeAlgorithm GetKeyExchangeAlgorithm(Stream baseStream)
@@ -95,7 +116,10 @@ namespace iLynx.Networking.Cryptography
                 buffer = bitConverter.GetBytes(algorithms.Length);
                 outputStream.Write(buffer, 0, buffer.Length);
                 foreach (var algorithm in algorithms.Select(MakePackage))
+                {
+                    //this.LogDebug("TX: Algorithm {0}", algorithm.AlgorithmIdentifier);
                     Serializer.Serialize(outputStream, algorithm);
+                }
                 buffer = encryptionAlgorithm.Encrypt(outputStream.ToArray());
             }
             var lengthBytes = bitConverter.GetBytes(buffer.Length);
@@ -119,7 +143,11 @@ namespace iLynx.Networking.Cryptography
                 outputStream.Read(lengthBuffer, 0, lengthBuffer.Length);
                 var algorithmCount = bitConverter.ToInt32(lengthBuffer);
                 for (var i = 0; i < algorithmCount; ++i)
-                    result.Add(Serializer.Deserialize<AlgorithmDescriptorPackage>(outputStream));
+                {
+                    var algorithm = Serializer.Deserialize<AlgorithmDescriptorPackage>(outputStream);
+                    result.Add(algorithm);
+                    //this.LogDebug("RX: Algorithm {0}", algorithm.AlgorithmIdentifier);
+                }
             }
             return result;
         }

@@ -1,4 +1,5 @@
-﻿using iLynx.Common;
+﻿using System.Diagnostics;
+using iLynx.Common;
 using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
 using iLynx.Networking.Interfaces;
@@ -19,8 +20,11 @@ namespace iLynx.Networking.Cryptography
         {
             var socket = AcceptSocket();
             if (null == socket) return null;
-            var stub = new CryptoConnectionStub<TMessage, TKey>(Serializer, socket, linkNegotiator, TimerService);
+            //var stub = new CryptoConnectionStub<TMessage, TKey>(Serializer, socket, linkNegotiator, TimerService);
+            var stub = new ManualCryptoConnectionStub<TMessage, TKey>(Serializer, socket, linkNegotiator, TimerService);
+            this.LogDebug("==> LISTENER: Begin Negotiate");
             stub.NegotiateTransportKeys();
+            this.LogDebug("<== LISTENER: End Negotiate");
             return stub;
         }
     }

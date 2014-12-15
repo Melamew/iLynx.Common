@@ -103,6 +103,7 @@ namespace iLynx.Networking.Cryptography
             Buffer.BlockCopy(rnd, 0, final, lengthField.Length + data.Length, rnd.Length);
             if (final.Length % blockSize != 0)
                 Trace.WriteLine("Wat?");
+            Trace.WriteLine(string.Format("TX: Computed Padding: {0}, Final Length: {1}", paddingSize, final.Length));
             target.Write(final, 0, final.Length);
             return lengthField.Length + data.Length + rnd.Length;
         }
@@ -116,7 +117,6 @@ namespace iLynx.Networking.Cryptography
             var length = Serializer.SingletonBitConverter.ToInt32(buffer);
             if (0 > length) throw new InvalidDataException();
             var result = new byte[length];
-            //var padding = (blockSize - (read%blockSize)) - sizeof (int);
             var gotData = 0;
             var block = 0;
             var dataLength = length < blockSize - sizeof(int) ? length : blockSize - sizeof(int);
@@ -132,6 +132,7 @@ namespace iLynx.Networking.Cryptography
                 ++block;
             }
             finalSize = block * blockSize;
+            Trace.WriteLine(string.Format("RX: Padding was: {0}, Final Length: {1}", finalSize - dataLength, finalSize));
             return result;
         }
 
@@ -159,5 +160,192 @@ namespace iLynx.Networking.Cryptography
         public bool IsOpen { get { return baseStream.CanRead && baseStream.CanWrite; } }
         public bool CanRead { get { return inputStream.CanRead; } }
         public bool CanWrite { get { return outputStream.CanWrite; } }
+    }
+
+    public class ManualCryptoConnectionStub<TMessage, TMessageKey> : ICryptoConnectionStub<TMessage, TMessageKey>
+        where TMessage : IKeyedMessage<TMessageKey>
+    {
+        private readonly int pollingInterval;
+        private readonly ITimerService timerService;
+        private readonly Socket socket;
+        private readonly ILinkNegotiator linkNegotiator;
+        private readonly ISerializer<TMessage> serializer;
+        private readonly Stream baseStream;
+        private bool isDisposed;
+        private readonly int connectionTimer;
+        private readonly RandomNumberGenerator reasonablySecurePrng = RandomNumberGenerator.Create();
+        private int blockSize = -1;
+        private ICryptoTransform encryptor;
+        private ICryptoTransform decryptor;
+
+        public ManualCryptoConnectionStub(ISerializer<TMessage> serializer, Socket socket, ILinkNegotiator linkNegotiator, ITimerService timerService, int pollingInterval = 1000)
+        {
+            this.pollingInterval = pollingInterval;
+            this.timerService = Guard.IsNull(() => timerService);
+            this.socket = Guard.IsNull(() => socket);
+            this.linkNegotiator = Guard.IsNull(() => linkNegotiator);
+            this.serializer = Guard.IsNull(() => serializer);
+            baseStream = new NetworkStream(socket);
+            connectionTimer = this.timerService.StartNew(OnCheckConnectionStatus, pollingInterval, Timeout.Infinite);
+        }
+
+        private void OnCheckConnectionStatus()
+        {
+            if (socket.IsConnected())
+                timerService.Change(connectionTimer, pollingInterval, Timeout.Infinite);
+            else
+                Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (isDisposed) return;
+            isDisposed = true;
+            decryptor.Dispose();
+            encryptor.Dispose();
+            try
+            {
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Disconnect(false);
+                socket.Dispose();
+            }
+            catch (NullReferenceException) { }
+            baseStream.Dispose();
+            linkNegotiator.Dispose();
+            decryptor = null;
+            encryptor = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        public bool NegotiateTransportKeys()
+        {
+            if (!IsOpen) throw new InvalidOperationException("This connection is not open");
+            return linkNegotiator.SetupConnection(baseStream, out decryptor, out encryptor, out blockSize);
+        }
+
+        public int Write(TMessage message)
+        {
+            int totalSize;
+            using (var memoryStream = new MemoryStream())
+            {
+                serializer.Serialize(message, memoryStream);
+                var data = memoryStream.ToArray();
+                WriteBytes(data, blockSize, reasonablySecurePrng, baseStream, encryptor, out totalSize);
+            }
+            return totalSize;
+        }
+
+        private static void WriteBytes(byte[] data, int blockSize, RandomNumberGenerator reasonablySecurePrng, Stream baseStream, ICryptoTransform encryptor, out int totalLength)
+        {
+            var dataLength = data.Length;
+            Trace.WriteLine("TX: " + data.ToString(":"));
+            var inputLength = dataLength + 4;
+            var blocks = inputLength / blockSize;
+            totalLength = blocks * blockSize;
+            if (0 != inputLength % blockSize)
+            {
+                if (inputLength > blockSize)
+                {
+                    ++blocks;
+                    totalLength += blockSize;
+                }
+                var dataPlusPadding = totalLength - 4;
+                //Array.Resize(ref data, dataPlusPadding);
+                var temp = data;
+                data = new byte[dataPlusPadding];
+                Buffer.BlockCopy(temp, 0, data, 0, temp.Length);
+                var paddingSize = dataPlusPadding - dataLength;
+                var paddingOffset = dataLength;
+                var paddingBytes = new byte[paddingSize];
+                reasonablySecurePrng.GetBytes(paddingBytes);
+                Buffer.BlockCopy(paddingBytes, 0, data, paddingOffset, paddingSize);
+            }
+
+            var finalData = new byte[totalLength];
+            var firstBlock = new byte[blockSize];
+            var length = Serializer.SingletonBitConverter.GetBytes(dataLength);
+            Buffer.BlockCopy(length, 0, firstBlock, 0, 4);
+            Buffer.BlockCopy(data, 0, firstBlock, 4, blockSize - 4);
+            encryptor.TransformBlock(firstBlock, 0, blockSize, finalData, 0);
+            for (var block = 1; block < blocks; ++block)
+            {
+                var offset = block * blockSize;
+                encryptor.TransformBlock(data, offset - 4, blockSize, finalData, offset);
+            }
+            baseStream.Write(finalData, 0, finalData.Length);
+            Trace.WriteLine(string.Format("Wrote {0} blocks", blocks));
+        }
+
+        public TMessage ReadNext(out int totalSize)
+        {
+            var bytes = ReadBytes(baseStream, blockSize, decryptor, out totalSize);
+            using (var memoryStream = new MemoryStream(bytes))
+                return serializer.Deserialize(memoryStream);
+        }
+
+        private static byte[] ReadBytes(Stream sourceStream, int blockSize, ICryptoTransform decryptor, out int totalSize)
+        {
+            var block = new byte[blockSize];
+            var read = sourceStream.FillRead(block);
+            totalSize = read;
+            if (read != blockSize) throw new InvalidDataException();
+            var decrypted = new byte[blockSize];
+            decryptor.TransformBlock(block, 0, block.Length, decrypted, 0);
+            var dataLength = Serializer.SingletonBitConverter.ToInt32(decrypted);
+            var final = new byte[dataLength];
+            Trace.WriteLine(string.Format("First Block: {0}", decrypted.ToString(":")));
+            Buffer.BlockCopy(decrypted, 4, final, 0, blockSize - 4);
+            var dataRead = blockSize - 4;
+            var blocksRead = 1;
+            var chunkSize = blockSize;
+            while (dataRead < dataLength)
+            {
+                read = sourceStream.FillRead(block);
+                totalSize += read;
+                if (dataRead + blockSize > dataLength)
+                    chunkSize = dataLength - dataRead;
+                try
+                {
+                    decrypted = new byte[blockSize];
+                    decryptor.TransformBlock(block, 0, blockSize, decrypted, 0);
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e);
+                }
+                Buffer.BlockCopy(decrypted, 0, final, dataRead, chunkSize);
+                ++blocksRead;
+                dataRead += chunkSize;
+            }
+            Trace.WriteLine(string.Format("Read {0} blocks", blocksRead));
+            Trace.WriteLine("RX: " + final.ToString(":"));
+            return final;
+            //var read = sourceStream.FillRead(readBlock);
+            //if (read != blockSize) throw new InvalidDataException();
+            //var inputData = new byte[blockSize];
+            //decryptor.TransformBlock(readBlock, 0, blockSize, inputData, 0);
+            //var dataLength = Serializer.SingletonBitConverter.ToInt32(inputData);
+            //if (0 > dataLength) throw new InvalidDataException();
+            //var remainingData = dataLength - (blockSize - 4);
+            //var blocks = dataLength / blockSize;
+            //if (0 != remainingData % blockSize)
+            //    ++blocks;
+            //var result = new byte[(blockSize * blocks) - 4];
+            //Buffer.BlockCopy(inputData, 4, result, 0, blockSize - 4);
+            //for (var block = 1; block < blocks; ++block)
+            //{
+            //    read += sourceStream.FillRead(readBlock);
+            //    decryptor.TransformBlock(readBlock, 0, blockSize, result, block * blockSize);
+            //}
+            //var data = new byte[dataLength];
+            //Buffer.BlockCopy(result, 0, data, 0, dataLength);
+            //totalSize = blocks * blockSize;
+            //return result;
+        }
+
+        public bool IsOpen { get { return baseStream.CanRead && baseStream.CanWrite; } }
+        public bool CanRead { get { return baseStream.CanRead; } }
+        public bool CanWrite { get { return baseStream.CanWrite; } }
     }
 }

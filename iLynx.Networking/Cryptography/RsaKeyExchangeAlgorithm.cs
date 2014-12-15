@@ -75,13 +75,16 @@ namespace iLynx.Networking.Cryptography
             int read;
             while ((read = dataStream.Read(dataSlice, 0, maxInputBytes)) > 0)
             {
+                byte[] encryptedSlice;
                 if (read < maxInputBytes)
                 {
                     var temp = new byte[read];
                     Array.Copy(dataSlice, temp, read);
                     dataSlice = temp;
+                    encryptedSlice = publicProvider.Encrypt(dataSlice, true);
                 }
-                var encryptedSlice = publicProvider.Encrypt(dataSlice, true);
+                else
+                    encryptedSlice = publicProvider.Encrypt(dataSlice, false);
                 target.Write(encryptedSlice, 0, encryptedSlice.Length);
                 dataSlice = new byte[maxInputBytes];
             }

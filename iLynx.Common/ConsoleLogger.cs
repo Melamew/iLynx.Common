@@ -59,7 +59,11 @@ namespace iLynx.Common
         public void Log(LogLevel level, object sender, string message)
         {
             var line = string.Format("[{0}:{1}]: {2}", level.ToString()[0], null == sender ? "NOWHERE" : sender.GetType().Name, message);
+#if DEBUG
+            Trace.WriteLine(line);
+#else
             Console.WriteLine(line);
+#endif
             if (writer == null) return;
             writer.WriteLine(line);
             writer.Flush();

@@ -64,8 +64,9 @@ namespace iLynx.Common.Threading
             var delta = nextDue - DateTime.Now;
             if (delta.TotalMilliseconds < 0)
             {
-                RuntimeCommon.DefaultLogger.Log(LogLevel.Warning, this, string.Format("Next timer interval is < 0 milliseconds away ({0}), restarting at 0", delta));
-                delta = TimeSpan.FromMilliseconds(0);
+                var newStart = delta.TotalMilliseconds*-1;
+                RuntimeCommon.DefaultLogger.Log(LogLevel.Warning, this, string.Format("Next timer interval is < 0 milliseconds away ({0}), restarting at {1}", delta, newStart));
+                delta = TimeSpan.FromMilliseconds(newStart);
             }
             mainTimer.Change(delta, Timeout.InfiniteTimeSpan);
         }
