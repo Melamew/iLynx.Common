@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using iLynx.Common;
 
-namespace iLynx.Common.Serialization
+namespace iLynx.Serialization
 {
     /// <summary>
     /// NaiveSerializer
@@ -15,7 +17,7 @@ namespace iLynx.Common.Serialization
     public class NaiveSerializer<T> : ISerializer
     {
         private readonly ILogger logger;
-        private readonly IEnumerable<SerializationInfo<T>> sortedGraph;
+        private readonly IEnumerable<SerializationInfo> sortedGraph;
         private const BindingFlags FieldFlags = BindingFlags.GetField | BindingFlags.SetField | BindingFlags.Public | BindingFlags.Instance;
         private const BindingFlags PropertyFlags = BindingFlags.SetProperty | BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance;
 
@@ -35,9 +37,9 @@ namespace iLynx.Common.Serialization
         /// </summary>
         /// <param name="targetType">Type of the target.</param>
         /// <returns></returns>
-        public static SortedList<Guid, SerializationInfo<T>> BuildObjectGraph(Type targetType)
+        public static SortedList<Guid, SerializationInfo> BuildObjectGraph(Type targetType)
         {
-            var graph = new SortedList<Guid, SerializationInfo<T>>();
+            var graph = new SortedList<Guid, SerializationInfo>();
             var namespaceAttribute = targetType.GetCustomAttribute<GuidAttribute>();
             var name = Guid.Empty;
             var hasAttribute = false;
@@ -50,16 +52,22 @@ namespace iLynx.Common.Serialization
                 var fieldInfo in
                     targetType.GetFields(FieldFlags)
                               .Where(f => !f.IsDefined(typeof(NotSerializedAttribute)) && !f.IsNotSerialized)
-                              .Select(c => new SerializationInfo<T>(c, c.FieldType))
+                              .Select(c => new SerializationInfo(c, c.FieldType))
                               .Concat(targetType.GetProperties(PropertyFlags)    // Apparently BindingFLAGS don't work like flags...
                               .Where(p => null != p.SetMethod && p.SetMethod.IsPublic && null != p.GetMethod && p.GetMethod.IsPublic && p.GetMethod.GetParameters().Length == 0 && p.SetMethod.GetParameters().Length == 1)
                               .Where(p => !p.IsDefined(typeof(NotSerializedAttribute)))
-                              .Select(p => new SerializationInfo<T>(p, p.PropertyType)))
+                              .Select(p => new SerializationInfo(p, p.PropertyType)))
                 )
             {
+                var idBase = fieldInfo.Member.Name + fieldInfo.Type.FullName;
                 var id = hasAttribute
-                             ? fieldInfo.Member.Name.CreateGuidV5(name)
-                             : fieldInfo.Member.Name.CreateGuidV5(Serializer.SerializerNamespace);
+                             ? idBase.CreateGuidV5(name)
+                             : idBase.CreateGuidV5(Serializer.SerializerNamespace);
+                if (graph.ContainsKey(id))
+                {
+                    Trace.WriteLine("...");
+                    continue;
+                }
                 graph.Add(id, fieldInfo);
             }
             return graph;

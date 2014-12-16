@@ -4,20 +4,21 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Media;
+using iLynx.Common;
 
-namespace iLynx.Common.Serialization
+namespace iLynx.Serialization
 {
     public class Primitives
     {
+        public static Encoding TextEncoding = Encoding.UTF8;
+
         public class StringSerializer : ISerializer<string>
         {
-            private Encoding encoding = Encoding.ASCII;
-            public Encoding Encoding { get { return encoding; } set { encoding = value; } }
             public void Serialize(object item, Stream target)
             {
                 var str = item as string;
                 if (null == str) return;
-                var bytes = encoding.GetBytes(str);
+                var bytes = TextEncoding.GetBytes(str);
                 var len = bytes.Length;
                 target.Write(Serializer.SingletonBitConverter.GetBytes(len), 0, sizeof(int));
                 target.Write(bytes, 0, bytes.Length);
@@ -30,7 +31,7 @@ namespace iLynx.Common.Serialization
                 var len = Serializer.SingletonBitConverter.ToInt32(buffer);
                 buffer = new byte[len];
                 source.Read(buffer, 0, buffer.Length);
-                return encoding.GetString(buffer);
+                return TextEncoding.GetString(buffer);
             }
 
             void ISerializer<string>.Serialize(string item, Stream target)
@@ -45,14 +46,14 @@ namespace iLynx.Common.Serialization
 
             public int GetOutputSize(string item)
             {
-                return encoding.GetByteCount(item);
+                return TextEncoding.GetByteCount(item);
             }
 
             public int GetOutputSize(object item)
             {
                 var str = item as string;
                 if (null == str) throw new InvalidCastException();
-                return encoding.GetByteCount(str);
+                return TextEncoding.GetByteCount(str);
             }
         }
 
@@ -116,17 +117,15 @@ namespace iLynx.Common.Serialization
             private readonly Func<object, int> getSizeCallback;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="iLynx.Common.Serialization.Primitives.CallbackSerializer" /> class.
+            /// Initializes a new instance of the <see cref="Primitives.CallbackSerializer" /> class.
             /// </summary>
             /// <param name="writeCallback">The write callback.</param>
             /// <param name="readCallback">The read callback.</param>
             /// <param name="getSizeCallback"></param>
             public CallbackSerializer(Action<object, Stream> writeCallback, Func<Stream, object> readCallback, Func<object, int> getSizeCallback = null)
             {
-                writeCallback.Guard("writeCallback");
-                readCallback.Guard("readCallback");
-                this.writeCallback = writeCallback;
-                this.readCallback = readCallback;
+                this.writeCallback = Guard.IsNull(() => writeCallback);
+                this.readCallback = Guard.IsNull(() => readCallback);
                 this.getSizeCallback = getSizeCallback;
             }
 
@@ -158,6 +157,80 @@ namespace iLynx.Common.Serialization
             }
         }
 
+        public class UnTypedArraySerializer : SerializerBase<Array>
+        {
+            private readonly Type arrayType;
+
+            public UnTypedArraySerializer(Type arrayType)
+            {
+                this.arrayType = Guard.IsNull(() => arrayType);
+            }
+
+            public override int GetOutputSize(Array item)
+            {
+                return -1;
+            }
+
+            public override Array Deserialize(Stream source)
+            {
+                var buffer = new byte[sizeof(int)];
+                source.Read(buffer, 0, buffer.Length);
+                var byteLength = Serializer.SingletonBitConverter.ToInt32(buffer);
+                buffer = new byte[byteLength];
+                source.Read(buffer, 0, buffer.Length);
+                using (var memoryStream = new MemoryStream(buffer))
+                {
+                    while (memoryStream.Position < memoryStream.Length)
+                    {
+                        
+                    }
+                }
+                //var elementCount = Serializer.SingletonBitConverter.ToInt32(buffer);
+                //if (0 > elementCount) throw new InvalidDataException();
+                //var target = Array.CreateInstance(arrayType.GetElementType(), elementCount);
+                //for (var i = 0; i < elementCount; ++i)
+                //{
+                //    var isNotNull = source.ReadByte();
+                //    if (isNotNull == 0) continue;
+                //    source.Read(buffer, 0, buffer.Length); // Length of the type string
+                //    var textLength = Serializer.SingletonBitConverter.ToInt32(buffer);
+                //    if (0 > textLength) throw new InvalidDataException();
+                //    buffer = new byte[textLength];
+                //    source.Read(buffer, 0, buffer.Length);
+                //    var typeName = TextEncoding.GetString(buffer);
+                //    var elementType = Type.GetType(typeName);
+                //    if (null == elementType) throw new NotSupportedException();
+                //    var serializer = Serializer.GetSerializer(elementType);
+                //    var item = serializer.Deserialize(source);
+                //    target.SetValue(item, i);
+                //}
+                return target;
+            }
+
+            public override void Serialize(Array item, Stream target)
+            {
+                var buffer = Serializer.SingletonBitConverter.GetBytes(item.Length);
+                target.Write(buffer, 0, buffer.Length);
+                foreach (var element in item)
+                {
+                    if (null == element)
+                    {
+                        target.WriteByte(0x00);
+                        continue;
+                    }
+                    
+                    target.WriteByte(0x01);
+                    var type = element.GetType();
+                    var textBuffer = TextEncoding.GetBytes(type.AssemblyQualifiedName);
+                    buffer = Serializer.SingletonBitConverter.GetBytes(textBuffer.Length);
+                    target.Write(buffer, 0, buffer.Length);
+                    target.Write(textBuffer, 0, textBuffer.Length);
+                    var serializer = Serializer.GetSerializer(type);
+                    serializer.Serialize(element, target);
+                }
+            }
+        }
+
         /// <summary>
         /// ArraySerializer
         /// // TODO: Maybe this could handle polymorphic arrays too?
@@ -168,7 +241,7 @@ namespace iLynx.Common.Serialization
             private readonly ISerializer itemSerializer;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="iLynx.Common.Serialization.Primitives.ArraySerializer" /> class.
+            /// Initializes a new instance of the <see cref="Primitives.ArraySerializer" /> class.
             /// </summary>
             /// <param name="arrayType">Type of the array.</param>
             /// <exception cref="WhatTheFuckException"></exception>

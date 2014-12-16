@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
-using iLynx.Common.Configuration;
+using iLynx.Configuration;
 
 namespace iLynx.Chatter.Server
 {

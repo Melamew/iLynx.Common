@@ -7,6 +7,7 @@ using System.Threading;
 using iLynx.Common;
 using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
+using iLynx.Serialization;
 
 // ReSharper disable LocalizableElement
 

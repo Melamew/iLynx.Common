@@ -3,8 +3,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using iLynx.Common;
-using iLynx.Common.Serialization;
 using iLynx.Networking.Interfaces;
+using iLynx.Serialization;
 
 namespace iLynx.Networking.UDP
 {

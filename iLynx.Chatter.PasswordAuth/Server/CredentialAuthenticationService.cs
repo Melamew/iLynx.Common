@@ -8,15 +8,16 @@ using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;
-using iLynx.Common.Serialization;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
+using iLynx.Serialization;
 
 namespace iLynx.Chatter.AuthenticationModule.Server
 {
     public class CredentialAuthenticationService : IDisposable, IAuthenticationService<ChatMessage, int>
     {
+        private readonly IBus<IServerCommand> serverCommandBus;
         private readonly IUserRegistrationService userRegistrationService;
         private readonly IPasswordHashingService passwordHashingService;
         private readonly IBus<MessageEnvelope<ChatMessage, int>> messageBus;
@@ -28,9 +29,11 @@ namespace iLynx.Chatter.AuthenticationModule.Server
         public CredentialAuthenticationService(IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> messageSubscriptionManager,
             IBus<MessageEnvelope<ChatMessage, int>> messageBus,
             IBus<IApplicationEvent> applicationEventBus,
+            IBus<IServerCommand> serverCommandBus,
             IUserRegistrationService userRegistrationService,
             IPasswordHashingService passwordHashingService)
         {
+            this.serverCommandBus = serverCommandBus;
             this.userRegistrationService = Guard.IsNull(() => userRegistrationService);
             this.passwordHashingService = Guard.IsNull(() => passwordHashingService);
             this.messageBus = Guard.IsNull(() => messageBus);
@@ -105,6 +108,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             };
             var envelope = new MessageEnvelope<ChatMessage, int>(message, clientId);
             messageBus.Publish(envelope);
+            serverCommandBus.Publish(new DisconnectCommand(clientId));
         }
 
         public void Dispose()

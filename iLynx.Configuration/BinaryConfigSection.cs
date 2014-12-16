@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using iLynx.Common.Serialization;
+using iLynx.Common;
+using iLynx.Serialization;
 
-namespace iLynx.Common.Configuration
+namespace iLynx.Configuration
 {
-    public class BinaryConfigSection
+    public interface IConfigSection
+    {
+        void ReadFrom(Stream stream);
+        IEnumerable<IConfigurableValue> GetAll(string category = null);
+        Dictionary<string, Dictionary<string, IConfigurableValue>> Categories { get; }
+    }
+
+    public class BinaryConfigSection : IConfigSection
     {
         public const string DefaultCategory = "Default";
 
-        private readonly Dictionary<string, Dictionary<string, ConfigurableValue>> categories = new Dictionary<string, Dictionary<string, ConfigurableValue>>();
+        private readonly Dictionary<string, Dictionary<string, IConfigurableValue>> categories = new Dictionary<string, Dictionary<string, IConfigurableValue>>();
 
-        public Dictionary<string, Dictionary<string, ConfigurableValue>> Categories
+        public Dictionary<string, Dictionary<string, IConfigurableValue>> Categories
         {
             get { return categories; }
         }
@@ -38,9 +46,9 @@ namespace iLynx.Common.Configuration
             {
                 var container = serializer.Deserialize(stream);
                 var category = container.Category;
-                Dictionary<string, ConfigurableValue> existing;
+                Dictionary<string, IConfigurableValue> existing;
                 if (!categories.TryGetValue(category, out existing))
-                    categories.Add(category, (existing = new Dictionary<string, ConfigurableValue>()));
+                    categories.Add(category, (existing = new Dictionary<string, IConfigurableValue>()));
                 foreach (var val in container.Values)
                 {
                     if (existing.ContainsKey(val.Key))
@@ -64,7 +72,7 @@ namespace iLynx.Common.Configuration
             /// </value>
             public string Category { get; set; }
 
-            private ConfigurableValue[] values = new ConfigurableValue[0];
+            private IConfigurableValue[] values = new IConfigurableValue[0];
 
             /// <summary>
             /// Gets or sets the values.
@@ -72,7 +80,7 @@ namespace iLynx.Common.Configuration
             /// <value>
             /// The values.
             /// </value>
-            public ConfigurableValue[] Values { get { return values; } set { values = value; } }
+            public IConfigurableValue[] Values { get { return values; } set { values = value; } }
         }
 
         /// <summary>
@@ -99,9 +107,9 @@ namespace iLynx.Common.Configuration
             }
         }
 
-        private Dictionary<string, ConfigurableValue> GetCategory(string cat)
+        private Dictionary<string, IConfigurableValue> GetCategory(string cat)
         {
-            Dictionary<string, ConfigurableValue> result;
+            Dictionary<string, IConfigurableValue> result;
             return Categories.TryGetValue(cat, out result) ? result : null;
         }
 
@@ -111,7 +119,7 @@ namespace iLynx.Common.Configuration
         /// <param name="category">The category.</param>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        public ConfigurableValue this[string category, string key]
+        public IConfigurableValue this[string category, string key]
         {
             get
             {
@@ -120,7 +128,7 @@ namespace iLynx.Common.Configuration
                     category = DefaultCategory;
                 var cat = GetCategory(category);
                 if (null == cat) return null;
-                ConfigurableValue value;
+                IConfigurableValue value;
                 return cat.TryGetValue(key, out value) ? value : null;
             }
             set
@@ -134,7 +142,7 @@ namespace iLynx.Common.Configuration
                 var cat = GetCategory(category);
                 if (null == cat)
                 {
-                    cat = new Dictionary<string, ConfigurableValue>();
+                    cat = new Dictionary<string, IConfigurableValue>();
                     Categories.Add(category, cat);
                 }
                 if (cat.ContainsKey(key))
@@ -156,7 +164,7 @@ namespace iLynx.Common.Configuration
         {
             key.GuardString("key");
             if (null == category) category = DefaultCategory;
-            Dictionary<string, ConfigurableValue> sub;
+            Dictionary<string, IConfigurableValue> sub;
             return Categories.TryGetValue(category, out sub) && sub.ContainsKey(key);
         }
 

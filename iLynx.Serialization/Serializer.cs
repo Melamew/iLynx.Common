@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using iLynx.Common;
 
-namespace iLynx.Common.Serialization
+namespace iLynx.Serialization
 {
     /// <summary>
     /// Serializer
@@ -107,17 +108,17 @@ namespace iLynx.Common.Serialization
             ISerializer ser;
             lock (LookupTable)
             {
-                if (!TryGetTypeSerializer(type, out ser))
-                {
-                    ser = type.IsArray ? MakeArraySerializer(type) : MakeSerializer(type);
-                    LookupTable.Add(type, ser);
-                }
+                if (TryGetTypeSerializer(type, out ser)) return ser;
+                ser = type.IsArray ? MakeArraySerializer(type) : MakeSerializer(type);
+                LookupTable.Add(type, ser);
             }
             return ser;
         }
 
         private static ISerializer MakeArraySerializer(Type arrayType)
         {
+            if (arrayType.IsUnTypedArray())
+                return new Primitives.UnTypedArraySerializer(arrayType);
             return new Primitives.ArraySerializer(arrayType);
         }
 

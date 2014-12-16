@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using iLynx.Common;
-using iLynx.Common.Serialization;
+using iLynx.Serialization;
 
 namespace iLynx.Chatter.Infrastructure
 {

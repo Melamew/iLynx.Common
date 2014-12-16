@@ -1,4 +1,6 @@
-﻿namespace iLynx.Common.Configuration
+﻿using System.Configuration;
+
+namespace iLynx.Configuration
 {
     /// <summary>
     ///     A simple configurable value (Uses the builtin ConfigurationManager (

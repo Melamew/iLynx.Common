@@ -8,6 +8,7 @@ using iLynx.Common.Serialization;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
+using iLynx.Serialization;
 
 namespace iLynx.Chatter.AuthenticationModule.Client
 {

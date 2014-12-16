@@ -10,7 +10,6 @@ namespace iLynx.Common
     /// </summary>
     public static class RuntimeCommon
     {
-        private static IBitConverter defaultBitConverter;
         private static readonly LoggingProxy Proxy = new LoggingProxy(new ConsoleLogger("Log.log"));
 
         /// <summary>
@@ -29,14 +28,6 @@ namespace iLynx.Common
         {
             get { return Proxy; }
             set { Proxy.Logger = value; }
-        }
-
-        /// <summary>
-        /// Gets the default (BigEndian) BitConverter
-        /// </summary>
-        public static IBitConverter DefaultBitConverter
-        {
-            get { return defaultBitConverter ?? (defaultBitConverter = new BigEndianBitConverter()); }
         }
 
         [StringFormatMethod("format")]

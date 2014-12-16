@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using iLynx.Common;
-using iLynx.Common.Serialization;
 using iLynx.Networking.Interfaces;
+using iLynx.Serialization;
 
 namespace iLynx.Networking
 {

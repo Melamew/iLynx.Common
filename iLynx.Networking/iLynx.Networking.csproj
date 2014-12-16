@@ -117,6 +117,10 @@
       <Project>{DF55B984-7E5E-447C-9D68-D93F9FB0C227}</Project>
       <Name>iLynx.PubSub</Name>
     </ProjectReference>
+    <ProjectReference Include="..\iLynx.Serialization\iLynx.Serialization.csproj">
+      <Project>{86100c1f-b2c4-4231-bfd4-f16dbc60e174}</Project>
+      <Name>iLynx.Serialization</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

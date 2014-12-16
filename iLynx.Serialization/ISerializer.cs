@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace iLynx.Common.Serialization
+namespace iLynx.Serialization
 {
     /// <summary>
     /// ISerializer

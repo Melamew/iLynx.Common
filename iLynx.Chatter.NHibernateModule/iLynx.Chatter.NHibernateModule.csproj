@@ -112,6 +112,10 @@
       <Project>{1241AC19-9872-4126-8915-3A34919E1705}</Project>
       <Name>iLynx.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\iLynx.Configuration\iLynx.Configuration.csproj">
+      <Project>{A92DA3A7-612C-440A-A84C-F3C8A3E4D85A}</Project>
+      <Name>iLynx.Configuration</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\x64\SQLite.Interop.dll">

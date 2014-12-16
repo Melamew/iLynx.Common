@@ -122,14 +122,6 @@
     <Compile Include="Collections\ICache.cs" />
     <Compile Include="Collections\IIDentifiable.cs" />
     <Compile Include="Collections\PriorityQueue.cs" />
-    <Compile Include="Configuration\BinaryConfigSection.cs" />
-    <Compile Include="Configuration\ConfigurableValue.cs" />
-    <Compile Include="Configuration\SingletonConfigurationManager.cs" />
-    <Compile Include="Configuration\ExeConfig.cs" />
-    <Compile Include="Configuration\ExeConfigValue.cs" />
-    <Compile Include="Configuration\IConfigurableValue.cs" />
-    <Compile Include="Configuration\IConfigurationManager.cs" />
-    <Compile Include="Configuration\IValueConverter.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="Cryptography\IEncryptionAlgorithm.cs" />
     <Compile Include="IFreezable.cs" />
@@ -139,13 +131,6 @@
     <Compile Include="NonComponentNotificationBase.cs" />
     <Compile Include="Pixels\IPalette.cs" />
     <Compile Include="Pixels\LinearGradientPalette.cs" />
-    <Compile Include="Serialization\BigEndianBitConverter.cs" />
-    <Compile Include="Serialization\Endianness.cs" />
-    <Compile Include="Serialization\IBitConverter.cs" />
-    <Compile Include="Serialization\ISerializer.cs" />
-    <Compile Include="Serialization\ISerializerService.cs" />
-    <Compile Include="Serialization\NotSerializedAttribute.cs" />
-    <Compile Include="Serialization\NullType.cs" />
     <Compile Include="Serialization\Old\DataProperty.cs" />
     <Compile Include="Serialization\Old\DataPropertyAttribute.cs" />
     <Compile Include="Serialization\Old\DataSerializer.cs" />
@@ -176,11 +161,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RuntimeHelper.cs" />
-    <Compile Include="Serialization\NaiveSerializer.cs" />
-    <Compile Include="Serialization\Primitives.cs" />
-    <Compile Include="Serialization\SerializationInfo.cs" />
-    <Compile Include="Serialization\Serializer.cs" />
-    <Compile Include="Serialization\WhatTheFuckException.cs" />
     <Compile Include="Threading\ITimerService.cs" />
     <Compile Include="Threading\ParameterizedThreadedResultWorker.cs" />
     <Compile Include="Threading\ParameterizedThreadedWorker.cs" />
@@ -209,7 +189,9 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

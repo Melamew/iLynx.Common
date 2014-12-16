@@ -1,7 +1,8 @@
 using System;
 using System.Diagnostics;
+using iLynx.Common;
 
-namespace iLynx.Common.Configuration
+namespace iLynx.Configuration
 {
     /// <summary>
     /// ConfigurableValue
@@ -59,7 +60,7 @@ namespace iLynx.Common.Configuration
                     return;
                 }
                 value = val.Value;
-                category = val.category;
+                category = val.Category;
             }
         }
 

@@ -3,7 +3,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 
-namespace iLynx.Common.Configuration
+namespace iLynx.Configuration
 {
     /// <summary>
     ///     Simple helper class that contains a <see cref="System.Configuration.Configuration" /> object for the entry assembly

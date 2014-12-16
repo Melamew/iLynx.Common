@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using iLynx.Common;
-using iLynx.Common.Serialization;
+using iLynx.Serialization;
 using ProtoBuf;
 using Serializer = ProtoBuf.Serializer;
 

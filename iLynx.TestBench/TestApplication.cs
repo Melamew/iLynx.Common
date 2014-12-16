@@ -4,13 +4,14 @@ using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.ServerServicesModule;
 using iLynx.Chatter.WPF;
 using iLynx.Common;
-using iLynx.Common.Configuration;
 using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
 using iLynx.Common.WPF;
+using iLynx.Configuration;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Cryptography;
 using iLynx.PubSub;
+using iLynx.Serialization;
 using iLynx.TestBench.ClientServerDemo;
 using Microsoft.Practices.Unity;
 

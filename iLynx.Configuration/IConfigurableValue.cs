@@ -1,6 +1,7 @@
 ﻿using System;
+using iLynx.Common;
 
-namespace iLynx.Common.Configuration
+namespace iLynx.Configuration
 {
     /// <summary>
     ///     A simple configurable value (Uses the builtin ConfigurationManager (
@@ -41,7 +42,7 @@ namespace iLynx.Common.Configuration
         /// <value>
         /// The category.
         /// </value>
-        string Category { get; }
+        string Category { get; set; }
     }
 
     /// <summary>
