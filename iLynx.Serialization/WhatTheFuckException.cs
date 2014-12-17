@@ -1,6 +1,6 @@
 using System;
 
-namespace iLynx.Common.Serialization
+namespace iLynx.Serialization
 {
     public class WhatTheFuckException : Exception
     {

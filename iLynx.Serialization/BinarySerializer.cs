@@ -1,43 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using iLynx.Common;
 
-namespace iLynx.Common.Serialization
+namespace iLynx.Serialization
 {
-    /// <summary>
-    /// NaiveSerializer
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class NaiveSerializer<T> : ISerializer
+    public static class SerializerExtensions
     {
-        private readonly ILogger logger;
-        private readonly IEnumerable<SerializationInfo<T>> sortedGraph;
         private const BindingFlags FieldFlags = BindingFlags.GetField | BindingFlags.SetField | BindingFlags.Public | BindingFlags.Instance;
         private const BindingFlags PropertyFlags = BindingFlags.SetProperty | BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NaiveSerializer{T}" /> class.
-        /// </summary>
-        /// <exception cref="System.NotSupportedException">Missing Types are currently not supported</exception>
-        public NaiveSerializer(ILogger logger)
-        {
-            this.logger = logger;
-            if (typeof(T) == Type.Missing.GetType()) throw new NotSupportedException("Missing Types are currently not supported");
-            sortedGraph = BuildObjectGraph(typeof(T)).Values;
-        }
 
         /// <summary>
         /// Builds the object graph.
         /// </summary>
         /// <param name="targetType">Type of the target.</param>
         /// <returns></returns>
-        public static SortedList<Guid, SerializationInfo<T>> BuildObjectGraph(Type targetType)
+        public static SortedList<Guid, SerializationInfo> BuildObjectGraph(this Type targetType)
         {
-            var graph = new SortedList<Guid, SerializationInfo<T>>();
+            var graph = new SortedList<Guid, SerializationInfo>();
             var namespaceAttribute = targetType.GetCustomAttribute<GuidAttribute>();
             var name = Guid.Empty;
             var hasAttribute = false;
@@ -50,33 +35,49 @@ namespace iLynx.Common.Serialization
                 var fieldInfo in
                     targetType.GetFields(FieldFlags)
                               .Where(f => !f.IsDefined(typeof(NotSerializedAttribute)) && !f.IsNotSerialized)
-                              .Select(c => new SerializationInfo<T>(c, c.FieldType))
+                              .Select(c => new SerializationInfo(c, c.FieldType))
                               .Concat(targetType.GetProperties(PropertyFlags)    // Apparently BindingFLAGS don't work like flags...
                               .Where(p => null != p.SetMethod && p.SetMethod.IsPublic && null != p.GetMethod && p.GetMethod.IsPublic && p.GetMethod.GetParameters().Length == 0 && p.SetMethod.GetParameters().Length == 1)
                               .Where(p => !p.IsDefined(typeof(NotSerializedAttribute)))
-                              .Select(p => new SerializationInfo<T>(p, p.PropertyType)))
+                              .Select(p => new SerializationInfo(p, p.PropertyType)))
                 )
             {
+                var idBase = fieldInfo.Member.Name + fieldInfo.Type.FullName;
                 var id = hasAttribute
-                             ? fieldInfo.Member.Name.CreateGuidV5(name)
-                             : fieldInfo.Member.Name.CreateGuidV5(Serializer.SerializerNamespace);
+                             ? idBase.CreateGuidV5(name)
+                             : idBase.CreateGuidV5(BinarySerializerService.SerializerNamespace);
+                if (graph.ContainsKey(id))
+                {
+                    Trace.WriteLine("...");
+                    continue;
+                }
                 graph.Add(id, fieldInfo);
             }
             return graph;
         }
+    }
 
-        public void Serialize(object item, Stream target)
+    /// <summary>
+    /// BinarySerializer
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class BinarySerializer<T> : SerializerBase<T>
+    {
+        private readonly ILogger logger;
+        private readonly IEnumerable<SerializationInfo> sortedGraph;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BinarySerializer{T}" /> class.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException">Missing Types are currently not supported</exception>
+        public BinarySerializer(ILogger logger = null)
         {
-            if (!(item is T)) throw new InvalidOperationException("The specified item is not of the correct type");
-            Serialize((T)item, target);
+            this.logger = logger ?? RuntimeCommon.DefaultLogger;
+            if (typeof(T) == Type.Missing.GetType()) throw new NotSupportedException("Missing Types are currently not supported");
+            sortedGraph = typeof(T).BuildObjectGraph().Values;
         }
 
-        object ISerializer.Deserialize(Stream source)
-        {
-            return Deserialize(source);
-        }
-
-        public int GetOutputSize(object item)
+        public override int GetOutputSize(T item)
         {
             var accum = 0;
             foreach (var member in sortedGraph)
@@ -87,7 +88,7 @@ namespace iLynx.Common.Serialization
                 {
                     value = value ?? new NullType();
                     var type = value.GetType();
-                    serializer = Serializer.GetSerializer(type);
+                    serializer = BinarySerializerService.GetSerializer(type);
                 }
                 else
                     serializer = member.TypeSerializer;
@@ -101,7 +102,7 @@ namespace iLynx.Common.Serialization
         /// </summary>
         /// <param name="source">The source.</param>
         /// <returns></returns>
-        public T Deserialize(Stream source)
+        public override T Deserialize(Stream source)
         {
             var target = Activator.CreateInstance(typeof(T));
             foreach (var member in sortedGraph)
@@ -113,7 +114,7 @@ namespace iLynx.Common.Serialization
                     var memberType = ReadType(source);
                     if (null == memberType)
                         continue;
-                    serializer = Serializer.GetSerializer(memberType);
+                    serializer = BinarySerializerService.GetSerializer(memberType);
                 }
                 else serializer = member.TypeSerializer;
 
@@ -154,7 +155,7 @@ namespace iLynx.Common.Serialization
         /// </summary>
         /// <param name="item">The item.</param>
         /// <param name="target">The target.</param>
-        public void Serialize(T item, Stream target)
+        public override void Serialize(T item, Stream target)
         {
             foreach (var member in sortedGraph)
             {
@@ -165,7 +166,7 @@ namespace iLynx.Common.Serialization
                 {
                     value = value ?? new NullType();
                     var type = value.GetType();
-                    serializer = Serializer.GetSerializer(type);
+                    serializer = BinarySerializerService.GetSerializer(type);
                     target.WriteByte(0x01); // Indicate that we need to read the type when we deserialize.
                     WriteType(target, type);
                 }
@@ -186,7 +187,7 @@ namespace iLynx.Common.Serialization
                 }
             }
         }
-
+        
         /// <summary>
         /// Reads the type.
         /// </summary>
@@ -196,7 +197,7 @@ namespace iLynx.Common.Serialization
         {
             var length = new byte[sizeof(int)];
             source.Read(length, 0, length.Length);
-            var len = Serializer.SingletonBitConverter.ToInt32(length);
+            var len = BinarySerializerService.SingletonBitConverter.ToInt32(length);
             if (len <= 0 || len >= 4096)
                 return null;
             var field = new byte[len];
@@ -213,7 +214,7 @@ namespace iLynx.Common.Serialization
         private static void WriteType(Stream target, Type type)
         {
             var typeBytes = Unicode.GetBytes(type.AssemblyQualifiedName ?? type.FullName);
-            var length = Serializer.SingletonBitConverter.GetBytes(typeBytes.Length);
+            var length = BinarySerializerService.SingletonBitConverter.GetBytes(typeBytes.Length);
             target.Write(length, 0, length.Length);
             target.Write(typeBytes, 0, typeBytes.Length);
         }

@@ -6,7 +6,7 @@ using FluentNHibernate.Cfg.Db;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.NHibernateModule.Mappings;
 using iLynx.Common;
-using iLynx.Common.Configuration;
+using iLynx.Configuration;
 using Microsoft.Practices.Unity;
 using NHibernate.Tool.hbm2ddl;
 

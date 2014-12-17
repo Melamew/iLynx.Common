@@ -3,14 +3,14 @@ using System.Linq;
 using System.Security.Cryptography;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Common;
-using iLynx.Common.Configuration;
-using iLynx.Common.Serialization;
+using iLynx.Configuration;
+using iLynx.Serialization;
 
 namespace iLynx.Chatter.AuthenticationModule
 {
     public class PasswordHashingService : IPasswordHashingService
     {
-        private readonly IBitConverter bitConverter = Serializer.SingletonBitConverter;
+        private readonly IBitConverter bitConverter = BinarySerializerService.SingletonBitConverter;
         private readonly IConfigurableValue<int> keySizeValue;
         private readonly RandomNumberGenerator cryptoRng = new RNGCryptoServiceProvider();
 

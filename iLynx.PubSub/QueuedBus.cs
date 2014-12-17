@@ -31,7 +31,7 @@ namespace iLynx.PubSub
                     continue;
                 }
                 var item = messageQueue.Dequeue();
-                RuntimeCommon.DefaultLogger.Log(LogLevel.Debug, this, string.Format("Publish: {0}", item.Item1));
+                this.LogDebug("Publish: {0}", item.Item1);
                 Publish(item.Item1, item.Item2);
             }
         }

@@ -13,6 +13,7 @@ namespace iLynx.Networking.ClientServer
 {
     public class MessageServer<TMessage, TKey> : IMessageServer<TMessage, TKey>, IDisposable where TMessage : IClientMessage<TKey>
     {
+        private readonly IBus<IServerCommand> serverCommandBus;
         private readonly IBus<MessageEnvelope<TMessage, TKey>> messageBus;
         private readonly IClientBuilder<TMessage, TKey> clientBuilder;
         private readonly IThreadManager threadManager;
@@ -25,13 +26,25 @@ namespace iLynx.Networking.ClientServer
         public MessageServer(IConnectionStubListener<TMessage, TKey> listener,
             IClientBuilder<TMessage, TKey> clientBuilder,
             IThreadManager threadManager,
-            IBus<MessageEnvelope<TMessage, TKey>> messageBus)
+            IBus<MessageEnvelope<TMessage, TKey>> messageBus,
+            IBus<IServerCommand> serverCommandBus)
         {
+            this.serverCommandBus = serverCommandBus;
             this.messageBus = Guard.IsNull(() => messageBus);
             this.clientBuilder = Guard.IsNull(() => clientBuilder);
             this.threadManager = Guard.IsNull(() => threadManager);
             this.listener = Guard.IsNull(() => listener);
             this.messageBus.Subscribe<MessageEnvelope<TMessage, TKey>>(HandleMessage);
+            this.serverCommandBus.Subscribe<DisconnectCommand>(OnDisconnect);
+        }
+
+        private void OnDisconnect(DisconnectCommand message)
+        {
+            var clientId = message.ClientId;
+            IClient<TMessage, TKey> client;
+            if (!connectedClients.TryGetValue(clientId, out client)) return;
+            client.Close();
+            connectedClients.Remove(clientId);
         }
 
         private void HandleMessage(MessageEnvelope<TMessage, TKey> envelope)
@@ -187,6 +200,21 @@ namespace iLynx.Networking.ClientServer
         public void Dispose()
         {
             messageBus.Unsubscribe<MessageEnvelope<TMessage, TKey>>(HandleMessage);
+            serverCommandBus.Unsubscribe<DisconnectCommand>(OnDisconnect);
         }
+    }
+
+    public class DisconnectCommand : IServerCommand
+    {
+        public DisconnectCommand(Guid clientId)
+        {
+            ClientId = clientId;
+        }
+
+        public Guid ClientId { get; private set; }
+    }
+
+    public interface IServerCommand
+    {
     }
 }

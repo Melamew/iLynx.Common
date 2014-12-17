@@ -1,14 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Reflection;
+using iLynx.Common;
 
-namespace iLynx.Common.Serialization
+namespace iLynx.Serialization
 {
+    public abstract class SerializerServiceBase : ISerializerService
+    {
+        ISerializer ISerializerService.GetSerializer(Type type)
+        {
+            return BinarySerializerService.GetSerializer(type);
+        }
+
+        ISerializer<T> ISerializerService.GetSerializer<T>()
+        {
+            return BinarySerializerService.GetSerializer<T>();
+        }
+
+        T ISerializerService.Deserialize<T>(Stream source)
+        {
+            return BinarySerializerService.Deserialize<T>(source);
+        }
+
+        void ISerializerService.Serialize<T>(T item, Stream target)
+        {
+            BinarySerializerService.Serialize(item, target);
+        }
+    }
+
     /// <summary>
-    /// Serializer
+    /// BinarySerializerService
     /// </summary>
-    public class Serializer : ISerializerService
+    public class BinarySerializerService : SerializerServiceBase
     {
         /// <summary>
         /// The namespace GUID used by this serializer
@@ -16,24 +41,25 @@ namespace iLynx.Common.Serialization
         public static readonly Guid SerializerNamespace = new Guid("6CB4F946-4563-4458-938A-56E5DAB8640F");
         private static readonly Dictionary<Type, ISerializer> LookupTable = new Dictionary<Type, ISerializer>
                                                                                     {
-                                                                                             { typeof(int), new Primitives.Int32Serializer() },
-                                                                                             { typeof(uint), new Primitives.UInt32Serializer() },
-                                                                                             { typeof(short), new Primitives.Int16Serializer() },
-                                                                                             { typeof(ushort), new Primitives.UInt16Serializer() },
-                                                                                             { typeof(long), new Primitives.Int64Serializer() },
-                                                                                             { typeof(ulong), new Primitives.UInt64Serializer() },
-                                                                                             { typeof(double), new Primitives.DoubleSerializer() },
-                                                                                             { typeof(float), new Primitives.SingleSerializer() },
-                                                                                             { typeof(decimal), new Primitives.DecimalSerializer() },
-                                                                                             { typeof(byte), new Primitives.ByteSerializer() },
-                                                                                             { typeof(sbyte), new Primitives.ByteSerializer() },
-                                                                                             { typeof(char), new Primitives.CharSerializer() },
-                                                                                             { typeof(string), new Primitives.StringSerializer() },
-                                                                                             { typeof(Guid), new Primitives.GuidSerializer() },
-                                                                                             { typeof(bool), new Primitives.BooleanSerializer() },
-                                                                                             { typeof(TimeSpan), new Primitives.TimeSpanSerializer() },
-                                                                                             { typeof(DateTime), new Primitives.DateTimeSerializer() },
-                                                                                             { typeof(System.Windows.Media.Color), new Primitives.ColorSerializer() },
+                                                                                             { typeof(int), new BinaryPrimitives.Int32Serializer() },
+                                                                                             { typeof(uint), new BinaryPrimitives.UInt32Serializer() },
+                                                                                             { typeof(short), new BinaryPrimitives.Int16Serializer() },
+                                                                                             { typeof(ushort), new BinaryPrimitives.UInt16Serializer() },
+                                                                                             { typeof(long), new BinaryPrimitives.Int64Serializer() },
+                                                                                             { typeof(ulong), new BinaryPrimitives.UInt64Serializer() },
+                                                                                             { typeof(double), new BinaryPrimitives.DoubleSerializer() },
+                                                                                             { typeof(float), new BinaryPrimitives.SingleSerializer() },
+                                                                                             { typeof(decimal), new BinaryPrimitives.DecimalSerializer() },
+                                                                                             { typeof(byte), new BinaryPrimitives.ByteSerializer() },
+                                                                                             { typeof(sbyte), new BinaryPrimitives.ByteSerializer() },
+                                                                                             { typeof(char), new BinaryPrimitives.CharSerializer() },
+                                                                                             { typeof(string), new BinaryPrimitives.StringSerializer() },
+                                                                                             { typeof(Guid), new BinaryPrimitives.GuidSerializer() },
+                                                                                             { typeof(bool), new BinaryPrimitives.BooleanSerializer() },
+                                                                                             { typeof(TimeSpan), new BinaryPrimitives.TimeSpanSerializer() },
+                                                                                             { typeof(DateTime), new BinaryPrimitives.DateTimeSerializer() },
+                                                                                             { typeof(System.Windows.Media.Color), new BinaryPrimitives.ColorSerializer() },
+                                                                                             { typeof(IPAddress), new BinaryPrimitives.IPAddressSerializer() }
                                                                                          };
 
         private static readonly Dictionary<Type, ISerializer> ObjectSerializers = new Dictionary<Type, ISerializer>();
@@ -42,9 +68,9 @@ namespace iLynx.Common.Serialization
         /// Gets an instance of the serializerservice.
         /// </summary>
         /// <returns></returns>
-        public static ISerializerService GetInstance()
+        public static ISerializerService Instance()
         {
-            return new Serializer();
+            return new BinarySerializerService();
         }
 
         /// <summary>
@@ -80,11 +106,6 @@ namespace iLynx.Common.Serialization
             return (ISerializer<T>)GetSerializer(typeof(T));
         }
 
-        ISerializer ISerializerService.GetSerializer(Type type)
-        {
-            return GetSerializer(type);
-        }
-
         private static bool TryGetTypeSerializer(Type type, out ISerializer serializer)
         {
             var result = false;
@@ -95,37 +116,32 @@ namespace iLynx.Common.Serialization
             return result || LookupTable.TryGetValue(type, out serializer);
         }
 
-        ISerializer<T> ISerializerService.GetSerializer<T>()
-        {
-            return GetSerializer<T>();
-        }
-
         public static ISerializer GetSerializer(Type type)
         {
             ISerializer ser;
             lock (LookupTable)
             {
-                if (!TryGetTypeSerializer(type, out ser))
-                {
-                    ser = type.IsArray ? MakeArraySerializer(type) : MakeSerializer(type);
-                    LookupTable.Add(type, ser);
-                }
+                if (TryGetTypeSerializer(type, out ser)) return ser;
+                ser = type.IsArray ? MakeArraySerializer(type) : MakeSerializer(type);
+                LookupTable.Add(type, ser);
             }
             return ser;
         }
 
         private static ISerializer MakeArraySerializer(Type arrayType)
         {
-            return new Primitives.ArraySerializer(arrayType);
+            if (arrayType.IsUnTypedArray())
+                return new BinaryPrimitives.UnTypedArraySerializer(arrayType);
+            return new BinaryPrimitives.ArraySerializer(arrayType);
         }
 
         private static ISerializer MakeSerializer(Type oType)
         {
-            var serializeInfo = typeof(Serializer).GetMethod("Serialize", BindingFlags.Static | BindingFlags.Public); // TODO: Make this a not-so-magic-string
+            var serializeInfo = typeof(BinarySerializerService).GetMethod("Serialize", BindingFlags.Static | BindingFlags.Public); // TODO: Make this a not-so-magic-string
             serializeInfo = serializeInfo.MakeGenericMethod(oType);
-            var deserializeInfo = typeof(Serializer).GetMethod("Deserialize", BindingFlags.Static | BindingFlags.Public); // TODO: Make this a not-so-magic-string
+            var deserializeInfo = typeof(BinarySerializerService).GetMethod("Deserialize", BindingFlags.Static | BindingFlags.Public); // TODO: Make this a not-so-magic-string
             deserializeInfo = deserializeInfo.MakeGenericMethod(oType);
-            return new Primitives.CallbackSerializer((o, stream) => serializeInfo.Invoke(null, new[] { o, stream }),
+            return new BinaryPrimitives.CallbackSerializer((o, stream) => serializeInfo.Invoke(null, new[] { o, stream }),
                                             stream => deserializeInfo.Invoke(null, new object[] { stream }));
         }
 
@@ -152,7 +168,7 @@ namespace iLynx.Common.Serialization
             return serializer;
         }
 
-        private static readonly MethodInfo InstantiationMethod = typeof(Serializer).GetMethod("TryInstantiate", BindingFlags.Public | BindingFlags.Static);
+        private static readonly MethodInfo InstantiationMethod = typeof(BinarySerializerService).GetMethod("TryInstantiate", BindingFlags.Public | BindingFlags.Static);
 
         private static ISerializer TryInstantiate(Type type)
         {
@@ -164,23 +180,13 @@ namespace iLynx.Common.Serialization
         {
             try
             {
-                return new NaiveSerializer<T>(RuntimeCommon.DefaultLogger);
+                return new BinarySerializer<T>(RuntimeCommon.DefaultLogger);
             }
             catch (Exception)
             {
                 //LogException(e, MethodBase.GetCurrentMethod());
                 return null;
             }
-        }
-
-        T ISerializerService.Deserialize<T>(Stream source)
-        {
-            return Deserialize<T>(source);
-        }
-
-        void ISerializerService.Serialize<T>(T item, Stream target)
-        {
-            Serialize(item, target);
         }
 
         /// <summary>
@@ -202,7 +208,7 @@ namespace iLynx.Common.Serialization
 
         private static void OnGetSerializerError<T>()
         {
-            RuntimeCommon.DefaultLogger.Log(LogLevel.Error, null, string.Format("Something went wrong here... Tried to get Serializer for Type: {0}, but was unsuccesful", typeof(T)));
+            RuntimeCommon.DefaultLogger.Log(LogLevel.Error, null, string.Format("Something went wrong here... Tried to get BinarySerializerService for Type: {0}, but was unsuccesful", typeof(T)));
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ using iLynx.Common.Serialization;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
+using iLynx.Serialization;
 
 namespace iLynx.Chatter.AuthenticationModule.Client
 {
@@ -40,7 +41,7 @@ namespace iLynx.Chatter.AuthenticationModule.Client
             };
             using (var output = new MemoryStream())
             {
-                Serializer.Serialize(new CredentialsPackage { Username = dialog.Username, Password = dialog.Password }, output);
+                BinarySerializerService.Serialize(new CredentialsPackage { Username = dialog.Username, Password = dialog.Password }, output);
                 message.Data = output.ToArray();
             }
             messageBus.Publish(new MessageEnvelope<ChatMessage, int>(message));

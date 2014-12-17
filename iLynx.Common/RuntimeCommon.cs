@@ -10,7 +10,6 @@ namespace iLynx.Common
     /// </summary>
     public static class RuntimeCommon
     {
-        private static IBitConverter defaultBitConverter;
         private static readonly LoggingProxy Proxy = new LoggingProxy(new ConsoleLogger("Log.log"));
 
         /// <summary>
@@ -31,14 +30,6 @@ namespace iLynx.Common
             set { Proxy.Logger = value; }
         }
 
-        /// <summary>
-        /// Gets the default (BigEndian) BitConverter
-        /// </summary>
-        public static IBitConverter DefaultBitConverter
-        {
-            get { return defaultBitConverter ?? (defaultBitConverter = new BigEndianBitConverter()); }
-        }
-
         [StringFormatMethod("format")]
         public static void LogWarning(this object sender, string format, params object[] args)
         {
@@ -53,7 +44,7 @@ namespace iLynx.Common
 
         public static void LogException(this object sender, Exception e, MethodBase method)
         {
-            Proxy.Log(LogLevel.Critical, sender, string.Format("{0} Caugh Exception: {1}", method, e));
+            Proxy.Log(LogLevel.Critical, sender, string.Format("{0} Caught Exception: {1}", method, e));
         }
 
         [StringFormatMethod("format")]

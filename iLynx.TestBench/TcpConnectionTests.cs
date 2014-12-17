@@ -5,13 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Common;
-using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
 using iLynx.Networking;
 using iLynx.Networking.Cryptography;
 using iLynx.Networking.Interfaces;
 using iLynx.Networking.Serialization;
 using iLynx.Networking.TCP;
+using iLynx.Serialization;
 
 namespace iLynx.TestBench
 {
@@ -35,7 +35,7 @@ namespace iLynx.TestBench
             var symmetricContainer = new AlgorithmContainer<ISymmetricAlgorithmDescriptor>();
             symmetricContainer.AddAlgorithm(new AesDescriptor(256));
             var timerService = new SingleThreadedTimerService();
-            var serializer = new SimpleMessageSerializer<int>(new Primitives.Int32Serializer());
+            var serializer = new SimpleMessageSerializer<int>(new BinaryPrimitives.Int32Serializer());
             var keyExchangeNegotiator = new KeyExchangeLinkNegotiator(keyExchangeContainer, symmetricContainer);
             var listener =
                 new CryptoConnectionStubListener<SimpleMessage<int>, int>(

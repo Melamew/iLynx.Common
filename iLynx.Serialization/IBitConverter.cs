@@ -1,4 +1,4 @@
-﻿namespace iLynx.Common.Serialization
+﻿namespace iLynx.Serialization
 {
     /// <summary>
     /// IBitConverterService

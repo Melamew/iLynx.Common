@@ -184,7 +184,7 @@ namespace iLynx.Chatter.Server
 
         private void ExecuteCommand()
         {
-            var line = currentLine;
+            var line = currentLine.Trim();
             currentLine = string.Empty;
             Console.WriteLine();
             // TODO: Move this down to bottom; only here for testing purposes
@@ -211,7 +211,7 @@ namespace iLynx.Chatter.Server
             var matches = registry.SuggestAutoComplete(commandLine.Item1, commandLine.Item2);
             if (0 >= matches.Length) return;
             if (matches.Length == 1)
-                currentLine = matches[0].Command;
+                currentLine = matches[0].Command + " ";
             Console.WriteLine();
             PrintCommands(matches);
         }

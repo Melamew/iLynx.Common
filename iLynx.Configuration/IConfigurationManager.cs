@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace iLynx.Common.Configuration
+namespace iLynx.Configuration
 {
     public interface IConfigurationManager
     {

@@ -1,6 +1,6 @@
 ﻿
 
-namespace iLynx.Common.Configuration
+namespace iLynx.Configuration
 {
     /// <summary>
     /// An interface that can be used to implement a simple string to {TValue} converter

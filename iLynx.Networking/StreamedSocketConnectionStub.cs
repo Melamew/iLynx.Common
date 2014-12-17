@@ -2,9 +2,9 @@
 using System.Net.Sockets;
 using System.Threading;
 using iLynx.Common;
-using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
 using iLynx.Networking.Interfaces;
+using iLynx.Serialization;
 
 namespace iLynx.Networking
 {

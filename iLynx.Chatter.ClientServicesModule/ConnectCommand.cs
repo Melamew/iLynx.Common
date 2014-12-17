@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using iLynx.Chatter.Infrastructure;
 
 namespace iLynx.Chatter.ClientServicesModule
@@ -9,6 +10,7 @@ namespace iLynx.Chatter.ClientServicesModule
 
         public ConnectCommand(EndPoint remoteEndpoint)
         {
+            Trace.WriteLine("======= ConnectCommand: Instance =======");
             RemoteEndpoint = remoteEndpoint;
         }
     }

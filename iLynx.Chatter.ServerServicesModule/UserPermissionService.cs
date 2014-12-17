@@ -24,13 +24,18 @@ namespace iLynx.Chatter.ServerServicesModule
             this.userAdapter = Guard.IsNull(() => userAdapter);
             this.consoleHandler.RegisterCommand("permissions", x => commandHandlerRegistry.Execute(x[0], x.Skip(1).ToArray()), "", commandHandlerRegistry.SuggestAutoComplete);
             commandHandlerRegistry.RegisterCommand("list", OnListPermissions, "Lists permissions for the specified user. list [username]");
-            commandHandlerRegistry.RegisterCommand("grant", OnGrantPermission, "Grants the specified user the specified permission. grant {username} {permission}", QuerySubCommandCallback);
-            commandHandlerRegistry.RegisterCommand("deny", OnDenyPermission, "Denies the specified user the specified permission. deny {username} {permission}", QuerySubCommandCallback);
+            commandHandlerRegistry.RegisterCommand("grant", OnGrantPermission, "Grants the specified user the specified permission. grant {username} {permission}", (s, strings) => ListPermissions(s, OnGrantPermission));
+            commandHandlerRegistry.RegisterCommand("deny", OnDenyPermission, "Denies the specified user the specified permission. deny {username} {permission}", (s, strings) => ListPermissions(s, OnDenyPermission));
         }
-        
-        private CommandDefinition[] QuerySubCommandCallback(string s, string[] strings)
+
+        private CommandDefinition[] ListPermissions(string s, Action<string[]> callback)
         {
-            return new[] { new CommandDefinition { Callback = null, Command = s, HelpText = "Blah", QuerySubCommand = null } };
+            return permissionsAdapter.Query().Where(x => x.PermissionIdentifier.StartsWith(s)).Select(x => new CommandDefinition
+            {
+                Callback = OnGrantPermission,
+                Command = s + " " + x.PermissionIdentifier,
+                HelpText = "",
+            }).ToArray();
         }
 
         private bool TryParse(string[] arguments, out User user, out Permission permission, bool createMissingPermission = false)
@@ -117,7 +122,7 @@ namespace iLynx.Chatter.ServerServicesModule
         {
             var existing = permissionsAdapter.GetFirst(x => x.PermissionIdentifier == permissionIdentifier);
             if (null != existing) return;
-            existing = new Permission {PermissionIdentifier = permissionIdentifier};
+            existing = new Permission { PermissionIdentifier = permissionIdentifier };
             permissionsAdapter.SaveOrUpdate(existing);
         }
     }

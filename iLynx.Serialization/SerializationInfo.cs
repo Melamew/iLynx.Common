@@ -1,13 +1,13 @@
 using System;
 using System.Reflection;
+using iLynx.Common;
 
-namespace iLynx.Common.Serialization
+namespace iLynx.Serialization
 {
     /// <summary>
     /// Contains the most basic information for serializing a single member of an object.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class SerializationInfo<T>
+    public class SerializationInfo
     {
         private readonly MemberInfo member;
         private readonly Type type;
@@ -20,8 +20,13 @@ namespace iLynx.Common.Serialization
             get { return member; }
         }
 
+        public Type Type
+        {
+            get { return type; }
+        }
+
         /// <summary>
-        /// Gets the Serializer that can be used to serialize this member (Only if the member is NOT untyped (Interface, object, abstract, etc.) and the member is NOT a delegate type.
+        /// Gets the BinarySerializerService that can be used to serialize this member (Only if the member is NOT untyped (Interface, object, abstract, etc.) and the member is NOT a delegate type.
         /// </summary>
         public ISerializer TypeSerializer { get; private set; }
         
@@ -43,11 +48,10 @@ namespace iLynx.Common.Serialization
         /// <param name="type"></param>
         public SerializationInfo(MemberInfo member, Type type)
         {
-            member.Guard("member");
-            IsUntyped = type.IsInterface || type.IsAbstract || typeof(object) == type;
+            this.member = Guard.IsNull(() => member);
+            this.type = Guard.IsNull(() => type);
+            IsUntyped = type.IsUnTyped() || type.IsUnTypedArray();
             IsDelegate = typeof(Delegate).IsAssignableFrom(type);
-            this.member = member;
-            this.type = type;
             TypeSerializer = IsUntyped || IsDelegate ? null : GetSerializer(type);
         }
 
@@ -86,12 +90,25 @@ namespace iLynx.Common.Serialization
 
         private static ISerializer GetSerializer(Type type)
         {
-            return Serializer.GetSerializer(type.IsEnum ? Enum.GetUnderlyingType(type) : type);
+            return BinarySerializerService.GetSerializer(type.IsEnum ? Enum.GetUnderlyingType(type) : type);
         }
 
         public override string ToString()
         {
             return string.Format("{0} : {1}", member.Name, type.AssemblyQualifiedName);
+        }
+    }
+
+    public static class SerializationHelper
+    {
+        public static bool IsUnTyped(this Type type)
+        {
+            return (type.IsInterface || type.IsAbstract || typeof (object) == type);
+        }
+
+        public static bool IsUnTypedArray(this Type type)
+        {
+            return type.IsArray && IsUnTyped(type.GetElementType());
         }
     }
 }
