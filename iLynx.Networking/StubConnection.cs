@@ -50,7 +50,7 @@ namespace iLynx.Networking
             while (doProcess)
             {
                 int size;
-                var message = stub.ReadNext(out size);
+                TMessage message = stub.ReadNext(out size);
                 if (0 > size)
                 {
                     Close();

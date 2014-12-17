@@ -279,9 +279,17 @@ namespace iLynx.Networking.Cryptography
 
         public TMessage ReadNext(out int totalSize)
         {
-            var bytes = ReadBytes(baseStream, blockSize, decryptor, out totalSize);
-            using (var memoryStream = new MemoryStream(bytes))
-                return serializer.Deserialize(memoryStream);
+            try
+            {
+                var bytes = ReadBytes(baseStream, blockSize, decryptor, out totalSize);
+                using (var memoryStream = new MemoryStream(bytes))
+                    return serializer.Deserialize(memoryStream);
+            }
+            catch (IOException)
+            {
+                totalSize = -1;
+                return default(TMessage);
+            }
         }
 
         private static byte[] ReadBytes(Stream sourceStream, int blockSize, ICryptoTransform decryptor, out int totalSize)

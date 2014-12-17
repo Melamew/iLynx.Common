@@ -68,6 +68,11 @@ namespace iLynx.Chatter.AuthenticationModule.Server
                 RejectClient(clientId);
                 return;
             }
+            if (string.IsNullOrEmpty(package.Password))
+            {
+                RejectClient(clientId);
+                return;
+            }
             if (passwordHashingService.PasswordMatches(package.Password, user)) AcceptClient(clientId, user);
             else RejectClient(clientId);
         }
@@ -108,6 +113,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             };
             var envelope = new MessageEnvelope<ChatMessage, int>(message, clientId);
             messageBus.Publish(envelope);
+            envelope.Wait();
             serverCommandBus.Publish(new DisconnectCommand(clientId));
         }
 

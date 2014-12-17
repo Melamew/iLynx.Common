@@ -44,7 +44,15 @@ namespace iLynx.Networking.ClientServer
 
         private void OnSendMessage(MessageEnvelope<TMessage, TKey> envelope)
         {
-            Send(envelope.Message);
+            try
+            {
+                Send(envelope.Message);
+            }
+            catch (Exception e)
+            {
+                envelope.Error = e;
+            }
+            envelope.Handled = true;
         }
 
         public override Guid ClientId { get { return clientId; } }

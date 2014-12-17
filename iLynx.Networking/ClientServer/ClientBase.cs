@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using iLynx.Common;
 using iLynx.Common.Threading;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
@@ -28,7 +29,14 @@ namespace iLynx.Networking.ClientServer
             var stub = Stub;
             if (null == stub) return;
             stub.Dispose();
-            WaitForReaderExit();
+            try
+            {
+                WaitForReaderExit();
+            }
+            catch (Exception e)
+            {
+                this.LogDebug("Reader exited with exception: {0}", e);
+            }
         }
 
         public void Disconnect(TMessage exitMessage)

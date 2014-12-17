@@ -49,10 +49,18 @@ namespace iLynx.Networking.ClientServer
 
         private void HandleMessage(MessageEnvelope<TMessage, TKey> envelope)
         {
-            if (null == envelope.TargetClients || 0 == envelope.TargetClients.Length)
-                SendMessage(envelope.Message);
-            else
-                SendMessage(envelope.Message, envelope.TargetClients);
+            try
+            {
+                if (null == envelope.TargetClients || 0 == envelope.TargetClients.Length)
+                    SendMessage(envelope.Message);
+                else
+                    SendMessage(envelope.Message, envelope.TargetClients);
+            }
+            catch (Exception e)
+            {
+                envelope.Error = e;
+            }
+            envelope.Handled = true;
         }
 
         public void Start(EndPoint localEndpoint)
