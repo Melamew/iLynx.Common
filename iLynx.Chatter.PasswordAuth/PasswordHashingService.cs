@@ -10,7 +10,7 @@ namespace iLynx.Chatter.AuthenticationModule
 {
     public class PasswordHashingService : IPasswordHashingService
     {
-        private readonly IBitConverter bitConverter = Serializer.SingletonBitConverter;
+        private readonly IBitConverter bitConverter = BinarySerializerService.SingletonBitConverter;
         private readonly IConfigurableValue<int> keySizeValue;
         private readonly RandomNumberGenerator cryptoRng = new RNGCryptoServiceProvider();
 

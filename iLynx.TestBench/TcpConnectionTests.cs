@@ -35,7 +35,7 @@ namespace iLynx.TestBench
             var symmetricContainer = new AlgorithmContainer<ISymmetricAlgorithmDescriptor>();
             symmetricContainer.AddAlgorithm(new AesDescriptor(256));
             var timerService = new SingleThreadedTimerService();
-            var serializer = new SimpleMessageSerializer<int>(new Primitives.Int32Serializer());
+            var serializer = new SimpleMessageSerializer<int>(new BinaryPrimitives.Int32Serializer());
             var keyExchangeNegotiator = new KeyExchangeLinkNegotiator(keyExchangeContainer, symmetricContainer);
             var listener =
                 new CryptoConnectionStubListener<SimpleMessage<int>, int>(

@@ -7,8 +7,8 @@ namespace iLynx.Chatter.Infrastructure
 {
     public class ChatMessageSerializer : ISerializer<ChatMessage>
     {
-        private readonly ISerializer<int> keySerializer = new Primitives.Int32Serializer();
-        private readonly ISerializer<Guid> idSerializer = new Primitives.GuidSerializer();
+        private readonly ISerializer<int> keySerializer = new BinaryPrimitives.Int32Serializer();
+        private readonly ISerializer<Guid> idSerializer = new BinaryPrimitives.GuidSerializer();
 
         public void Serialize(object item, Stream target)
         {

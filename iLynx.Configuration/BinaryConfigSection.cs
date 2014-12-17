@@ -13,10 +13,53 @@ namespace iLynx.Configuration
         void ReadFrom(Stream stream);
         IEnumerable<IConfigurableValue> GetAll(string category = null);
         Dictionary<string, Dictionary<string, IConfigurableValue>> Categories { get; }
+        void WriteTo(Stream target);
+        IConfigurableValue this[string category, string key] { get; set; }
+        bool Contains(string category, string key);
+        IEnumerable<string> GetCagerories();
+        string FileExtension { get; }
     }
 
-    public class BinaryConfigSection : IConfigSection
+    public class XmlConfigSection : ConfigSectionBase
     {
+        public override string FileExtension
+        {
+            get { return "xml"; }
+        }
+
+        protected override ISerializer<ValuesContainer> ContainerSerializer
+        {
+            get { return new BinarySerializer<ValuesContainer>(); }
+        }
+    }
+
+    /// <summary>
+    /// ValuesContainer
+    /// </summary>
+    public class ValuesContainer
+    {
+        /// <summary>
+        /// Gets or sets the category.
+        /// </summary>
+        /// <value>
+        /// The category.
+        /// </value>
+        public string Category { get; set; }
+
+        private IConfigurableValue[] values = new IConfigurableValue[0];
+
+        /// <summary>
+        /// Gets or sets the values.
+        /// </summary>
+        /// <value>
+        /// The values.
+        /// </value>
+        public IConfigurableValue[] Values { get { return values; } set { values = value; } }
+    }
+
+    public abstract class ConfigSectionBase : IConfigSection
+    {
+        public abstract string FileExtension { get; }
         public const string DefaultCategory = "Default";
 
         private readonly Dictionary<string, Dictionary<string, IConfigurableValue>> categories = new Dictionary<string, Dictionary<string, IConfigurableValue>>();
@@ -33,78 +76,6 @@ namespace iLynx.Configuration
         public IEnumerable<IConfigurableValue> GetAll(string category = null)
         {
             return Categories.Where(x => null == category || x.Key == category).SelectMany(c => c.Value.Select(x => x.Value));
-        }
-
-        /// <summary>
-        /// Reads XML from the configuration file.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-        public void ReadFrom(Stream stream)
-        {
-            var serializer = new NaiveSerializer<ValuesContainer>(RuntimeCommon.DefaultLogger);
-            while (stream.Position != stream.Length)
-            {
-                var container = serializer.Deserialize(stream);
-                var category = container.Category;
-                Dictionary<string, IConfigurableValue> existing;
-                if (!categories.TryGetValue(category, out existing))
-                    categories.Add(category, (existing = new Dictionary<string, IConfigurableValue>()));
-                foreach (var val in container.Values.Where(x => null != x))
-                {
-                    if (existing.ContainsKey(val.Key))
-                        existing[val.Key] = val;
-                    else
-                        existing.Add(val.Key, val);
-                }
-            }
-        }
-
-        /// <summary>
-        /// ValuesContainer
-        /// </summary>
-        public class ValuesContainer
-        {
-            /// <summary>
-            /// Gets or sets the category.
-            /// </summary>
-            /// <value>
-            /// The category.
-            /// </value>
-            public string Category { get; set; }
-
-            private IConfigurableValue[] values = new IConfigurableValue[0];
-
-            /// <summary>
-            /// Gets or sets the values.
-            /// </summary>
-            /// <value>
-            /// The values.
-            /// </value>
-            public IConfigurableValue[] Values { get { return values; } set { values = value; } }
-        }
-
-        /// <summary>
-        /// Writes the outer tags of this configuration element to the configuration file when implemented in a derived class.
-        /// </summary>
-        /// <returns>
-        /// true if writing was successful; otherwise, false.
-        /// </returns>
-        public void WriteTo(Stream target)
-        {
-            try
-            {
-                var serializer = new NaiveSerializer<ValuesContainer>(RuntimeCommon.DefaultLogger);
-                foreach (var container in Categories.Select(category => new ValuesContainer
-                                                                        {
-                                                                            Category = category.Key,
-                                                                            Values = category.Value.Values.ToArray()
-                                                                        }))
-                    serializer.Serialize(container, target);
-            }
-            catch (Exception e)
-            {
-                Trace.WriteLine(e);
-            }
         }
 
         private Dictionary<string, IConfigurableValue> GetCategory(string cat)
@@ -175,6 +146,59 @@ namespace iLynx.Configuration
         public IEnumerable<string> GetCagerories()
         {
             return Categories.Keys;
+        }
+
+        protected abstract ISerializer<ValuesContainer> ContainerSerializer { get; }
+
+        public void WriteTo(Stream target)
+        {
+            try
+            {
+                var serializer = ContainerSerializer;
+                foreach (var container in Categories.Select(category => new ValuesContainer
+                {
+                    Category = category.Key,
+                    Values = category.Value.Values.ToArray()
+                }))
+                    serializer.Serialize(container, target);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e);
+            }
+        }
+
+        public void ReadFrom(Stream source)
+        {
+            var serializer = ContainerSerializer;
+            while (source.Position != source.Length)
+            {
+                var container = serializer.Deserialize(source);
+                var category = container.Category;
+                Dictionary<string, IConfigurableValue> existing;
+                if (!Categories.TryGetValue(category, out existing))
+                    Categories.Add(category, (existing = new Dictionary<string, IConfigurableValue>()));
+                foreach (var val in container.Values.Where(x => null != x))
+                {
+                    if (existing.ContainsKey(val.Key))
+                        existing[val.Key] = val;
+                    else
+                        existing.Add(val.Key, val);
+                }
+            }
+        }
+    }
+
+    public class BinaryConfigSection : ConfigSectionBase
+    {
+        public override string FileExtension
+        {
+            get { return "bin"; }
+        }
+
+        protected override ISerializer<ValuesContainer> ContainerSerializer
+        {
+            get { return new BinarySerializer<ValuesContainer>(); }
         }
     }
 }

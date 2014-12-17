@@ -49,7 +49,7 @@ namespace iLynx.TestBench
         public static void SetupContainer(IUnityContainer container)
         {
             container.RegisterType<IDispatcher, WPFApplicationDispatcher>(new ContainerControlledLifetimeManager());
-            container.RegisterType<ISerializer<int>, Primitives.Int32Serializer>(
+            container.RegisterType<ISerializer<int>, BinaryPrimitives.Int32Serializer>(
                 new ContainerControlledLifetimeManager());
             container.RegisterType<ISerializer<ChatMessage>, ChatMessageSerializer>(
                 new ContainerControlledLifetimeManager());

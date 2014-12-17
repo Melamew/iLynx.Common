@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Xml.Serialization;
 using iLynx.Common;
 
 namespace iLynx.Configuration
@@ -7,6 +8,7 @@ namespace iLynx.Configuration
     /// <summary>
     /// ConfigurableValue
     /// </summary>
+    [XmlInclude(typeof(ExeConfigValue<>))]
     public class ConfigurableValue : IConfigurableValue
     {
         private object value;

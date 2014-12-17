@@ -9,7 +9,7 @@ using iLynx.Common;
 
 namespace iLynx.Serialization
 {
-    public class Primitives
+    public class BinaryPrimitives
     {
         public static Encoding TextEncoding = Encoding.Unicode;
 
@@ -21,7 +21,7 @@ namespace iLynx.Serialization
                 if (null == str) return;
                 var bytes = TextEncoding.GetBytes(str);
                 var len = bytes.Length;
-                target.Write(Serializer.SingletonBitConverter.GetBytes(len), 0, sizeof(int));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(len), 0, sizeof(int));
                 target.Write(bytes, 0, bytes.Length);
             }
 
@@ -29,7 +29,7 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[4];
                 source.Read(buffer, 0, buffer.Length);
-                var len = Serializer.SingletonBitConverter.ToInt32(buffer);
+                var len = BinarySerializerService.SingletonBitConverter.ToInt32(buffer);
                 buffer = new byte[len];
                 source.Read(buffer, 0, buffer.Length);
                 return TextEncoding.GetString(buffer);
@@ -118,7 +118,7 @@ namespace iLynx.Serialization
             private readonly Func<object, int> getSizeCallback;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Primitives.CallbackSerializer" /> class.
+            /// Initializes a new instance of the <see cref="BinaryPrimitives.CallbackSerializer" /> class.
             /// </summary>
             /// <param name="writeCallback">The write callback.</param>
             /// <param name="readCallback">The read callback.</param>
@@ -176,7 +176,7 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(int)];
                 source.Read(buffer, 0, buffer.Length);
-                var elementCount = Serializer.SingletonBitConverter.ToInt32(buffer);
+                var elementCount = BinarySerializerService.SingletonBitConverter.ToInt32(buffer);
                 if (0 > elementCount) throw new InvalidDataException();
                 var target = Array.CreateInstance(arrayType.GetElementType(), elementCount);
                 for (var i = 0; i < elementCount; ++i)
@@ -186,7 +186,7 @@ namespace iLynx.Serialization
                     Trace.WriteLine(string.Format("Reading Element at {0}", source.Position));
                     buffer = new byte[sizeof(int)];
                     source.Read(buffer, 0, buffer.Length); // Length of the type string
-                    var textLength = Serializer.SingletonBitConverter.ToInt32(buffer);
+                    var textLength = BinarySerializerService.SingletonBitConverter.ToInt32(buffer);
                     if (0 > textLength) throw new InvalidDataException();
                     buffer = new byte[textLength];
                     source.Read(buffer, 0, buffer.Length);
@@ -196,7 +196,7 @@ namespace iLynx.Serialization
                     {
                         continue;
                     }
-                    var serializer = Serializer.GetSerializer(elementType);
+                    var serializer = BinarySerializerService.GetSerializer(elementType);
                     var item = serializer.Deserialize(source);
                     target.SetValue(item, i);
                 }
@@ -205,7 +205,7 @@ namespace iLynx.Serialization
 
             public override void Serialize(Array item, Stream target)
             {
-                var buffer = Serializer.SingletonBitConverter.GetBytes(item.Length);
+                var buffer = BinarySerializerService.SingletonBitConverter.GetBytes(item.Length);
                 target.Write(buffer, 0, buffer.Length);
                 foreach (var element in item)
                 {
@@ -220,10 +220,10 @@ namespace iLynx.Serialization
                     var type = element.GetType();
                     var name = type.AssemblyQualifiedName;
                     var textBuffer = TextEncoding.GetBytes(name);
-                    buffer = Serializer.SingletonBitConverter.GetBytes(textBuffer.Length);
+                    buffer = BinarySerializerService.SingletonBitConverter.GetBytes(textBuffer.Length);
                     target.Write(buffer, 0, buffer.Length);
                     target.Write(textBuffer, 0, textBuffer.Length);
-                    var serializer = Serializer.GetSerializer(type);
+                    var serializer = BinarySerializerService.GetSerializer(type);
                     serializer.Serialize(element, target);
                 }
             }
@@ -239,7 +239,7 @@ namespace iLynx.Serialization
             private readonly ISerializer itemSerializer;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Primitives.ArraySerializer" /> class.
+            /// Initializes a new instance of the <see cref="BinaryPrimitives.ArraySerializer" /> class.
             /// </summary>
             /// <param name="arrayType">Type of the array.</param>
             /// <exception cref="WhatTheFuckException"></exception>
@@ -247,7 +247,7 @@ namespace iLynx.Serialization
             {
                 if (!arrayType.IsArray) throw new WhatTheFuckException();
                 elementType = arrayType.GetElementType();
-                itemSerializer = Serializer.GetSerializer(elementType);
+                itemSerializer = BinarySerializerService.GetSerializer(elementType);
                 if (null == itemSerializer) throw new WhatTheFuckException();
             }
 
@@ -269,7 +269,7 @@ namespace iLynx.Serialization
                     var cnt = value.Length;
                     for (var i = 0; i < cnt; ++i)
                         itemSerializer.Serialize(value.GetValue(i), memStream);
-                    var buffer = Serializer.SingletonBitConverter.GetBytes(cnt);
+                    var buffer = BinarySerializerService.SingletonBitConverter.GetBytes(cnt);
                     target.Write(buffer, 0, buffer.Length);
                     memStream.WriteTo(target);
                 }
@@ -280,7 +280,7 @@ namespace iLynx.Serialization
                 var buffer = new byte[4];
                 var count = source.Read(buffer, 0, buffer.Length);
                 if (4 != count) throw new WhatTheFuckException();
-                var elements = Serializer.SingletonBitConverter.ToInt32(buffer);
+                var elements = BinarySerializerService.SingletonBitConverter.ToInt32(buffer);
                 var array = Array.CreateInstance(elementType, elements);
                 for (var i = 0; i < elements; ++i)
                     array.SetValue(itemSerializer.Deserialize(source), i);
@@ -378,12 +378,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(short)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToInt16(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToInt16(buffer);
             }
 
             public void Serialize(short item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(short));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(short));
             }
 
             /// <summary>
@@ -424,12 +424,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(short)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToUInt16(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToUInt16(buffer);
             }
 
             public void Serialize(ushort item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(ushort));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(ushort));
             }
 
             /// <summary>
@@ -470,12 +470,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(int)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToInt32(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToInt32(buffer);
             }
 
             public void Serialize(int item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(int));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(int));
             }
 
             /// <summary>
@@ -516,12 +516,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(uint)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToUInt32(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToUInt32(buffer);
             }
 
             public void Serialize(uint item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(uint));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(uint));
             }
 
             /// <summary>
@@ -562,12 +562,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(long)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToInt64(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToInt64(buffer);
             }
 
             public void Serialize(long item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(long));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(long));
             }
 
             /// <summary>
@@ -608,12 +608,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(ulong)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToUInt64(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToUInt64(buffer);
             }
 
             public void Serialize(ulong item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(ulong));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(ulong));
             }
 
             /// <summary>
@@ -654,12 +654,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(double)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToDouble(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToDouble(buffer);
             }
 
             public void Serialize(double item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(double));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(double));
             }
 
             /// <summary>
@@ -700,12 +700,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(float)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToSingle(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToSingle(buffer);
             }
 
             public void Serialize(float item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(float));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(float));
             }
 
             /// <summary>
@@ -746,12 +746,12 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(decimal)];
                 source.Read(buffer, 0, buffer.Length);
-                return Serializer.SingletonBitConverter.ToDecimal(buffer);
+                return BinarySerializerService.SingletonBitConverter.ToDecimal(buffer);
             }
 
             public void Serialize(decimal item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(decimal));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(decimal));
             }
 
             /// <summary>
@@ -797,7 +797,7 @@ namespace iLynx.Serialization
 
             public void Serialize(byte item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item), 0, sizeof(byte));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(byte));
             }
 
             /// <summary>
@@ -890,14 +890,14 @@ namespace iLynx.Serialization
 
             public void Serialize(TimeSpan item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item.Ticks), 0, sizeof(long));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item.Ticks), 0, sizeof(long));
             }
 
             public TimeSpan Deserialize(Stream source)
             {
                 var result = new byte[sizeof(long)];
                 source.Read(result, 0, result.Length);
-                return TimeSpan.FromTicks(Serializer.SingletonBitConverter.ToInt64(result));
+                return TimeSpan.FromTicks(BinarySerializerService.SingletonBitConverter.ToInt64(result));
             }
 
             /// <summary>
@@ -939,12 +939,12 @@ namespace iLynx.Serialization
             {
                 var result = new byte[sizeof(long)];
                 source.Read(result, 0, result.Length);
-                return new DateTime(Serializer.SingletonBitConverter.ToInt64(result));
+                return new DateTime(BinarySerializerService.SingletonBitConverter.ToInt64(result));
             }
 
             public void Serialize(DateTime item, Stream target)
             {
-                target.Write(Serializer.SingletonBitConverter.GetBytes(item.Ticks), 0, sizeof(long));
+                target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item.Ticks), 0, sizeof(long));
             }
 
             /// <summary>
@@ -1005,28 +1005,6 @@ namespace iLynx.Serialization
             }
         }
 
-        public abstract class SerializerBase<T> : ISerializer<T>
-        {
-            public void Serialize(object item, Stream target)
-            {
-                Serialize((T) item, target);
-            }
-
-            public abstract T Deserialize(Stream source);
-            public abstract void Serialize(T item, Stream target);
-            public abstract int GetOutputSize(T item);
-
-            object ISerializer.Deserialize(Stream source)
-            {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                return GetOutputSize((T) item);
-            }
-        }
-
         public class IPAddressSerializer : SerializerBase<IPAddress>
         {
             public override int GetOutputSize(IPAddress item)
@@ -1038,7 +1016,7 @@ namespace iLynx.Serialization
             {
                 var lengthBytes = new byte[sizeof(int)];
                 source.Read(lengthBytes, 0, lengthBytes.Length);
-                var length = Serializer.SingletonBitConverter.ToInt32(lengthBytes);
+                var length = BinarySerializerService.SingletonBitConverter.ToInt32(lengthBytes);
                 var bytes = new byte[length];
                 source.Read(bytes, 0, bytes.Length);
                 return new IPAddress(bytes);
@@ -1047,7 +1025,7 @@ namespace iLynx.Serialization
             public override void Serialize(IPAddress item, Stream target)
             {
                 var addressBytes = item.GetAddressBytes();
-                var lengthBytes = Serializer.SingletonBitConverter.GetBytes(addressBytes.Length);
+                var lengthBytes = BinarySerializerService.SingletonBitConverter.GetBytes(addressBytes.Length);
                 target.Write(lengthBytes, 0, lengthBytes.Length);
                 target.Write(addressBytes, 0, addressBytes.Length);
             }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 
 namespace iLynx.Configuration
 {
@@ -11,23 +9,11 @@ namespace iLynx.Configuration
     /// </summary>
     public static class ExeConfig
     {
-        private static System.Configuration.Configuration configuration;
-
-        /// <summary>
-        ///     Gets a <see cref="System.Configuration.Configuration" /> object for the entry assembly
-        /// </summary>
-        public static System.Configuration.Configuration Configuration
-        {
-            get
-            {
-                return configuration ??
-                       (configuration = ConfigurationManager.OpenExeConfiguration(Assembly.GetEntryAssembly().Location));
-            }
-        }
-
-        private static BinaryConfigSection configurableValuesSection;
-        private const string BinaryConfigFile = "Configuration.bin";
-        private readonly static string TargetPath = Path.Combine(Environment.CurrentDirectory, BinaryConfigFile);
+        private static Func<IConfigSection> builder = () => new BinaryConfigSection(); 
+        //private static Func<IConfigSection> builder = () => new XmlConfigSection(); 
+        private static IConfigSection configurableValuesSection;
+        private const string ConfigFile = "Configuration";
+        private readonly static string TargetPath = Path.Combine(Environment.CurrentDirectory, ConfigFile);
 
         /// <summary>
         /// Gets the configurable values section.
@@ -35,36 +21,53 @@ namespace iLynx.Configuration
         /// <value>
         /// The configurable values section.
         /// </value>
-        public static BinaryConfigSection ConfigurableValuesSection
+        public static IConfigSection ConfigurableValuesSection
         {
             get { return configurableValuesSection ?? (configurableValuesSection = GetConfigurableValueSection()); }
         }
 
-        private static BinaryConfigSection GetConfigurableValueSection()
+        private static IConfigSection GetConfigurableValueSection()
         {
             if (null != configurableValuesSection) return configurableValuesSection;
             configurableValuesSection = Load();
-            //Save();
             return configurableValuesSection;
         }
 
-        private static BinaryConfigSection Load()
+        public static void SetUp(Func<IConfigSection> configSectionBuilder)
+        {
+            builder = configSectionBuilder;
+            configurableValuesSection = null;
+        }
+
+        private static string GetFileName(IConfigSection section)
+        {
+            var ext = section.FileExtension;
+            if (ext.StartsWith("."))
+                ext = ext.Remove(0, 1);
+            if (0 == ext.Length) throw new InvalidOperationException("The specified configuration section does not have a valid file extension");
+            return string.Format("{0}.{1}", TargetPath, ext);
+        }
+
+        private static IConfigSection Load()
         {
             Trace.WriteLine("::::: ExeConfig.Load() :::::");
-            var result = new BinaryConfigSection();
-            if (!File.Exists(TargetPath)) return result;
-            using (var source = File.OpenRead(TargetPath))
-                result.ReadFrom(source);
-            return result;
+            var section = builder();
+            var fileName = GetFileName(section);
+            if (!File.Exists(fileName)) return section;
+            using (var source = File.OpenRead(fileName))
+                section.ReadFrom(source);
+            return section;
         }
 
         public static void Save()
         {
             Trace.WriteLine("::::: ExeConfig.Save() :::::");
-            if (File.Exists(TargetPath))
-                File.Delete(TargetPath);
-            using (var target = File.Open(TargetPath, FileMode.Create))
-                ConfigurableValuesSection.WriteTo(target);
+            var section = ConfigurableValuesSection;
+            var fileName = GetFileName(section);
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+            using (var target = File.Open(fileName, FileMode.Create))
+                section.WriteTo(target);
         }
     }
 }

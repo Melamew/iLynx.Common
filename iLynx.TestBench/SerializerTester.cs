@@ -17,9 +17,9 @@ namespace iLynx.TestBench
                 var pass = true;
                 using (var memStream = new MemoryStream())
                 {
-                    Serializer.Serialize(obj, memStream);
+                    BinarySerializerService.Serialize(obj, memStream);
                     memStream.Position = 0;
-                    var result = Serializer.Deserialize<TestObject>(memStream);
+                    var result = BinarySerializerService.Deserialize<TestObject>(memStream);
                     pass &= result.Compare(obj, false);
                 }
                 Program.WriteCenter(string.Format("Test: {0}", i + 1), 2);

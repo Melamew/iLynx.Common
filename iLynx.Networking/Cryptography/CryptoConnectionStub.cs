@@ -96,7 +96,7 @@ namespace iLynx.Networking.Cryptography
             var paddingSize = (blockSize - ((data.Length + sizeof(int)) % blockSize));
             var rnd = new byte[paddingSize]; // Padding
             reasonablySecurePrng.GetBytes(rnd);
-            var lengthField = Serializer.SingletonBitConverter.GetBytes(data.Length);
+            var lengthField = BinarySerializerService.SingletonBitConverter.GetBytes(data.Length);
             var final = new byte[lengthField.Length + data.Length + rnd.Length];
             Buffer.BlockCopy(lengthField, 0, final, 0, lengthField.Length);
             Buffer.BlockCopy(data, 0, final, lengthField.Length, data.Length);
@@ -114,7 +114,7 @@ namespace iLynx.Networking.Cryptography
             var buffer = new byte[blockSize];
             source.Read(buffer, 0, buffer.Length);
             // Decode the length field
-            var length = Serializer.SingletonBitConverter.ToInt32(buffer);
+            var length = BinarySerializerService.SingletonBitConverter.ToInt32(buffer);
             if (0 > length) throw new InvalidDataException();
             var result = new byte[length];
             var gotData = 0;
@@ -264,7 +264,7 @@ namespace iLynx.Networking.Cryptography
 
             var finalData = new byte[totalLength];
             var firstBlock = new byte[blockSize];
-            var length = Serializer.SingletonBitConverter.GetBytes(dataLength);
+            var length = BinarySerializerService.SingletonBitConverter.GetBytes(dataLength);
             Buffer.BlockCopy(length, 0, firstBlock, 0, 4);
             Buffer.BlockCopy(data, 0, firstBlock, 4, blockSize - 4);
             encryptor.TransformBlock(firstBlock, 0, blockSize, finalData, 0);
@@ -292,7 +292,7 @@ namespace iLynx.Networking.Cryptography
             if (read != blockSize) throw new InvalidDataException();
             var decrypted = new byte[blockSize];
             decryptor.TransformBlock(block, 0, block.Length, decrypted, 0);
-            var dataLength = Serializer.SingletonBitConverter.ToInt32(decrypted);
+            var dataLength = BinarySerializerService.SingletonBitConverter.ToInt32(decrypted);
             var final = new byte[dataLength];
             Trace.WriteLine(string.Format("First Block: {0}", decrypted.ToString(":")));
             Buffer.BlockCopy(decrypted, 4, final, 0, blockSize - 4);
@@ -325,7 +325,7 @@ namespace iLynx.Networking.Cryptography
             //if (read != blockSize) throw new InvalidDataException();
             //var inputData = new byte[blockSize];
             //decryptor.TransformBlock(readBlock, 0, blockSize, inputData, 0);
-            //var dataLength = Serializer.SingletonBitConverter.ToInt32(inputData);
+            //var dataLength = BinarySerializerService.SingletonBitConverter.ToInt32(inputData);
             //if (0 > dataLength) throw new InvalidDataException();
             //var remainingData = dataLength - (blockSize - 4);
             //var blocks = dataLength / blockSize;

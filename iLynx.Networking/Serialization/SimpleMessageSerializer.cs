@@ -16,7 +16,7 @@ namespace iLynx.Networking.Serialization
 
         public SimpleMessageSerializer()
         {
-            keySerializer = Serializer.GetSerializer<TMessageKey>();
+            keySerializer = BinarySerializerService.GetSerializer<TMessageKey>();
         } 
 
         public void Serialize(object item, Stream target)
@@ -31,7 +31,7 @@ namespace iLynx.Networking.Serialization
             var key = keySerializer.Deserialize(source);
             var readBuffer = new byte[sizeof (int)];
             source.Read(readBuffer, 0, readBuffer.Length);
-            var dataLength = Serializer.SingletonBitConverter.ToInt32(readBuffer);
+            var dataLength = BinarySerializerService.SingletonBitConverter.ToInt32(readBuffer);
             if (0 > dataLength) return new SimpleMessage<TMessageKey>(key);
             if (0 >= dataLength) return new SimpleMessage<TMessageKey>(key, readBuffer);
             readBuffer = new byte[dataLength];
@@ -44,7 +44,7 @@ namespace iLynx.Networking.Serialization
             Guard.IsNull(() => item);
             keySerializer.Serialize(item.Key, target);
             var data = item.Data ?? new byte[0];
-            var writeBuffer = Serializer.SingletonBitConverter.GetBytes(data.Length);
+            var writeBuffer = BinarySerializerService.SingletonBitConverter.GetBytes(data.Length);
             target.Write(writeBuffer, 0, writeBuffer.Length);
             target.Write(data, 0, data.Length);
         }

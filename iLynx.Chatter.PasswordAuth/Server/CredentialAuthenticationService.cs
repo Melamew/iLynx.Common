@@ -60,7 +60,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             var clientId = keyedMessage.ClientId;
             using (var inputStream = new MemoryStream(keyedMessage.Data))
             {
-                package = Serializer.Deserialize<CredentialsPackage>(inputStream);
+                package = BinarySerializerService.Deserialize<CredentialsPackage>(inputStream);
             }
             User user;
             if (!userRegistrationService.IsRegistered(package.Username, out user))

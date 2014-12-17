@@ -26,7 +26,7 @@ namespace iLynx.Serialization
         }
 
         /// <summary>
-        /// Gets the Serializer that can be used to serialize this member (Only if the member is NOT untyped (Interface, object, abstract, etc.) and the member is NOT a delegate type.
+        /// Gets the BinarySerializerService that can be used to serialize this member (Only if the member is NOT untyped (Interface, object, abstract, etc.) and the member is NOT a delegate type.
         /// </summary>
         public ISerializer TypeSerializer { get; private set; }
         
@@ -90,7 +90,7 @@ namespace iLynx.Serialization
 
         private static ISerializer GetSerializer(Type type)
         {
-            return Serializer.GetSerializer(type.IsEnum ? Enum.GetUnderlyingType(type) : type);
+            return BinarySerializerService.GetSerializer(type.IsEnum ? Enum.GetUnderlyingType(type) : type);
         }
 
         public override string ToString()

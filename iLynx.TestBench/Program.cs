@@ -19,14 +19,14 @@ namespace iLynx.TestBench
         public static void Main(string[] args)
         {
             var menu = new ConsoleMenu();
-            menu.AddMenuItem('1', "Run some Serializer tests", RunSerializerTests);
+            menu.AddMenuItem('1', "Run some BinarySerializerService tests", RunSerializerTests);
             menu.AddMenuItem('2', "Run tests on RuntimeHelper", RunRuntimeHelper);
-            menu.AddMenuItem('3', "Run more Serializer tests", RunMoreSerializerTests);
+            menu.AddMenuItem('3', "Run more BinarySerializerService tests", RunMoreSerializerTests);
             menu.AddMenuItem('4', "Run \"Primitive\" serialization test", TestPrimitiveSerialization);
             menu.AddMenuItem('5', "Run Multi-Dimensional array serialization test", TestMultiDimensionalArray);
             menu.AddMenuItem('6', "Run Tcp connection tests", () => new TcpConnectionTests().Run());
             menu.AddMenuItem('7', "Run timerservice tests", RunTimerServiceTests);
-            menu.AddMenuItem('8', "Run Serializer 'Visualization'", RunSerializerVisualization);
+            menu.AddMenuItem('8', "Run BinarySerializerService 'Visualization'", RunSerializerVisualization);
             menu.AddMenuItem('w', "Run the WPF test window", StartDialog);
             menu.ShowMenu();
         }
@@ -44,7 +44,7 @@ namespace iLynx.TestBench
             byte[] buffer;
             using (var stream = new MemoryStream())
             {
-                Serializer.Serialize(instance, stream);
+                BinarySerializerService.Serialize(instance, stream);
                 buffer = stream.ToArray();
             }
             var ascii = Encoding.ASCII.GetString(buffer);
@@ -103,9 +103,9 @@ namespace iLynx.TestBench
             {
                 var item = new ArrayClass { Array = new int[5, 5, 5] };
                 item.Array[2, 2, 2] = 5;
-                Serializer.Serialize(item, target);
+                BinarySerializerService.Serialize(item, target);
                 target.Position = 0;
-                var result = Serializer.Deserialize<ArrayClass>(target);
+                var result = BinarySerializerService.Deserialize<ArrayClass>(target);
                 Console.WriteLine("{0}", result.Array[2, 2, 2] == item.Array[2, 2, 2]);
             }
         }
@@ -119,9 +119,9 @@ namespace iLynx.TestBench
         {
             using (var memStream = new MemoryStream())
             {
-                Serializer.Serialize(5, memStream);
+                BinarySerializerService.Serialize(5, memStream);
                 memStream.Position = 0;
-                var result = Serializer.Deserialize<int>(memStream);
+                var result = BinarySerializerService.Deserialize<int>(memStream);
                 WriteCenter(string.Format("Primitive Serialization: {0}", 5 == result ? "PASS" : "FAIL"), 0);
                 Trace.WriteLine(result);
                 Debug.Assert(5 == result);
@@ -152,7 +152,7 @@ namespace iLynx.TestBench
         private static void RunSerializerTests()
         {
             const long count = (long)(int.MaxValue * 0.5);
-            //var serializer = new Serializer(new ConsoleLogger());
+            //var serializer = new BinarySerializerService(new ConsoleLogger());
             var lastUpdate = DateTime.Now - TimeSpan.FromSeconds(10);
             var serializeSw = new Stopwatch();
             var deserializeSw = new Stopwatch();
@@ -169,12 +169,12 @@ namespace iLynx.TestBench
                 using (var memoryStream = new MemoryStream())
                 {
                     serializeSw.Start();
-                    Serializer.Serialize(random, memoryStream);
+                    BinarySerializerService.Serialize(random, memoryStream);
                     serializeSw.Stop();
                     totalBytes += memoryStream.Length;
                     memoryStream.Seek(0, SeekOrigin.Begin);
                     deserializeSw.Start();
-                    other = Serializer.Deserialize<TestObject>(memoryStream);
+                    other = BinarySerializerService.Deserialize<TestObject>(memoryStream);
                     deserializeSw.Stop();
                 }
                 if (!other.Compare(random, false))

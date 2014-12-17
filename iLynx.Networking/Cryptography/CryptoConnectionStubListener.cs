@@ -19,7 +19,7 @@ namespace iLynx.Networking.Cryptography
         {
             var socket = AcceptSocket();
             if (null == socket) return null;
-            //var stub = new CryptoConnectionStub<TMessage, TKey>(Serializer, socket, linkNegotiator, TimerService);
+            //var stub = new CryptoConnectionStub<TMessage, TKey>(BinarySerializerService, socket, linkNegotiator, TimerService);
             var stub = new ManualCryptoConnectionStub<TMessage, TKey>(Serializer, socket, linkNegotiator, TimerService);
             this.LogDebug("==> LISTENER: Begin Negotiate");
             stub.NegotiateTransportKeys();
