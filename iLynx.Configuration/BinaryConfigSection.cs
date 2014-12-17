@@ -49,7 +49,7 @@ namespace iLynx.Configuration
                 Dictionary<string, IConfigurableValue> existing;
                 if (!categories.TryGetValue(category, out existing))
                     categories.Add(category, (existing = new Dictionary<string, IConfigurableValue>()));
-                foreach (var val in container.Values)
+                foreach (var val in container.Values.Where(x => null != x))
                 {
                     if (existing.ContainsKey(val.Key))
                         existing[val.Key] = val;

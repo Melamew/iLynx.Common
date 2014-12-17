@@ -48,11 +48,19 @@ namespace iLynx.Configuration
             ValueContainer container;
             if (!OpenValues.TryGetValue(GetKey(key, category), out container))
             {
+                var value = ExeConfig.ConfigurableValuesSection[category, key];
+                if (null == value)
+                {
+                    value = new ExeConfigValue<T>(key, defaultValue, category);
+                    value.Store();
+                }
+
                 container = new ValueContainer
                             {
-                                Value = new ExeConfigValue<T>(key, defaultValue, category),
+                                Value = value,
                                 ValueType = typeof (T)
                             };
+
                 OpenValues.Add(GetKey(key, category), container);
             }
             if (container.ValueType != typeof (T))

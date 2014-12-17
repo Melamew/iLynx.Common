@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,7 +11,7 @@ namespace iLynx.Serialization
 {
     public class Primitives
     {
-        public static Encoding TextEncoding = Encoding.UTF8;
+        public static Encoding TextEncoding = Encoding.Unicode;
 
         public class StringSerializer : ISerializer<string>
         {
@@ -175,35 +176,30 @@ namespace iLynx.Serialization
             {
                 var buffer = new byte[sizeof(int)];
                 source.Read(buffer, 0, buffer.Length);
-                var byteLength = Serializer.SingletonBitConverter.ToInt32(buffer);
-                buffer = new byte[byteLength];
-                source.Read(buffer, 0, buffer.Length);
-                using (var memoryStream = new MemoryStream(buffer))
+                var elementCount = Serializer.SingletonBitConverter.ToInt32(buffer);
+                if (0 > elementCount) throw new InvalidDataException();
+                var target = Array.CreateInstance(arrayType.GetElementType(), elementCount);
+                for (var i = 0; i < elementCount; ++i)
                 {
-                    while (memoryStream.Position < memoryStream.Length)
+                    var isNotNull = source.ReadByte();
+                    if (isNotNull == 0) continue;
+                    Trace.WriteLine(string.Format("Reading Element at {0}", source.Position));
+                    buffer = new byte[sizeof(int)];
+                    source.Read(buffer, 0, buffer.Length); // Length of the type string
+                    var textLength = Serializer.SingletonBitConverter.ToInt32(buffer);
+                    if (0 > textLength) throw new InvalidDataException();
+                    buffer = new byte[textLength];
+                    source.Read(buffer, 0, buffer.Length);
+                    var typeName = TextEncoding.GetString(buffer);
+                    var elementType = Type.GetType(typeName);
+                    if (null == elementType)
                     {
-                        
+                        continue;
                     }
+                    var serializer = Serializer.GetSerializer(elementType);
+                    var item = serializer.Deserialize(source);
+                    target.SetValue(item, i);
                 }
-                //var elementCount = Serializer.SingletonBitConverter.ToInt32(buffer);
-                //if (0 > elementCount) throw new InvalidDataException();
-                //var target = Array.CreateInstance(arrayType.GetElementType(), elementCount);
-                //for (var i = 0; i < elementCount; ++i)
-                //{
-                //    var isNotNull = source.ReadByte();
-                //    if (isNotNull == 0) continue;
-                //    source.Read(buffer, 0, buffer.Length); // Length of the type string
-                //    var textLength = Serializer.SingletonBitConverter.ToInt32(buffer);
-                //    if (0 > textLength) throw new InvalidDataException();
-                //    buffer = new byte[textLength];
-                //    source.Read(buffer, 0, buffer.Length);
-                //    var typeName = TextEncoding.GetString(buffer);
-                //    var elementType = Type.GetType(typeName);
-                //    if (null == elementType) throw new NotSupportedException();
-                //    var serializer = Serializer.GetSerializer(elementType);
-                //    var item = serializer.Deserialize(source);
-                //    target.SetValue(item, i);
-                //}
                 return target;
             }
 
@@ -220,8 +216,10 @@ namespace iLynx.Serialization
                     }
                     
                     target.WriteByte(0x01);
+                    Trace.WriteLine(string.Format("Writing element at {0}", target.Position));
                     var type = element.GetType();
-                    var textBuffer = TextEncoding.GetBytes(type.AssemblyQualifiedName);
+                    var name = type.AssemblyQualifiedName;
+                    var textBuffer = TextEncoding.GetBytes(name);
                     buffer = Serializer.SingletonBitConverter.GetBytes(textBuffer.Length);
                     target.Write(buffer, 0, buffer.Length);
                     target.Write(textBuffer, 0, textBuffer.Length);

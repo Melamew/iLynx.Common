@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -43,12 +44,13 @@ namespace iLynx.Configuration
         {
             if (null != configurableValuesSection) return configurableValuesSection;
             configurableValuesSection = Load();
-            Save();
+            //Save();
             return configurableValuesSection;
         }
 
         private static BinaryConfigSection Load()
         {
+            Trace.WriteLine("::::: ExeConfig.Load() :::::");
             var result = new BinaryConfigSection();
             if (!File.Exists(TargetPath)) return result;
             using (var source = File.OpenRead(TargetPath))
@@ -58,6 +60,7 @@ namespace iLynx.Configuration
 
         public static void Save()
         {
+            Trace.WriteLine("::::: ExeConfig.Save() :::::");
             if (File.Exists(TargetPath))
                 File.Delete(TargetPath);
             using (var target = File.Open(TargetPath, FileMode.Create))
