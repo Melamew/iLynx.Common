@@ -13,19 +13,18 @@ namespace iLynx.Serialization
     {
         public static Encoding TextEncoding = Encoding.Unicode;
 
-        public class StringSerializer : ISerializer<string>
+        public class StringSerializer : SerializerBase<string>
         {
-            public void Serialize(object item, Stream target)
+            public override void Serialize(string item, Stream target)
             {
-                var str = item as string;
-                if (null == str) return;
-                var bytes = TextEncoding.GetBytes(str);
+                if (null == item) return;
+                var bytes = TextEncoding.GetBytes(item);
                 var len = bytes.Length;
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(len), 0, sizeof(int));
                 target.Write(bytes, 0, bytes.Length);
             }
 
-            public string Deserialize(Stream source)
+            public override string Deserialize(Stream source)
             {
                 var buffer = new byte[4];
                 source.Read(buffer, 0, buffer.Length);
@@ -35,75 +34,32 @@ namespace iLynx.Serialization
                 return TextEncoding.GetString(buffer);
             }
 
-            void ISerializer<string>.Serialize(string item, Stream target)
-            {
-                Serialize(item, target);
-            }
-
-            object ISerializer.Deserialize(Stream source)
-            {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(string item)
+            public override int GetOutputSize(string item)
             {
                 return TextEncoding.GetByteCount(item);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                var str = item as string;
-                if (null == str) throw new InvalidCastException();
-                return TextEncoding.GetByteCount(str);
             }
         }
 
         /// <summary>
         /// GuidSerializer
         /// </summary>
-        public class GuidSerializer : ISerializer<Guid>
+        public class GuidSerializer : SerializerBase<Guid>
         {
-            /// <summary>
-            /// Serializes the specified item.
-            /// </summary>
-            /// <param name="item">The item.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object item, Stream target)
-            {
-                Serialize((Guid)item, target);
-            }
-
-            public Guid Deserialize(Stream source)
+            public override Guid Deserialize(Stream source)
             {
                 var buf = new byte[16];
                 source.Read(buf, 0, 16);
                 return new Guid(buf);
             }
 
-            public void Serialize(Guid item, Stream target)
+            public override void Serialize(Guid item, Stream target)
             {
                 var buf = item.ToByteArray();
                 target.Write(buf, 0, buf.Length);
             }
 
-            /// <summary>
-            /// Deserializes the specified source.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(Guid item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(Guid item)
-            {
-                return 16;
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is Guid)) throw new InvalidCastException();
                 return 16;
             }
         }
@@ -111,50 +67,38 @@ namespace iLynx.Serialization
         /// <summary>
         /// CallbackSerializer
         /// </summary>
-        public class CallbackSerializer : ISerializer<object>
+        public class CallbackSerializer<T> : SerializerBase<T>
         {
-            private readonly Action<object, Stream> writeCallback;
-            private readonly Func<Stream, object> readCallback;
-            private readonly Func<object, int> getSizeCallback;
+            private readonly Action<T, Stream> writeCallback;
+            private readonly Func<Stream, T> readCallback;
+            private readonly Func<T, int> getSizeCallback;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="BinaryPrimitives.CallbackSerializer" /> class.
+            /// Initializes a new instance of the <see cref="BinaryPrimitives.CallbackSerializer{T}" /> class.
             /// </summary>
             /// <param name="writeCallback">The write callback.</param>
             /// <param name="readCallback">The read callback.</param>
             /// <param name="getSizeCallback"></param>
-            public CallbackSerializer(Action<object, Stream> writeCallback, Func<Stream, object> readCallback, Func<object, int> getSizeCallback = null)
+            public CallbackSerializer(Action<T, Stream> writeCallback, Func<Stream, T> readCallback, Func<T, int> getSizeCallback)
             {
                 this.writeCallback = Guard.IsNull(() => writeCallback);
                 this.readCallback = Guard.IsNull(() => readCallback);
-                this.getSizeCallback = getSizeCallback;
+                this.getSizeCallback = Guard.IsNull(() => getSizeCallback);
             }
 
-            /// <summary>
-            /// Serializes the specified item.
-            /// </summary>
-            /// <param name="item">The item.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object item, Stream target)
+            public override int GetOutputSize(T item)
             {
-                writeCallback(item, target);
+                return getSizeCallback(item);
             }
 
-            /// <summary>
-            /// Deserializes the specified source.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            public object Deserialize(Stream source)
+            public override T Deserialize(Stream source)
             {
                 return readCallback(source);
             }
 
-            public int GetOutputSize(object item)
+            public override void Serialize(T item, Stream target)
             {
-                if (null == getSizeCallback)
-                    throw new NotSupportedException();
-                return getSizeCallback(item);
+                writeCallback(item, target);
             }
         }
 
@@ -214,11 +158,15 @@ namespace iLynx.Serialization
                         target.WriteByte(0x00);
                         continue;
                     }
-                    
-                    target.WriteByte(0x01);
-                    Trace.WriteLine(string.Format("Writing element at {0}", target.Position));
                     var type = element.GetType();
                     var name = type.AssemblyQualifiedName;
+                    if (null == name)
+                    {
+                        target.WriteByte(0x00);
+                        continue;
+                    }
+                    target.WriteByte(0x01);
+                    Trace.WriteLine(string.Format("Writing element at {0}", target.Position));
                     var textBuffer = TextEncoding.GetBytes(name);
                     buffer = BinarySerializerService.SingletonBitConverter.GetBytes(textBuffer.Length);
                     target.Write(buffer, 0, buffer.Length);
@@ -233,7 +181,7 @@ namespace iLynx.Serialization
         /// ArraySerializer
         /// // TODO: Maybe this could handle polymorphic arrays too?
         /// </summary>
-        public class ArraySerializer : ISerializer<Array>
+        public class ArraySerializer : SerializerBase<Array>
         {
             private readonly Type elementType;
             private readonly ISerializer itemSerializer;
@@ -251,18 +199,7 @@ namespace iLynx.Serialization
                 if (null == itemSerializer) throw new WhatTheFuckException();
             }
 
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            /// <exception cref="WhatTheFuckException"></exception>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((Array)value, target);
-            }
-
-            public void Serialize(Array value, Stream target)
+            public override void Serialize(Array value, Stream target)
             {
                 using (var memStream = new MemoryStream())
                 {
@@ -275,7 +212,7 @@ namespace iLynx.Serialization
                 }
             }
 
-            public Array Deserialize(Stream source)
+            public override Array Deserialize(Stream source)
             {
                 var buffer = new byte[4];
                 var count = source.Read(buffer, 0, buffer.Length);
@@ -287,537 +224,233 @@ namespace iLynx.Serialization
                 return array;
             }
 
-            /// <summary>
-            /// Deserializes the specified source.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            /// <exception cref="WhatTheFuckException"></exception>
-            object ISerializer.Deserialize(Stream source)
-            {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(Array item)
+            public override int GetOutputSize(Array item)
             {
                 var itemElementType = item.GetType().GetElementType();
                 if (itemElementType != elementType) throw new InvalidCastException();
                 return item.Cast<object>().Sum(element => itemSerializer.GetOutputSize(element));
-            }
-
-            public int GetOutputSize(object item)
-            {
-                var arr = item as Array;
-                if (null == arr) throw new InvalidCastException();
-                return GetOutputSize(arr);
             }
         }
 
         /// <summary>
         /// BooleanSerializer
         /// </summary>
-        public class BooleanSerializer : ISerializer<bool>
+        public class BooleanSerializer : SerializerBase<bool>
         {
-            /// <summary>
-            /// Serializes the specified item.
-            /// </summary>
-            /// <param name="item">The item.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object item, Stream target)
-            {
-                Serialize((bool)item, target);
-            }
-
-            public void Serialize(bool item, Stream target)
+            public override void Serialize(bool item, Stream target)
             {
                 target.Write(new[] { (byte)(item ? 0x01 : 0x00) }, 0, 1);
             }
 
-            public bool Deserialize(Stream source)
+            public override bool Deserialize(Stream source)
             {
                 var buf = new byte[1];
                 source.Read(buf, 0, 1);
                 return buf[0] == 1;
             }
 
-            /// <summary>
-            /// Deserializes the specified source.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(bool item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(bool item)
-            {
-                return 1;
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is bool)) throw new InvalidCastException();
                 return 1;
             }
         }
 
-        public class Int16Serializer : ISerializer<short>
+        public class Int16Serializer : SerializerBase<short>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((short) value, target);
-            }
-
-            public short Deserialize(Stream source)
+            public override short Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(short)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToInt16(buffer);
             }
 
-            public void Serialize(short item, Stream target)
+            public override void Serialize(short item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(short));
             }
 
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(short item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(short item)
-            {
-                return sizeof (short);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is short)) throw new InvalidCastException();
-                return sizeof (short);
+                return sizeof(short);
             }
         }
 
-        public class UInt16Serializer : ISerializer<ushort>
+        public class UInt16Serializer : SerializerBase<ushort>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((ushort)value, target);
-            }
-
-            public ushort Deserialize(Stream source)
+            public override ushort Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(short)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToUInt16(buffer);
             }
 
-            public void Serialize(ushort item, Stream target)
+            public override void Serialize(ushort item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(ushort));
             }
 
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(ushort item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(ushort item)
-            {
-                return sizeof(ushort);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is ushort)) throw new InvalidCastException();
                 return sizeof(ushort);
             }
         }
 
-        public class Int32Serializer : ISerializer<int>
+        public class Int32Serializer : SerializerBase<int>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((int)value, target);
-            }
-
-            public int Deserialize(Stream source)
+            public override int Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(int)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToInt32(buffer);
             }
 
-            public void Serialize(int item, Stream target)
+            public override void Serialize(int item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(int));
             }
 
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(int item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(int item)
-            {
-                return sizeof(int);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is int)) throw new InvalidCastException();
                 return sizeof(int);
             }
         }
 
-        public class UInt32Serializer : ISerializer<uint>
+        public class UInt32Serializer : SerializerBase<uint>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((uint)value, target);
-            }
-
-            public uint Deserialize(Stream source)
+            public override uint Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(uint)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToUInt32(buffer);
             }
 
-            public void Serialize(uint item, Stream target)
+            public override void Serialize(uint item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(uint));
             }
 
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(uint item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(uint item)
-            {
-                return sizeof(uint);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is uint)) throw new InvalidCastException();
                 return sizeof(uint);
             }
         }
 
-        public class Int64Serializer : ISerializer<long>
+        public class Int64Serializer : SerializerBase<long>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((long)value, target);
-            }
-
-            public long Deserialize(Stream source)
+            public override long Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(long)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToInt64(buffer);
             }
 
-            public void Serialize(long item, Stream target)
+            public override void Serialize(long item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(long));
             }
 
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(long item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(long item)
-            {
-                return sizeof(long);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is long)) throw new InvalidCastException();
                 return sizeof(long);
             }
         }
 
-        public class UInt64Serializer : ISerializer<ulong>
+        public class UInt64Serializer : SerializerBase<ulong>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((ulong)value, target);
-            }
-
-            public ulong Deserialize(Stream source)
+            public override ulong Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(ulong)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToUInt64(buffer);
             }
 
-            public void Serialize(ulong item, Stream target)
+            public override void Serialize(ulong item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(ulong));
             }
 
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(ulong item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(ulong item)
-            {
-                return sizeof(ulong);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is ulong)) throw new InvalidCastException();
                 return sizeof(ulong);
             }
         }
 
-        public class DoubleSerializer : ISerializer<double>
+        public class DoubleSerializer : SerializerBase<double>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((double)value, target);
-            }
-
-            public double Deserialize(Stream source)
+            public override double Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(double)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToDouble(buffer);
             }
 
-            public void Serialize(double item, Stream target)
+            public override void Serialize(double item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(double));
             }
 
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(double item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(double item)
-            {
-                return sizeof(double);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is double)) throw new InvalidCastException();
                 return sizeof(double);
             }
         }
 
-        public class SingleSerializer : ISerializer<float>
+        public class SingleSerializer : SerializerBase<float>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((float)value, target);
-            }
-
-            public float Deserialize(Stream source)
+            public override float Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(float)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToSingle(buffer);
             }
 
-            public void Serialize(float item, Stream target)
+            public override void Serialize(float item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(float));
             }
-
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+        
+            public override int GetOutputSize(float item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(float item)
-            {
-                return sizeof(float);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is float)) throw new InvalidCastException();
                 return sizeof(float);
             }
         }
 
-        public class DecimalSerializer : ISerializer<decimal>
+        public class DecimalSerializer : SerializerBase<decimal>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((decimal)value, target);
-            }
-
-            public decimal Deserialize(Stream source)
+            public override decimal Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(decimal)];
                 source.Read(buffer, 0, buffer.Length);
                 return BinarySerializerService.SingletonBitConverter.ToDecimal(buffer);
             }
 
-            public void Serialize(decimal item, Stream target)
+            public override void Serialize(decimal item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(decimal));
             }
-
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            
+            public override int GetOutputSize(decimal item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(decimal item)
-            {
-                return sizeof(decimal);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is decimal)) throw new InvalidCastException();
                 return sizeof(decimal);
             }
         }
 
-        public class ByteSerializer : ISerializer<byte>
+        public class ByteSerializer : SerializerBase<byte>
         {
-            /// <summary>
-            /// Writes to.
-            /// </summary>
-            /// <param name="value">The value.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object value, Stream target)
-            {
-                Serialize((byte)value, target);
-            }
-
-            public byte Deserialize(Stream source)
+            public override byte Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(byte)];
                 source.Read(buffer, 0, buffer.Length);
                 return buffer[0];
             }
 
-            public void Serialize(byte item, Stream target)
+            public override void Serialize(byte item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item), 0, sizeof(byte));
             }
 
-            /// <summary>
-            /// Reads from.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(byte item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(byte item)
-            {
-                return 1;
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is byte)) throw new InvalidCastException();
                 return 1;
             }
         }
@@ -825,26 +458,16 @@ namespace iLynx.Serialization
         /// <summary>
         /// CharSerializer
         /// </summary>
-        public class CharSerializer : ISerializer<char>
+        public class CharSerializer : SerializerBase<char>
         {
-            /// <summary>
-            /// Serializes the specified item.
-            /// </summary>
-            /// <param name="item">The item.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object item, Stream target)
-            {
-                Serialize((char)item, target);
-            }
-
-            public void Serialize(char item, Stream target)
+            public override void Serialize(char item, Stream target)
             {
                 var buffer = new byte[sizeof(char)];
                 Buffer.BlockCopy(new[] { item }, 0, buffer, 0, sizeof(char));
                 target.Write(buffer, 0, sizeof(char));
             }
 
-            public char Deserialize(Stream source)
+            public override char Deserialize(Stream source)
             {
                 var buffer = new byte[sizeof(char)];
                 source.Read(buffer, 0, sizeof(char));
@@ -853,154 +476,68 @@ namespace iLynx.Serialization
                 return result[0];
             }
 
-            /// <summary>
-            /// Deserializes the specified source.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(char item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(char item)
-            {
-                return 1;
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is char)) throw new InvalidCastException();
                 return 1;
             }
         }
 
-        public class TimeSpanSerializer : ISerializer<TimeSpan>
+        public class TimeSpanSerializer : SerializerBase<TimeSpan>
         {
-            /// <summary>
-            /// Serializes the specified item.
-            /// </summary>
-            /// <param name="item">The item.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object item,
-                                Stream target)
-            {
-                Serialize((TimeSpan)item, target);
-            }
-
-            public void Serialize(TimeSpan item, Stream target)
+            public override void Serialize(TimeSpan item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item.Ticks), 0, sizeof(long));
             }
 
-            public TimeSpan Deserialize(Stream source)
+            public override TimeSpan Deserialize(Stream source)
             {
                 var result = new byte[sizeof(long)];
                 source.Read(result, 0, result.Length);
                 return TimeSpan.FromTicks(BinarySerializerService.SingletonBitConverter.ToInt64(result));
             }
 
-            /// <summary>
-            /// Deserializes the specified source.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(TimeSpan item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(TimeSpan item)
-            {
-                return sizeof(long);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is TimeSpan)) throw new InvalidCastException();
                 return sizeof(long);
             }
         }
 
-        public class DateTimeSerializer : ISerializer<DateTime>
+        public class DateTimeSerializer : SerializerBase<DateTime>
         {
-            /// <summary>
-            /// Serializes the specified item.
-            /// </summary>
-            /// <param name="item">The item.</param>
-            /// <param name="target">The target.</param>
-            public void Serialize(object item,
-                                Stream target)
-            {
-                Serialize((DateTime) item, target);
-            }
-
-            public DateTime Deserialize(Stream source)
+            public override DateTime Deserialize(Stream source)
             {
                 var result = new byte[sizeof(long)];
                 source.Read(result, 0, result.Length);
                 return new DateTime(BinarySerializerService.SingletonBitConverter.ToInt64(result));
             }
 
-            public void Serialize(DateTime item, Stream target)
+            public override void Serialize(DateTime item, Stream target)
             {
                 target.Write(BinarySerializerService.SingletonBitConverter.GetBytes(item.Ticks), 0, sizeof(long));
             }
 
-            /// <summary>
-            /// Deserializes the specified source.
-            /// </summary>
-            /// <param name="source">The source.</param>
-            /// <returns></returns>
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(DateTime item)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(DateTime item)
-            {
-                return sizeof (long);
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is DateTime)) throw new InvalidCastException();
-                return sizeof (long);
+                return sizeof(long);
             }
         }
 
-        public class ColorSerializer : ISerializer<Color>
+        public class ColorSerializer : SerializerBase<Color>
         {
-            public void Serialize(object item, Stream target)
-            {
-                Serialize((Color)item, target);
-            }
-
-            public Color Deserialize(Stream source)
+            public override Color Deserialize(Stream source)
             {
                 var bytes = new byte[4];
                 source.Read(bytes, 0, bytes.Length);
                 return Color.FromArgb(bytes[0], bytes[1], bytes[2], bytes[3]);
             }
 
-            public void Serialize(Color item, Stream target)
+            public override void Serialize(Color item, Stream target)
             {
                 target.Write(new[] { item.A, item.R, item.G, item.B }, 0, 4);
             }
 
-            object ISerializer.Deserialize(Stream source)
+            public override int GetOutputSize(Color color)
             {
-                return Deserialize(source);
-            }
-
-            public int GetOutputSize(Color color)
-            {
-                return 4;
-            }
-
-            public int GetOutputSize(object item)
-            {
-                if (!(item is Color)) throw new InvalidCastException();
                 return 4;
             }
         }

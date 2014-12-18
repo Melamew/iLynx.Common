@@ -18,6 +18,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
     public class CredentialAuthenticationService : IDisposable, IAuthenticationService<ChatMessage, int>
     {
         private readonly IBus<IServerCommand> serverCommandBus;
+        private readonly ISerializerService serializerService;
         private readonly IUserRegistrationService userRegistrationService;
         private readonly IPasswordHashingService passwordHashingService;
         private readonly IBus<MessageEnvelope<ChatMessage, int>> messageBus;
@@ -31,9 +32,11 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             IBus<IApplicationEvent> applicationEventBus,
             IBus<IServerCommand> serverCommandBus,
             IUserRegistrationService userRegistrationService,
-            IPasswordHashingService passwordHashingService)
+            IPasswordHashingService passwordHashingService,
+            ISerializerService serializerService)
         {
-            this.serverCommandBus = serverCommandBus;
+            this.serverCommandBus = Guard.IsNull(() => serverCommandBus);
+            this.serializerService = Guard.IsNull(() => serializerService);
             this.userRegistrationService = Guard.IsNull(() => userRegistrationService);
             this.passwordHashingService = Guard.IsNull(() => passwordHashingService);
             this.messageBus = Guard.IsNull(() => messageBus);
@@ -60,7 +63,7 @@ namespace iLynx.Chatter.AuthenticationModule.Server
             var clientId = keyedMessage.ClientId;
             using (var inputStream = new MemoryStream(keyedMessage.Data))
             {
-                package = BinarySerializerService.Deserialize<CredentialsPackage>(inputStream);
+                package = serializerService.Deserialize<CredentialsPackage>(inputStream);
             }
             User user;
             if (!userRegistrationService.IsRegistered(package.Username, out user))

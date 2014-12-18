@@ -14,11 +14,6 @@ namespace iLynx.Networking.Serialization
             this.keySerializer = Guard.IsNull(() => keySerializer);
         }
 
-        public SimpleMessageSerializer()
-        {
-            keySerializer = BinarySerializerService.GetSerializer<TMessageKey>();
-        } 
-
         public void Serialize(object item, Stream target)
         {
             var msg = item as SimpleMessage<TMessageKey>;

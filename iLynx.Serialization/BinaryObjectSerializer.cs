@@ -19,8 +19,9 @@ namespace iLynx.Serialization
         /// Builds the object graph.
         /// </summary>
         /// <param name="targetType">Type of the target.</param>
+        /// <param name="getSerializerCallback"></param>
         /// <returns></returns>
-        public static SortedList<Guid, SerializationInfo> BuildObjectGraph(this Type targetType)
+        public static SortedList<Guid, SerializationInfo> BuildObjectGraph(this Type targetType, Func<Type, ISerializer> getSerializerCallback)
         {
             var graph = new SortedList<Guid, SerializationInfo>();
             var namespaceAttribute = targetType.GetCustomAttribute<GuidAttribute>();
@@ -35,17 +36,17 @@ namespace iLynx.Serialization
                 var fieldInfo in
                     targetType.GetFields(FieldFlags)
                               .Where(f => !f.IsDefined(typeof(NotSerializedAttribute)) && !f.IsNotSerialized)
-                              .Select(c => new SerializationInfo(c, c.FieldType))
+                              .Select(c => new SerializationInfo(c, c.FieldType, getSerializerCallback))
                               .Concat(targetType.GetProperties(PropertyFlags)    // Apparently BindingFLAGS don't work like flags...
                               .Where(p => null != p.SetMethod && p.SetMethod.IsPublic && null != p.GetMethod && p.GetMethod.IsPublic && p.GetMethod.GetParameters().Length == 0 && p.SetMethod.GetParameters().Length == 1)
                               .Where(p => !p.IsDefined(typeof(NotSerializedAttribute)))
-                              .Select(p => new SerializationInfo(p, p.PropertyType)))
+                              .Select(p => new SerializationInfo(p, p.PropertyType, getSerializerCallback)))
                 )
             {
                 var idBase = fieldInfo.Member.Name + fieldInfo.Type.FullName;
                 var id = hasAttribute
                              ? idBase.CreateGuidV5(name)
-                             : idBase.CreateGuidV5(BinarySerializerService.SerializerNamespace);
+                             : idBase.CreateGuidV5(SerializerServiceBase.SerializerNamespace);
                 if (graph.ContainsKey(id))
                 {
                     Trace.WriteLine("...");
@@ -57,30 +58,32 @@ namespace iLynx.Serialization
         }
     }
 
+    public abstract class ObjectSerializerBase<T> : SerializerBase<T>
+    {
+        protected readonly IEnumerable<SerializationInfo> Graph;
+
+        protected ObjectSerializerBase(Func<Type, ISerializer> getSerializerCallback)
+        {
+            if (typeof(T) == Type.Missing.GetType()) throw new NotSupportedException("Missing Types are currently not supported");
+            Graph = typeof(T).BuildObjectGraph(getSerializerCallback).Values;
+        }
+    }
+
     /// <summary>
-    /// BinarySerializer
+    /// BinaryObjectSerializer
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BinarySerializer<T> : SerializerBase<T>
+    public class BinaryObjectSerializer<T> : ObjectSerializerBase<T>
     {
-        private readonly ILogger logger;
-        private readonly IEnumerable<SerializationInfo> sortedGraph;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BinarySerializer{T}" /> class.
-        /// </summary>
-        /// <exception cref="System.NotSupportedException">Missing Types are currently not supported</exception>
-        public BinarySerializer(ILogger logger = null)
+        public BinaryObjectSerializer()
+            : base(BinarySerializerService.GetSerializer)
         {
-            this.logger = logger ?? RuntimeCommon.DefaultLogger;
-            if (typeof(T) == Type.Missing.GetType()) throw new NotSupportedException("Missing Types are currently not supported");
-            sortedGraph = typeof(T).BuildObjectGraph().Values;
         }
 
         public override int GetOutputSize(T item)
         {
             var accum = 0;
-            foreach (var member in sortedGraph)
+            foreach (var member in Graph)
             {
                 ISerializer serializer;
                 var value = member.IsDelegate ? null : member.GetValue(item);
@@ -105,7 +108,7 @@ namespace iLynx.Serialization
         public override T Deserialize(Stream source)
         {
             var target = Activator.CreateInstance(typeof(T));
-            foreach (var member in sortedGraph)
+            foreach (var member in Graph)
             {
                 ISerializer serializer;
                 var readType = source.ReadByte() == 0x01;
@@ -142,8 +145,8 @@ namespace iLynx.Serialization
         /// <param name="m">The m.</param>
         private void PostQuit(Exception e, MethodBase m)
         {
-            logger.Log(LogLevel.Error, this, string.Format("{0}: {1}", e, m));
-            logger.Log(LogLevel.Critical, this, "Last Error was unrecoverable. Giving up");
+            this.LogError("{0}: {1}", e, m);
+            this.LogCritical("Last Error was unrecoverable. Giving up");
         }
 
         // ReSharper disable StaticFieldInGenericType
@@ -157,11 +160,11 @@ namespace iLynx.Serialization
         /// <param name="target">The target.</param>
         public override void Serialize(T item, Stream target)
         {
-            foreach (var member in sortedGraph)
+            foreach (var member in Graph)
             {
                 ISerializer serializer;
                 var value = member.IsDelegate ? null : member.GetValue(item);
-                
+
                 if (null == value || member.IsUntyped)
                 {
                     value = value ?? new NullType();
@@ -187,7 +190,7 @@ namespace iLynx.Serialization
                 }
             }
         }
-        
+
         /// <summary>
         /// Reads the type.
         /// </summary>

@@ -4,7 +4,6 @@ using iLynx.Chatter.AuthenticationModule.ViewModels;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;
-using iLynx.Common.Serialization;
 using iLynx.Networking.ClientServer;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
@@ -15,15 +14,18 @@ namespace iLynx.Chatter.AuthenticationModule.Client
     public class CredentialAuthenticationService : IDisposable
     {
         private readonly IWindowingService windowingService;
+        private readonly ISerializerService serializerService;
         private readonly IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> messageSubscriptionManager;
         private readonly IBus<MessageEnvelope<ChatMessage, int>> messageBus;
 
         public CredentialAuthenticationService(
             IKeyedSubscriptionManager<int, MessageReceivedHandler<ChatMessage, int>> messageSubscriptionManager,
             IBus<MessageEnvelope<ChatMessage, int>> messageBus,
-            IWindowingService windowingService)
+            IWindowingService windowingService,
+            ISerializerService serializerService)
         {
-            this.windowingService = windowingService;
+            this.windowingService = Guard.IsNull(() => windowingService);
+            this.serializerService = Guard.IsNull(() => serializerService);
             this.messageSubscriptionManager = Guard.IsNull(() => messageSubscriptionManager);
             this.messageBus = Guard.IsNull(() => messageBus);
             this.messageSubscriptionManager.Subscribe(MessageKeys.CredentialAuthenticationRequest, OnCredentialAuthenticationRequest);
@@ -41,7 +43,7 @@ namespace iLynx.Chatter.AuthenticationModule.Client
             };
             using (var output = new MemoryStream())
             {
-                BinarySerializerService.Serialize(new CredentialsPackage { Username = dialog.Username, Password = dialog.Password }, output);
+                serializerService.Serialize(new CredentialsPackage { Username = dialog.Username, Password = dialog.Password }, output);
                 message.Data = output.ToArray();
             }
             messageBus.Publish(new MessageEnvelope<ChatMessage, int>(message));

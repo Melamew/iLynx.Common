@@ -60,6 +60,7 @@ namespace iLynx.Chatter.Server
 
         private void RegisterTypes()
         {
+            Container.RegisterType<ISerializerService, BinarySerializerService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ICommandHandlerRegistry, CommandHandlerRegistry>(new PerResolveLifetimeManager());
             Container.RegisterInstance<IConsoleHandler>(Container.Resolve<ConsoleInputHandler>(), new ContainerControlledLifetimeManager());
             Container.RegisterType<IConfigurationManager, SingletonConfigurationManager>(new ContainerControlledLifetimeManager());

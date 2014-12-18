@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using iLynx.Common;
-using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
 using iLynx.Serialization;
 
@@ -36,6 +35,8 @@ namespace iLynx.TestBench
             public string Name { get; set; }
         }
 
+        private static readonly ISerializerService SerializerService = new BinarySerializerService();
+
         private static void RunSerializerVisualization()
         {
             const string testString = "abcdefghijklmnopqrstuvwxyz";
@@ -44,7 +45,7 @@ namespace iLynx.TestBench
             byte[] buffer;
             using (var stream = new MemoryStream())
             {
-                BinarySerializerService.Serialize(instance, stream);
+                SerializerService.Serialize(instance, stream);
                 buffer = stream.ToArray();
             }
             var ascii = Encoding.ASCII.GetString(buffer);
@@ -103,9 +104,9 @@ namespace iLynx.TestBench
             {
                 var item = new ArrayClass { Array = new int[5, 5, 5] };
                 item.Array[2, 2, 2] = 5;
-                BinarySerializerService.Serialize(item, target);
+                SerializerService.Serialize(item, target);
                 target.Position = 0;
-                var result = BinarySerializerService.Deserialize<ArrayClass>(target);
+                var result = SerializerService.Deserialize<ArrayClass>(target);
                 Console.WriteLine("{0}", result.Array[2, 2, 2] == item.Array[2, 2, 2]);
             }
         }
@@ -119,9 +120,9 @@ namespace iLynx.TestBench
         {
             using (var memStream = new MemoryStream())
             {
-                BinarySerializerService.Serialize(5, memStream);
+                SerializerService.Serialize(5, memStream);
                 memStream.Position = 0;
-                var result = BinarySerializerService.Deserialize<int>(memStream);
+                var result = SerializerService.Deserialize<int>(memStream);
                 WriteCenter(string.Format("Primitive Serialization: {0}", 5 == result ? "PASS" : "FAIL"), 0);
                 Trace.WriteLine(result);
                 Debug.Assert(5 == result);
@@ -169,12 +170,12 @@ namespace iLynx.TestBench
                 using (var memoryStream = new MemoryStream())
                 {
                     serializeSw.Start();
-                    BinarySerializerService.Serialize(random, memoryStream);
+                    SerializerService.Serialize(random, memoryStream);
                     serializeSw.Stop();
                     totalBytes += memoryStream.Length;
                     memoryStream.Seek(0, SeekOrigin.Begin);
                     deserializeSw.Start();
-                    other = BinarySerializerService.Deserialize<TestObject>(memoryStream);
+                    other = SerializerService.Deserialize<TestObject>(memoryStream);
                     deserializeSw.Stop();
                 }
                 if (!other.Compare(random, false))

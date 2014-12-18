@@ -23,19 +23,16 @@ namespace iLynx.Serialization
         /// <param name="item">The item.</param>
         /// <param name="target">The target.</param>
         void Serialize<T>(T item, Stream target) where T : new();
-
+        
         /// <summary>
-        /// Attempts to find a serializer for the specified type.
+        /// Adds the specified serializer as an 'override'
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        ISerializer<T> GetSerializer<T>();
+        /// <param name="serializer"></param>
+        void AddOverride<T>(ISerializer<T> serializer);
 
-        /// <summary>
-        /// Attempts to find a serializer for the specified type.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        ISerializer GetSerializer(Type type);
+        ISerializer FindSerializer(Type type);
+
+        ISerializer<T> FindSerializer<T>();
     }
 }

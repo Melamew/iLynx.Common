@@ -70,6 +70,7 @@ namespace iLynx.Chatter.Client
         protected override void ConfigureContainer()
         {
             base.ConfigureContainer();
+            Container.RegisterType<ISerializerService, BinarySerializerService>(new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IBus<>), typeof(QueuedBus<>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IKeyedSubscriptionManager<,>), typeof(KeyedSubscriptionManager<,>), new ContainerControlledLifetimeManager());
             Container.RegisterType(typeof(IMessageServer<,>), typeof(MessageServer<,>), new ContainerControlledLifetimeManager());

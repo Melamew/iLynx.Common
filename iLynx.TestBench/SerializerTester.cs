@@ -12,14 +12,15 @@ namespace iLynx.TestBench
             obj.Array = null;
             obj.AString = null;
             var failures = 0;
+            var serializer = new BinarySerializerService();
             for (var i = 0; i < 50000000; ++i)
             {
                 var pass = true;
                 using (var memStream = new MemoryStream())
                 {
-                    BinarySerializerService.Serialize(obj, memStream);
+                    serializer.Serialize(obj, memStream);
                     memStream.Position = 0;
-                    var result = BinarySerializerService.Deserialize<TestObject>(memStream);
+                    var result = serializer.Deserialize<TestObject>(memStream);
                     pass &= result.Compare(obj, false);
                 }
                 Program.WriteCenter(string.Format("Test: {0}", i + 1), 2);

@@ -20,19 +20,6 @@ namespace iLynx.Configuration
         string FileExtension { get; }
     }
 
-    public class XmlConfigSection : ConfigSectionBase
-    {
-        public override string FileExtension
-        {
-            get { return "xml"; }
-        }
-
-        protected override ISerializer<ValuesContainer> ContainerSerializer
-        {
-            get { return new BinarySerializer<ValuesContainer>(); }
-        }
-    }
-
     /// <summary>
     /// ValuesContainer
     /// </summary>
@@ -57,12 +44,18 @@ namespace iLynx.Configuration
         public IConfigurableValue[] Values { get { return values; } set { values = value; } }
     }
 
-    public abstract class ConfigSectionBase : IConfigSection
+    public abstract class ConfigSection : IConfigSection
     {
-        public abstract string FileExtension { get; }
+        public string FileExtension { get { return extension; } }
         public const string DefaultCategory = "Default";
 
         private readonly Dictionary<string, Dictionary<string, IConfigurableValue>> categories = new Dictionary<string, Dictionary<string, IConfigurableValue>>();
+        private readonly string extension;
+
+        protected ConfigSection(string extension)
+        {
+            this.extension = extension;
+        }
 
         public Dictionary<string, Dictionary<string, IConfigurableValue>> Categories
         {
@@ -189,16 +182,15 @@ namespace iLynx.Configuration
         }
     }
 
-    public class BinaryConfigSection : ConfigSectionBase
+    public class BinaryConfigSection : ConfigSection
     {
-        public override string FileExtension
+        public BinaryConfigSection() : base("bin")
         {
-            get { return "bin"; }
         }
 
         protected override ISerializer<ValuesContainer> ContainerSerializer
         {
-            get { return new BinarySerializer<ValuesContainer>(); }
+            get { return BinarySerializerService.GetSerializer<ValuesContainer>(); }
         }
     }
 }
