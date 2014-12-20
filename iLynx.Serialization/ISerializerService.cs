@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace iLynx.Serialization
 {
@@ -14,7 +13,7 @@ namespace iLynx.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The source.</param>
         /// <returns></returns>
-        T Deserialize<T>(Stream source) where T : new();
+        T Deserialize<T>(Stream source);
 
         /// <summary>
         /// Serializes the specified item.
@@ -22,17 +21,17 @@ namespace iLynx.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="item">The item.</param>
         /// <param name="target">The target.</param>
-        void Serialize<T>(T item, Stream target) where T : new();
-        
-        /// <summary>
-        /// Adds the specified serializer as an 'override'
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="serializer"></param>
-        void AddOverride<T>(ISerializer<T> serializer);
+        void Serialize<T>(T item, Stream target);
 
-        ISerializer FindSerializer(Type type);
+        ///// <summary>
+        ///// Adds the specified serializer as an 'override'
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="serializer"></param>
+        //void AddOverride<T>(ISerializer<T> serializer);
 
-        ISerializer<T> FindSerializer<T>();
+        //ISerializer FindSerializer(Type type);
+
+        //ISerializer<T> FindSerializer<T>();
     }
 }

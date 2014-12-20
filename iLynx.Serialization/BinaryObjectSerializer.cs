@@ -21,9 +21,9 @@ namespace iLynx.Serialization
         /// <param name="targetType">Type of the target.</param>
         /// <param name="getSerializerCallback"></param>
         /// <returns></returns>
-        public static SortedList<Guid, SerializationInfo> BuildObjectGraph(this Type targetType, Func<Type, ISerializer> getSerializerCallback)
+        public static SortedList<Guid, SerializationInfo<TSerializer>> BuildObjectGraph<TSerializer>(this Type targetType, Func<Type, TSerializer> getSerializerCallback)
         {
-            var graph = new SortedList<Guid, SerializationInfo>();
+            var graph = new SortedList<Guid, SerializationInfo<TSerializer>>();
             var namespaceAttribute = targetType.GetCustomAttribute<GuidAttribute>();
             var name = Guid.Empty;
             var hasAttribute = false;
@@ -36,17 +36,17 @@ namespace iLynx.Serialization
                 var fieldInfo in
                     targetType.GetFields(FieldFlags)
                               .Where(f => !f.IsDefined(typeof(NotSerializedAttribute)) && !f.IsNotSerialized)
-                              .Select(c => new SerializationInfo(c, c.FieldType, getSerializerCallback))
+                              .Select(c => new SerializationInfo<TSerializer>(c, c.FieldType, getSerializerCallback))
                               .Concat(targetType.GetProperties(PropertyFlags)    // Apparently BindingFLAGS don't work like flags...
                               .Where(p => null != p.SetMethod && p.SetMethod.IsPublic && null != p.GetMethod && p.GetMethod.IsPublic && p.GetMethod.GetParameters().Length == 0 && p.SetMethod.GetParameters().Length == 1)
                               .Where(p => !p.IsDefined(typeof(NotSerializedAttribute)))
-                              .Select(p => new SerializationInfo(p, p.PropertyType, getSerializerCallback)))
+                              .Select(p => new SerializationInfo<TSerializer>(p, p.PropertyType, getSerializerCallback)))
                 )
             {
                 var idBase = fieldInfo.Member.Name + fieldInfo.Type.FullName;
                 var id = hasAttribute
                              ? idBase.CreateGuidV5(name)
-                             : idBase.CreateGuidV5(SerializerServiceBase.SerializerNamespace);
+                             : idBase.CreateGuidV5(RuntimeComm.SerializerNamespace);
                 if (graph.ContainsKey(id))
                 {
                     Trace.WriteLine("...");
@@ -60,12 +60,23 @@ namespace iLynx.Serialization
 
     public abstract class ObjectSerializerBase<T> : SerializerBase<T>
     {
-        protected readonly IEnumerable<SerializationInfo> Graph;
+        protected readonly IEnumerable<SerializationInfo<ISerializer>> Graph;
 
         protected ObjectSerializerBase(Func<Type, ISerializer> getSerializerCallback)
         {
             if (typeof(T) == Type.Missing.GetType()) throw new NotSupportedException("Missing Types are currently not supported");
             Graph = typeof(T).BuildObjectGraph(getSerializerCallback).Values;
+        }
+
+        /// <summary>
+        /// Posts the quit.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <param name="m">The m.</param>
+        protected virtual void PostQuit(Exception e, MethodBase m)
+        {
+            this.LogError("{0}: {1}", e, m);
+            this.LogCritical("Last Error was unrecoverable. Giving up");
         }
     }
 
@@ -136,17 +147,6 @@ namespace iLynx.Serialization
                 }
             }
             return (T)target;
-        }
-
-        /// <summary>
-        /// Posts the quit.
-        /// </summary>
-        /// <param name="e">The e.</param>
-        /// <param name="m">The m.</param>
-        private void PostQuit(Exception e, MethodBase m)
-        {
-            this.LogError("{0}: {1}", e, m);
-            this.LogCritical("Last Error was unrecoverable. Giving up");
         }
 
         // ReSharper disable StaticFieldInGenericType

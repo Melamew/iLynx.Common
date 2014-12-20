@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Reflection;
+using iLynx.Common;
 
 namespace iLynx.Serialization
 {
     /// <summary>
     /// BinarySerializerService
     /// </summary>
-    public class BinarySerializerService : SerializerServiceBase
+    public class BinarySerializerService : ISerializerService
     {
         private static readonly Dictionary<Type, ISerializer> Overrides = new Dictionary<Type, ISerializer>
                                                                                     {
@@ -39,11 +41,47 @@ namespace iLynx.Serialization
         public static readonly IBitConverter SingletonBitConverter = new BigEndianBitConverter();
 
         /// <summary>
+        /// Serializes the specified item.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item">The item.</param>
+        /// <param name="target">The target.</param>
+        public virtual void Serialize<T>(T item, Stream target)
+        {
+            var serializer = FindSerializer<T>();
+            if (null == serializer)
+            {
+                OnGetSerializerError<T>();
+                return;
+            }
+            serializer.Serialize(item, target);
+        }
+
+        /// <summary>
+        /// Deserializes the specified source.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">The source.</param>
+        /// <returns></returns>
+        public virtual T Deserialize<T>(Stream source)
+        {
+            var serializer = FindSerializer<T>();
+            if (null != serializer) return serializer.Deserialize(source);
+            OnGetSerializerError<T>();
+            return default(T);
+        }
+
+        protected virtual void OnGetSerializerError<T>()
+        {
+            this.LogError("Something went wrong... Tried to get Serializer for Type: {0}, but was unsuccesful", typeof(T));
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="serializer"></param>
         /// <typeparam name="T"></typeparam>
-        public override void AddOverride<T>(ISerializer<T> serializer)
+        public void AddOverride<T>(ISerializer<T> serializer)
         {
             lock (Overrides)
             {
@@ -96,12 +134,12 @@ namespace iLynx.Serialization
             return ser;
         }
 
-        public override ISerializer<T> FindSerializer<T>()
+        public ISerializer<T> FindSerializer<T>()
         {
             return GetSerializer<T>();
         }
 
-        public override ISerializer FindSerializer(Type type)
+        public ISerializer FindSerializer(Type type)
         {
             return GetSerializer(type);
         }

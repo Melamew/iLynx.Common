@@ -7,9 +7,9 @@ namespace iLynx.Serialization
     /// <summary>
     /// Contains the most basic information for serializing a single member of an object.
     /// </summary>
-    public class SerializationInfo
+    public class SerializationInfo<TSerializer>
     {
-        private readonly Func<Type, ISerializer> getSerializerCallback;
+        private readonly Func<Type, TSerializer> getSerializerCallback;
         private readonly MemberInfo member;
         private readonly Type type;
 
@@ -29,7 +29,7 @@ namespace iLynx.Serialization
         /// <summary>
         /// Gets the BinarySerializerService that can be used to serialize this member (Only if the member is NOT untyped (Interface, object, abstract, etc.) and the member is NOT a delegate t.
         /// </summary>
-        public ISerializer TypeSerializer { get; private set; }
+        public TSerializer TypeSerializer { get; private set; }
         
         /// <summary>
         /// Gets a value indicating whether or not the member described in this instance is 'untyped' (Of t object, an interface, or an abstract class definition).
@@ -48,14 +48,14 @@ namespace iLynx.Serialization
         /// <param name="member"></param>
         /// <param name="type"></param>
         /// <param name="getSerializerCallback"></param>
-        public SerializationInfo(MemberInfo member, Type type, Func<Type, ISerializer> getSerializerCallback)
+        public SerializationInfo(MemberInfo member, Type type, Func<Type, TSerializer> getSerializerCallback)
         {
             this.getSerializerCallback = Guard.IsNull(() => getSerializerCallback);
             this.member = Guard.IsNull(() => member);
             this.type = Guard.IsNull(() => type);
             IsUntyped = type.IsUnTyped();
             IsDelegate = typeof(Delegate).IsAssignableFrom(type);
-            TypeSerializer = IsUntyped || IsDelegate ? null : GetSerializer(type);
+            TypeSerializer = IsUntyped || IsDelegate ? default(TSerializer) : GetSerializer(type);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace iLynx.Serialization
             field.SetValue(target, value);
         }
 
-        private ISerializer GetSerializer(Type t)
+        private TSerializer GetSerializer(Type t)
         {
             return getSerializerCallback(t.IsEnum ? Enum.GetUnderlyingType(t) : t);
         }

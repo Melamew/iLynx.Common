@@ -18,7 +18,7 @@ namespace iLynx.TestBench
     public class TcpConnectionTests
     {
         private readonly ConsoleMenu menu = new ConsoleMenu();
-        private readonly ISerializerService serializerService = new BinarySerializerService();
+
         public void Run()
         {
             menu.AddMenuItem('1', "Run a simple Server/Client test", RunClientServerTest);
@@ -50,11 +50,11 @@ namespace iLynx.TestBench
 
         private void RunSubscriberTest()
         {
-            var listener = new TcpStubListener<SimpleMessage<int>, int>(new SimpleMessageSerializer<int>(serializerService.FindSerializer<int>()), new SingleThreadedTimerService());
+            var listener = new TcpStubListener<SimpleMessage<int>, int>(new SimpleMessageSerializer<int>(BinarySerializerService.GetSerializer<int>()), new SingleThreadedTimerService());
             const ushort port = 50124;
             var connection = new StubConnection<SimpleMessage<int>, int>(
                 new ThreadManager(RuntimeCommon.DefaultLogger),
-                new TcpStubBuilder<SimpleMessage<int>, int>(new SimpleMessageSerializer<int>(serializerService.FindSerializer<int>()), new SingleThreadedTimerService()));
+                new TcpStubBuilder<SimpleMessage<int>, int>(new SimpleMessageSerializer<int>(BinarySerializerService.GetSerializer<int>()), new SingleThreadedTimerService()));
             RunClientSubscriber(connection, listener, port);
         }
 
@@ -126,11 +126,11 @@ namespace iLynx.TestBench
         private void RunClientServerTest()
         {
             const ushort port = 5321;
-            var listener = new TcpStubListener<SimpleMessage<int>, int>(new SimpleMessageSerializer<int>(serializerService.FindSerializer<int>()), new SingleThreadedTimerService());
+            var listener = new TcpStubListener<SimpleMessage<int>, int>(new SimpleMessageSerializer<int>(BinarySerializerService.GetSerializer<int>()), new SingleThreadedTimerService());
             var endPoint = new IPEndPoint(IPAddress.Any, port);
             listener.BindTo(endPoint);
             var serverTask = Task.Run(() => AcceptSocket(listener));
-            var connectionBuilder = new TcpStubBuilder<SimpleMessage<int>, int>(new SimpleMessageSerializer<int>(serializerService.FindSerializer<int>()), new SingleThreadedTimerService());
+            var connectionBuilder = new TcpStubBuilder<SimpleMessage<int>, int>(new SimpleMessageSerializer<int>(BinarySerializerService.GetSerializer<int>()), new SingleThreadedTimerService());
             var ep = new IPEndPoint(IPAddress.Loopback, port);
             Console.WriteLine(@"Client: Building connection to {0}", ep);
             var connection = connectionBuilder.Build(ep);

@@ -53,12 +53,16 @@
     <Compile Include="NullType.cs" />
     <Compile Include="BinaryPrimitives.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuntimeComm.cs" />
     <Compile Include="SerializationInfo.cs" />
     <Compile Include="BinarySerializerService.cs" />
     <Compile Include="SerializerBase.cs" />
-    <Compile Include="SerializerServiceBase.cs" />
     <Compile Include="WhatTheFuckException.cs" />
+    <Compile Include="Xml\IXmlSerializer.cs" />
+    <Compile Include="Xml\XmlObjectSerializer.cs" />
     <Compile Include="Xml\XmlSerializer.cs" />
+    <Compile Include="Xml\XmlSerializerBase.cs" />
+    <Compile Include="Xml\XmlSerializerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">

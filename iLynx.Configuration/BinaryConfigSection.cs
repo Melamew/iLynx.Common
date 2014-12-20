@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using iLynx.Common;
 using iLynx.Serialization;
+using iLynx.Serialization.Xml;
 
 namespace iLynx.Configuration
 {
@@ -184,13 +186,59 @@ namespace iLynx.Configuration
 
     public class BinaryConfigSection : ConfigSection
     {
-        public BinaryConfigSection() : base("bin")
+        public BinaryConfigSection()
+            : base("bin")
         {
         }
 
         protected override ISerializer<ValuesContainer> ContainerSerializer
         {
             get { return BinarySerializerService.GetSerializer<ValuesContainer>(); }
+        }
+    }
+
+    public class XmlConfigSection : ConfigSection
+    {
+        public XmlConfigSection()
+            : base("xml")
+        {
+
+        }
+
+        private class XmlSerializerWrapper : SerializerBase<ValuesContainer>
+        {
+            private readonly IXmlSerializer<ValuesContainer> xmlSerializer;
+            public XmlSerializerWrapper()
+            {
+                xmlSerializer = XmlSerializerService.GetSerializer<ValuesContainer>();
+            }
+            public override int GetOutputSize(ValuesContainer item)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override ValuesContainer Deserialize(Stream source)
+            {
+                using (var reader = XmlReader.Create(source, new XmlReaderSettings
+                {
+                    ConformanceLevel = ConformanceLevel.Fragment
+                }))
+                    return xmlSerializer.Deserialize(reader);
+            }
+
+            public override void Serialize(ValuesContainer item, Stream target)
+            {
+                using (var writer = XmlWriter.Create(target, new XmlWriterSettings
+                {
+                    ConformanceLevel = ConformanceLevel.Fragment
+                }))
+                    xmlSerializer.Serialize(item, writer);
+            }
+        }
+
+        protected override ISerializer<ValuesContainer> ContainerSerializer
+        {
+            get { return new XmlSerializerWrapper(); }
         }
     }
 }

@@ -4,9 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Windows.Media;
+using System.Xml;
 using iLynx.Common;
 using iLynx.Common.Threading;
 using iLynx.Serialization;
+using iLynx.Serialization.Xml;
 
 // ReSharper disable LocalizableElement
 
@@ -26,13 +29,49 @@ namespace iLynx.TestBench
             menu.AddMenuItem('6', "Run Tcp connection tests", () => new TcpConnectionTests().Run());
             menu.AddMenuItem('7', "Run timerservice tests", RunTimerServiceTests);
             menu.AddMenuItem('8', "Run BinarySerializerService 'Visualization'", RunSerializerVisualization);
+            menu.AddMenuItem('9', "Run some tests on XmlSerializer", RunXmlSerializerTests);
             menu.AddMenuItem('w', "Run the WPF test window", StartDialog);
             menu.ShowMenu();
         }
 
+        private static void RunXmlSerializerTests()
+        {
+            var serializer = new XmlSerializerService();
+            for (var i = 0; i < 5000; ++i)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    var item1 = new VisualizationClass { Value = "Blah " + i };
+                    var item2 = new VisualizationClass { Value = "Blah " + (i + 1) };
+                    using (var writer = XmlWriter.Create(stream, new XmlWriterSettings{ ConformanceLevel = ConformanceLevel.Fragment}))
+                    {
+                        serializer.Serialize(item1, writer);
+                        Console.WriteLine("Write: {0}", item1.Value);
+                        serializer.Serialize(item2, writer);
+                        Console.WriteLine("Write: {0}", item2.Value);
+                    }
+                    var buffer = stream.ToArray();
+                    stream.Position = 0;
+                    Console.WriteLine("Serialized Data:");
+                    Console.WriteLine(Encoding.Default.GetString(buffer));
+                    using (var reader = XmlReader.Create(stream, new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment }))
+                    {
+                        var result1 = serializer.Deserialize<VisualizationClass>(reader);
+                        Console.WriteLine("Read: {0}", result1.Value);
+                        var result2 = serializer.Deserialize<VisualizationClass>(reader);
+                        Console.WriteLine("Read: {0}", result2.Value);
+                    }
+                    //Console.WriteLine("Write: {0}", item.Value);
+                    //var result = serializer.Deserialize<VisualizationClass>(stream);
+                    //Console.WriteLine("Read Back: {0}", result.Value);
+                    //Console.WriteLine(result.Value == item.Value ? "PASS" : "FAIL");
+                }
+            }
+        }
+
         private class VisualizationClass
         {
-            public string Name { get; set; }
+            public string Value { get; set; }
         }
 
         private static readonly ISerializerService SerializerService = new BinarySerializerService();
@@ -41,7 +80,7 @@ namespace iLynx.TestBench
         {
             const string testString = "abcdefghijklmnopqrstuvwxyz";
             Console.WriteLine("Serializing: {0}", testString);
-            var instance = new VisualizationClass {Name = testString};
+            var instance = new VisualizationClass { Value = testString };
             byte[] buffer;
             using (var stream = new MemoryStream())
             {
@@ -74,7 +113,7 @@ namespace iLynx.TestBench
                     timerService.Stop(timer2);
                 if (t1 >= count && t2 >= count) break;
             }
-            
+
             Console.ReadKey();
         }
 
