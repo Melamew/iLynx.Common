@@ -14,7 +14,9 @@ namespace iLynx.Serialization.Xml
         public override T Deserialize(XmlReader reader)
         {
             var target = Activator.CreateInstance(typeof(T));
-            reader.Read();
+            if (reader.NodeType != XmlNodeType.Element)
+                reader.Read();
+            if (reader.LocalName != typeof (T).Name) return default(T);
             try
             {
                 foreach (var member in Graph)
@@ -66,7 +68,8 @@ namespace iLynx.Serialization.Xml
         /// <param name="target">The target.</param>
         public override void Serialize(T item, XmlWriter target)
         {
-            target.WriteStartElement("A" + Guid.NewGuid().ToString("N"));
+            var typeName = typeof (T).Name.Replace('`', '.');
+            target.WriteStartElement(typeName);
             try
             {
                 foreach (var member in Graph)

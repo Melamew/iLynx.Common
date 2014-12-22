@@ -131,17 +131,12 @@
     <Compile Include="NonComponentNotificationBase.cs" />
     <Compile Include="Pixels\IPalette.cs" />
     <Compile Include="Pixels\LinearGradientPalette.cs" />
-    <Compile Include="Serialization\Old\DataProperty.cs" />
-    <Compile Include="Serialization\Old\DataPropertyAttribute.cs" />
-    <Compile Include="Serialization\Old\DataSerializer.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GenericEventHandler.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IDataAdapter.cs" />
     <Compile Include="IDataPersister.cs" />
-    <Compile Include="Serialization\Old\IDataProperty.cs" />
-    <Compile Include="Serialization\Old\IDataSerializer.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IValidatable.cs" />
     <Compile Include="LoggingProxy.cs" />
@@ -189,9 +184,7 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configuration\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

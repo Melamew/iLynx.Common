@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using iLynx.Common.Serialization;
 using JetBrains.Annotations;
 
 namespace iLynx.Common

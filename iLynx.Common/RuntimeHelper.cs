@@ -6,6 +6,34 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
+namespace iLynx.Common.Xml
+{
+    public static class XmlHelper
+    {
+        public static bool IsValidAttributeString(this string xml)
+        {
+            return xml.Length > 0 && 
+                   !(xml.Contains("&") ||
+                     xml.Contains(";") ||
+                     xml.Contains("<") ||
+                     xml.Contains(">") ||
+                     xml.Contains("'") ||
+                     xml.Contains("\"") ||
+                     char.IsNumber(xml, 0));
+        }
+
+        public static string DirtyEscape(this string xml)
+        {
+            return xml.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;").Replace("'", "&apos;");
+        }
+
+        public static string XmlDirtyUnescape(this string xml)
+        {
+            return xml.Replace("&amp;", "&").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&quot;", "\"").Replace("&apos;", "'");
+        }
+    }
+}
+
 namespace iLynx.Common
 {
     /// <summary>

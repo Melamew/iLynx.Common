@@ -29,43 +29,53 @@ namespace iLynx.TestBench
             menu.AddMenuItem('6', "Run Tcp connection tests", () => new TcpConnectionTests().Run());
             menu.AddMenuItem('7', "Run timerservice tests", RunTimerServiceTests);
             menu.AddMenuItem('8', "Run BinarySerializerService 'Visualization'", RunSerializerVisualization);
-            menu.AddMenuItem('9', "Run some tests on XmlSerializer", RunXmlSerializerTests);
+            menu.AddMenuItem('9', "Run some tests on XmlSerializer", DoTest);
             menu.AddMenuItem('w', "Run the WPF test window", StartDialog);
             menu.ShowMenu();
         }
 
-        private static void RunXmlSerializerTests()
+        private static void DoTest()
         {
-            var serializer = new XmlSerializerService();
-            for (var i = 0; i < 5000; ++i)
+            using (var stream = new MemoryStream())
             {
-                using (var stream = new MemoryStream())
-                {
-                    var item1 = new VisualizationClass { Value = "Blah " + i };
-                    var item2 = new VisualizationClass { Value = "Blah " + (i + 1) };
-                    using (var writer = XmlWriter.Create(stream, new XmlWriterSettings{ ConformanceLevel = ConformanceLevel.Fragment}))
-                    {
-                        serializer.Serialize(item1, writer);
-                        Console.WriteLine("Write: {0}", item1.Value);
-                        serializer.Serialize(item2, writer);
-                        Console.WriteLine("Write: {0}", item2.Value);
-                    }
-                    var buffer = stream.ToArray();
-                    stream.Position = 0;
-                    Console.WriteLine("Serialized Data:");
-                    Console.WriteLine(Encoding.Default.GetString(buffer));
-                    using (var reader = XmlReader.Create(stream, new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment }))
-                    {
-                        var result1 = serializer.Deserialize<VisualizationClass>(reader);
-                        Console.WriteLine("Read: {0}", result1.Value);
-                        var result2 = serializer.Deserialize<VisualizationClass>(reader);
-                        Console.WriteLine("Read: {0}", result2.Value);
-                    }
-                    //Console.WriteLine("Write: {0}", item.Value);
-                    //var result = serializer.Deserialize<VisualizationClass>(stream);
-                    //Console.WriteLine("Read Back: {0}", result.Value);
-                    //Console.WriteLine(result.Value == item.Value ? "PASS" : "FAIL");
-                }
+                WriteElement("Test", stream);
+                Console.WriteLine("Stream Length after first write: {0}", stream.Length);
+                WriteElement("Test2", stream);
+                Console.WriteLine("Stream Length after second write: {0}", stream.Length);
+                stream.Position = 0;
+                Console.WriteLine(ReadElement(stream));
+                Console.WriteLine("Position is now: {0}/{1}", stream.Position, stream.Length);
+                Console.WriteLine(ReadElement(stream)); // Note that this will fail due to the stream position now being at the end.
+            }
+        }
+
+        private static string ReadElement(Stream source)
+        {
+            string result;
+            using (var reader = XmlReader.Create(source, new XmlReaderSettings
+            {
+                ConformanceLevel = ConformanceLevel.Fragment,
+                CloseInput = false
+            }))
+            {
+                reader.Read();
+                result = reader.Name;
+                reader.Read();
+            }
+            return result;
+        }
+
+        private static void WriteElement(string name, Stream target)
+        {
+            using (var writer = XmlWriter.Create(target, new XmlWriterSettings
+                                                         {
+                                                             ConformanceLevel = ConformanceLevel.Fragment,
+                                                             WriteEndDocumentOnClose = false,
+                                                             OmitXmlDeclaration = true,
+                                                         }))
+            {
+                writer.WriteStartElement(name);
+                writer.WriteEndElement();
             }
         }
 

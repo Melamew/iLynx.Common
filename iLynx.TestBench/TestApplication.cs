@@ -4,7 +4,6 @@ using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.ServerServicesModule;
 using iLynx.Chatter.WPF;
 using iLynx.Common;
-using iLynx.Common.Serialization;
 using iLynx.Common.Threading;
 using iLynx.Common.WPF;
 using iLynx.Configuration;

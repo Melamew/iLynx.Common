@@ -221,7 +221,7 @@ namespace iLynx.Configuration
             {
                 using (var reader = XmlReader.Create(source, new XmlReaderSettings
                 {
-                    ConformanceLevel = ConformanceLevel.Fragment
+                    ConformanceLevel = ConformanceLevel.Fragment,
                 }))
                     return xmlSerializer.Deserialize(reader);
             }
@@ -230,7 +230,12 @@ namespace iLynx.Configuration
             {
                 using (var writer = XmlWriter.Create(target, new XmlWriterSettings
                 {
-                    ConformanceLevel = ConformanceLevel.Fragment
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    WriteEndDocumentOnClose = false,
+                    OmitXmlDeclaration = true,
+                    Indent = true,
+
+
                 }))
                     xmlSerializer.Serialize(item, writer);
             }

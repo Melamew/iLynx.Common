@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace iLynx.Tests
 {
-    [TestFixture]
     public class XmlPrimitivesFixture
     {
         [TestFixture]

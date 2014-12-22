@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Windows.Media;
 using System.Xml;
 using JetBrains.Annotations;
 
@@ -16,28 +17,47 @@ namespace iLynx.Serialization.Xml
             {typeof (char), new XmlPrimitives.CharSerializer()},
             {typeof (Guid), new XmlPrimitives.GuidSerializer()},
             {typeof (byte), new XmlPrimitives.ByteSerializer()},
-            {typeof (int), new XmlPrimitives.Int32Serializer()}
+            {typeof (ushort), new XmlPrimitives.UInt16Serializer()},
+            {typeof (short), new XmlPrimitives.Int16Serializer()},
+            {typeof (uint), new XmlPrimitives.UInt32Serializer()},
+            {typeof (int), new XmlPrimitives.Int32Serializer()},
+            {typeof (ulong), new XmlPrimitives.UInt64Serializer()},
+            {typeof (long), new XmlPrimitives.Int64Serializer()},
+            {typeof (float), new XmlPrimitives.SingleSerializer()},
+            {typeof (double), new XmlPrimitives.DoubleSerializer()},
+            {typeof (decimal), new XmlPrimitives.DecimalSerializer()},
+            {typeof (Color), new XmlPrimitives.ColorSerializer()},
+            {typeof (DateTime), new XmlPrimitives.DateTimeSerializer()},
+            {typeof (TimeSpan), new XmlPrimitives.TimeSpanSerializer()},
         };
+
+        private static readonly XmlWriterSettings WriterSettings = new XmlWriterSettings
+                                                                   {
+                                                                       OmitXmlDeclaration = true,
+                                                                       ConformanceLevel = ConformanceLevel.Fragment
+                                                                   };
+
+        private static readonly XmlReaderSettings ReaderSettings = new XmlReaderSettings
+                                                                   {
+                                                                       IgnoreComments = true,
+                                                                       ConformanceLevel = ConformanceLevel.Fragment,
+                                                                       CloseInput = false,
+                                                                   };
 
         public void Serialize<T>(T item, Stream target)
         {
-            using (var writer = XmlWriter.Create(target, new XmlWriterSettings
+            using (var writer = XmlWriter.Create(target, WriterSettings))
             {
-                OmitXmlDeclaration = true,
-                ConformanceLevel = ConformanceLevel.Fragment
-            }))
-            {
+                writer.WriteStartElement("Data");
                 Serialize(item, writer);
+                writer.WriteAttributeString("StreamOffset", target.Position.ToString(CultureInfo.InvariantCulture));
+                writer.WriteEndElement();
             }
         }
 
         public T Deserialize<T>(Stream source)
         {
-            using (var reader = XmlReader.Create(source, new XmlReaderSettings
-            {
-                IgnoreComments = true,
-                ConformanceLevel = ConformanceLevel.Fragment,
-            }))
+            using (var reader = XmlReader.Create(source, ReaderSettings))
             {
                 return Deserialize<T>(reader);
             }
@@ -174,6 +194,40 @@ namespace iLynx.Serialization.Xml
             }
         }
 
+        public class Int16Serializer : XmlSerializerBase<short>
+        {
+            #region Overrides of XmlSerializerBase<ushort>
+
+            public override void Serialize(short item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(short).ToString(), item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override short Deserialize(XmlReader reader)
+            {
+                return short.Parse(reader.ReadElementString(typeof (short).Name));
+            }
+
+            #endregion
+        }
+
+        public class UInt16Serializer : XmlSerializerBase<ushort>
+        {
+            #region Overrides of XmlSerializerBase<ushort>
+
+            public override void Serialize(ushort item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(ushort).ToString(), item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override ushort Deserialize(XmlReader reader)
+            {
+                return ushort.Parse(reader.ReadElementString(typeof(ushort).Name));
+            }
+
+            #endregion
+        }
+
         public class Int32Serializer : XmlSerializerBase<int>
         {
             public override void Serialize(int item, XmlWriter writer)
@@ -184,6 +238,84 @@ namespace iLynx.Serialization.Xml
             public override int Deserialize(XmlReader reader)
             {
                 return int.Parse(reader.ReadElementString(typeof(int).Name));
+            }
+        }
+
+        public class UInt32Serializer : XmlSerializerBase<uint>
+        {
+            public override void Serialize(uint item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(uint).Name, item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override uint Deserialize(XmlReader reader)
+            {
+                return uint.Parse(reader.ReadElementString(typeof(uint).Name));
+            }
+        }
+
+        public class Int64Serializer : XmlSerializerBase<long>
+        {
+            public override void Serialize(long item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(long).Name, item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override long Deserialize(XmlReader reader)
+            {
+                return long.Parse(reader.ReadElementString(typeof(long).Name));
+            }
+        }
+
+        public class UInt64Serializer : XmlSerializerBase<ulong>
+        {
+            public override void Serialize(ulong item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(ulong).Name, item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override ulong Deserialize(XmlReader reader)
+            {
+                return ulong.Parse(reader.ReadElementString(typeof(ulong).Name));
+            }
+        }
+
+        public class DoubleSerializer : XmlSerializerBase<double>
+        {
+            public override void Serialize(double item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(double).Name, item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override double Deserialize(XmlReader reader)
+            {
+                return double.Parse(reader.ReadElementString(typeof(double).Name));
+            }
+        }
+
+        public class SingleSerializer : XmlSerializerBase<float>
+        {
+            public override void Serialize(float item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(float).Name, item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override float Deserialize(XmlReader reader)
+            {
+                return float.Parse(reader.ReadElementString(typeof(float).Name));
+            }
+        }
+
+        public class DecimalSerializer : XmlSerializerBase<decimal>
+        {
+            public override void Serialize(decimal item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(decimal).Name, item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override decimal Deserialize(XmlReader reader)
+            {
+                return decimal.Parse(reader.ReadElementString(typeof(decimal).Name));
             }
         }
 
@@ -210,6 +342,32 @@ namespace iLynx.Serialization.Xml
             public override Guid Deserialize(XmlReader reader)
             {
                 return new Guid(reader.ReadElementString(typeof(Guid).Name));
+            }
+        }
+
+        public class DateTimeSerializer : XmlSerializerBase<DateTime>
+        {
+            public override void Serialize(DateTime item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(DateTime).Name, item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override DateTime Deserialize(XmlReader reader)
+            {
+                return DateTime.Parse(reader.ReadElementString(typeof(DateTime).Name));
+            }
+        }
+
+        public class TimeSpanSerializer : XmlSerializerBase<TimeSpan>
+        {
+            public override void Serialize(TimeSpan item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(TimeSpan).Name, item.ToString());
+            }
+
+            public override TimeSpan Deserialize(XmlReader reader)
+            {
+                return TimeSpan.Parse(reader.ReadElementString(typeof(TimeSpan).Name));
             }
         }
 
@@ -327,6 +485,41 @@ namespace iLynx.Serialization.Xml
                 }
                 finally { reader.ReadEndElement(); }
             }
+        }
+
+        public class ColorSerializer : XmlSerializerBase<Color>
+        {
+            #region Overrides of XmlSerializerBase<Color>
+
+            public override void Serialize(Color item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof (Color).Name, string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}",
+                    item.A,
+                    item.R,
+                    item.G,
+                    item.B));
+            }
+
+            public override Color Deserialize(XmlReader reader)
+            {
+                var str = reader.ReadElementString(typeof (Color).Name);
+                var haveAlpha = str.Length - 1 == 8;
+                var offset = 1;
+                byte a = 0xFF;
+                if (haveAlpha)
+                {
+                    a = byte.Parse(str.Substring(offset, 2), NumberStyles.HexNumber);
+                    offset += 2;
+                }
+                var r = byte.Parse(str.Substring(offset, 2));
+                offset += 2;
+                var g = byte.Parse(str.Substring(offset, 2));
+                offset += 2;
+                var b = byte.Parse(str.Substring(offset, 2));
+                return Color.FromArgb(a, r, g, b);
+            }
+
+            #endregion
         }
     }
 }
