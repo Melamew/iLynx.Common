@@ -26,9 +26,10 @@ namespace iLynx.Serialization.Xml
                     try
                     {
                         IXmlSerializer serializer;
-                        if (ShouldReadType(reader))
+                        var typeName = reader.GetAttribute("Type");
+                        if (null != typeName)
                         {
-                            var memberType = ReadType(reader);
+                            var memberType = Type.GetType(typeName);
                             if (null == memberType)
                                 continue;
                             serializer = XmlSerializerService.GetSerializer(memberType);
@@ -79,19 +80,15 @@ namespace iLynx.Serialization.Xml
                     {
                         IXmlSerializer serializer;
                         var value = member.IsDelegate ? null : member.GetValue(item);
-                        if (null == value || member.IsUntyped)
+                        if (null == value) continue;
+                        if (member.IsUntyped)
                         {
-                            value = value ?? new NullType();
                             var type = value.GetType();
                             serializer = XmlSerializerService.GetSerializer(type);
-                            target.WriteAttributeString("T", true.ToString());// Indicate that we need to read the type when we deserialize.
                             WriteType(target, type);
                         }
                         else
-                        {
-                            target.WriteAttributeString("T", false.ToString());// Indicate that we do NOT need to read the type when we deserialize.
                             serializer = member.TypeSerializer;
-                        }
 
                         try
                         {
@@ -112,12 +109,6 @@ namespace iLynx.Serialization.Xml
         private static void WriteType(XmlWriter writer, Type type)
         {
             writer.WriteAttributeString("Type", type.AssemblyQualifiedName ?? Type.Missing.ToString());
-        }
-
-        private static Type ReadType(XmlReader reader)
-        {
-            var typeName = reader.GetAttribute("Type");
-            return null == typeName ? typeof(NullType) : Type.GetType(typeName);
         }
     }
 }
