@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Media;
 using System.Xml;
+using iLynx.Common;
 using JetBrains.Annotations;
 
 namespace iLynx.Serialization.Xml
@@ -217,7 +218,7 @@ namespace iLynx.Serialization.Xml
 
             public override void Serialize(ushort item, XmlWriter writer)
             {
-                writer.WriteElementString(typeof(ushort).ToString(), item.ToString(CultureInfo.InvariantCulture));
+                writer.WriteElementString(typeof(ushort).Name, item.ToString(CultureInfo.InvariantCulture));
             }
 
             public override ushort Deserialize(XmlReader reader)
@@ -412,18 +413,20 @@ namespace iLynx.Serialization.Xml
 
             public override Array Deserialize(XmlReader reader)
             {
-                reader.Read();
+                //reader.Read();
+                reader.SkipToElement("Array");
                 try
                 {
                     var countString = reader.GetAttribute("Count");
+                    reader.ReadStartElement("Array");
                     int count;
                     if (!int.TryParse(countString, out count)) return null;
                     var target = Array.CreateInstance(arrayElementType, count);
                     for (var i = 0; i < count; ++i)
                     {
-                        reader.ReadStartElement("Entry");
                         try
                         {
+                            reader.SkipToElement("Entry");
                             var isNull = bool.Parse(reader.GetAttribute("IsNull") ?? "true");
                             if (isNull)
                                 continue;
@@ -431,6 +434,7 @@ namespace iLynx.Serialization.Xml
                             if (null == elementTypeString) continue;
                             var elementType = Type.GetType(elementTypeString);
                             if (null == elementType) continue;
+                            reader.ReadStartElement("Entry");
                             var serializer = XmlSerializerService.GetSerializer(elementType);
                             var result = serializer.Deserialize(reader);
                             target.SetValue(result, i);
@@ -468,14 +472,14 @@ namespace iLynx.Serialization.Xml
 
             public override Array Deserialize(XmlReader reader)
             {
-                reader.Read();
+                reader.SkipToElement("Array");
                 try
                 {
                     var countAttrib = reader.GetAttribute("Count");
                     int count;
                     if (!int.TryParse(countAttrib, out count)) return null;
                     var target = Array.CreateInstance(elementType, count);
-                    if (!reader.Read()) return null;
+                    reader.ReadStartElement("Array");
                     for (var i = 0; i < count; ++i)
                     {
                         var element = elementSerializer.Deserialize(reader);

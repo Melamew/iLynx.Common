@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Xml;
 using iLynx.Common;
 using iLynx.Serialization;
@@ -20,6 +21,11 @@ namespace iLynx.Configuration
         bool Contains(string category, string key);
         IEnumerable<string> GetCagerories();
         string FileExtension { get; }
+    }
+
+    public class CategoriesContainer
+    {
+        public ValuesContainer[] Sections { get; set; }
     }
 
     /// <summary>
@@ -143,19 +149,22 @@ namespace iLynx.Configuration
             return Categories.Keys;
         }
 
-        protected abstract ISerializer<ValuesContainer> ContainerSerializer { get; }
+        protected abstract ISerializer<CategoriesContainer> ContainerSerializer { get; }
 
         public void WriteTo(Stream target)
         {
             try
             {
                 var serializer = ContainerSerializer;
-                foreach (var container in Categories.Select(category => new ValuesContainer
-                {
-                    Category = category.Key,
-                    Values = category.Value.Values.ToArray()
-                }))
-                    serializer.Serialize(container, target);
+                var container = new CategoriesContainer
+                                {
+                                    Sections = Categories.Select(category => new ValuesContainer
+                                                                             {
+                                                                                 Category = category.Key,
+                                                                                 Values = category.Value.Values.ToArray()
+                                                                             }).ToArray(),
+                                };
+                serializer.Serialize(container, target);
             }
             catch (Exception e)
             {
@@ -169,17 +178,8 @@ namespace iLynx.Configuration
             while (source.Position != source.Length)
             {
                 var container = serializer.Deserialize(source);
-                var category = container.Category;
-                Dictionary<string, IConfigurableValue> existing;
-                if (!Categories.TryGetValue(category, out existing))
-                    Categories.Add(category, (existing = new Dictionary<string, IConfigurableValue>()));
-                foreach (var val in container.Values.Where(x => null != x))
-                {
-                    if (existing.ContainsKey(val.Key))
-                        existing[val.Key] = val;
-                    else
-                        existing.Add(val.Key, val);
-                }
+                foreach (var categoryValues in container.Sections)
+                    categories.Add(categoryValues.Category, categoryValues.Values.ToDictionary(x => x.Key, x => x));
             }
         }
     }
@@ -191,9 +191,9 @@ namespace iLynx.Configuration
         {
         }
 
-        protected override ISerializer<ValuesContainer> ContainerSerializer
+        protected override ISerializer<CategoriesContainer> ContainerSerializer
         {
-            get { return BinarySerializerService.GetSerializer<ValuesContainer>(); }
+            get { return BinarySerializerService.GetSerializer<CategoriesContainer>(); }
         }
     }
 
@@ -205,19 +205,19 @@ namespace iLynx.Configuration
 
         }
 
-        private class XmlSerializerWrapper : SerializerBase<ValuesContainer>
+        private class XmlSerializerWrapper : SerializerBase<CategoriesContainer>
         {
-            private readonly IXmlSerializer<ValuesContainer> xmlSerializer;
+            private readonly IXmlSerializer<CategoriesContainer> xmlSerializer;
             public XmlSerializerWrapper()
             {
-                xmlSerializer = XmlSerializerService.GetSerializer<ValuesContainer>();
+                xmlSerializer = XmlSerializerService.GetSerializer<CategoriesContainer>();
             }
-            public override int GetOutputSize(ValuesContainer item)
+            public override int GetOutputSize(CategoriesContainer item)
             {
                 throw new NotSupportedException();
             }
 
-            public override ValuesContainer Deserialize(Stream source)
+            public override CategoriesContainer Deserialize(Stream source)
             {
                 using (var reader = XmlReader.Create(source, new XmlReaderSettings
                 {
@@ -226,7 +226,7 @@ namespace iLynx.Configuration
                     return xmlSerializer.Deserialize(reader);
             }
 
-            public override void Serialize(ValuesContainer item, Stream target)
+            public override void Serialize(CategoriesContainer item, Stream target)
             {
                 using (var writer = XmlWriter.Create(target, new XmlWriterSettings
                 {
@@ -241,7 +241,7 @@ namespace iLynx.Configuration
             }
         }
 
-        protected override ISerializer<ValuesContainer> ContainerSerializer
+        protected override ISerializer<CategoriesContainer> ContainerSerializer
         {
             get { return new XmlSerializerWrapper(); }
         }

@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace iLynx.Common.Xml
 {
@@ -526,6 +527,21 @@ namespace iLynx.Common
             if (!type.IsEnum) yield break;
             foreach (var value in type.GetEnumValues())
                 yield return (T) value;
+        }
+
+        public static void SkipWhitespace(this XmlReader reader)
+        {
+            while (XmlNodeType.Whitespace == reader.NodeType &&
+                reader.Read())
+            { }
+        }
+
+        public static void SkipToElement(this XmlReader reader, string localName)
+        {
+            while (XmlNodeType.Element != reader.NodeType &&
+                reader.LocalName != localName &&
+                reader.Read())
+            { }
         }
     }
 }

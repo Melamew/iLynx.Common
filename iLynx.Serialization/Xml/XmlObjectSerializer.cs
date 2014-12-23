@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Reflection;
 using System.Xml;
+using iLynx.Common;
 
 namespace iLynx.Serialization.Xml
 {
     public class XmlObjectSerializer<T> : XmlObjectSerializerBase<T>
     {
+        private readonly string xmlFriendlyName = typeof (T).Name.Replace('`', '.');
         public XmlObjectSerializer()
             : base(XmlSerializerService.GetSerializer)
         {
@@ -14,14 +16,13 @@ namespace iLynx.Serialization.Xml
         public override T Deserialize(XmlReader reader)
         {
             var target = Activator.CreateInstance(typeof(T));
-            if (reader.NodeType != XmlNodeType.Element)
-                reader.Read();
-            if (reader.LocalName != typeof (T).Name) return default(T);
+            reader.SkipToElement(xmlFriendlyName);
+            reader.ReadStartElement(xmlFriendlyName);
             try
             {
                 foreach (var member in Graph)
                 {
-                    reader.Read();
+                    reader.SkipToElement(member.Member.Name);
                     try
                     {
                         IXmlSerializer serializer;
@@ -33,7 +34,7 @@ namespace iLynx.Serialization.Xml
                             serializer = XmlSerializerService.GetSerializer(memberType);
                         }
                         else serializer = member.TypeSerializer;
-                        reader.ReadStartElement();
+                        reader.ReadStartElement(member.Member.Name);
                         var value = serializer.Deserialize(reader);
                         try
                         {
@@ -48,11 +49,11 @@ namespace iLynx.Serialization.Xml
                             break;
                         }
                     }
-                    finally { reader.Read(); }
+                    finally { reader.ReadEndElement(); }
                 }
                 return (T)target;
             }
-            finally { reader.Read(); }
+            finally { reader.ReadEndElement(); }
         }
 
         private static bool ShouldReadType(XmlReader reader)
@@ -68,8 +69,7 @@ namespace iLynx.Serialization.Xml
         /// <param name="target">The target.</param>
         public override void Serialize(T item, XmlWriter target)
         {
-            var typeName = typeof (T).Name.Replace('`', '.');
-            target.WriteStartElement(typeName);
+            target.WriteStartElement(xmlFriendlyName);
             try
             {
                 foreach (var member in Graph)

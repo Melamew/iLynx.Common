@@ -9,8 +9,8 @@ namespace iLynx.Configuration
     /// </summary>
     public static class ExeConfig
     {
-        private static Func<IConfigSection> builder = () => new BinaryConfigSection(); 
-        //private static Func<IConfigSection> builder = () => new XmlConfigSection(); 
+        //private static Func<IConfigSection> builder = () => new BinaryConfigSection(); 
+        private static Func<IConfigSection> builder = () => new XmlConfigSection(); 
         private static IConfigSection configurableValuesSection;
         private const string ConfigFile = "Configuration";
         private readonly static string TargetPath = Path.Combine(Environment.CurrentDirectory, ConfigFile);
