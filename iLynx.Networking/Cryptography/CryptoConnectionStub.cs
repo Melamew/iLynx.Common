@@ -242,6 +242,7 @@ namespace iLynx.Networking.Cryptography
             Trace.WriteLine("TX: " + data.ToString(":"));
             var inputLength = dataLength + 4;
             var blocks = inputLength / blockSize;
+            blocks = blocks == 0 ? 1 : blocks;
             totalLength = blocks * blockSize;
             if (0 != inputLength % blockSize)
             {
@@ -303,6 +304,12 @@ namespace iLynx.Networking.Cryptography
             var dataLength = BinarySerializerService.SingletonBitConverter.ToInt32(decrypted);
             var final = new byte[dataLength];
             Trace.WriteLine(string.Format("First Block: {0}", decrypted.ToString(":")));
+            var maxData = blockSize - 4;
+            if (dataLength <= maxData)
+            {
+                Buffer.BlockCopy(decrypted, 4, final, 0, dataLength);
+                return final;
+            }
             Buffer.BlockCopy(decrypted, 4, final, 0, blockSize - 4);
             var dataRead = blockSize - 4;
             var blocksRead = 1;

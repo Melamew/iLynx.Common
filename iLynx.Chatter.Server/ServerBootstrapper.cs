@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using iLynx.Chatter.Infrastructure;
+using iLynx.Chatter.Infrastructure.Crypto;
 using iLynx.Common;
 using iLynx.Common.Threading;
 using iLynx.Configuration;
@@ -84,6 +85,9 @@ namespace iLynx.Chatter.Server
         {
             var symmetricContainer = container.Resolve<IAlgorithmContainer<ISymmetricAlgorithmDescriptor>>();
             symmetricContainer.AddAlgorithm(new AesDescriptor(256));
+            symmetricContainer.AddAlgorithm(new Threefish256Descriptor());
+            symmetricContainer.AddAlgorithm(new Threefish512Descriptor());
+            symmetricContainer.AddAlgorithm(new Threefish1024Descriptor());
             var asymmetricContainer = container.Resolve<IAlgorithmContainer<IKeyExchangeAlgorithmDescriptor>>();
             asymmetricContainer.AddAlgorithm(new RsaDescriptor(3072));
         }

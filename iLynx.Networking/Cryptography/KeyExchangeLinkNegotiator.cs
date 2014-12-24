@@ -39,6 +39,7 @@ namespace iLynx.Networking.Cryptography
             var exchangeAlgorithm = GetKeyExchangeAlgorithm(baseStream);
             var transportAlgorithm = GetStrongestDescriptor(baseStream, transportAlgorithmBuilder, exchangeAlgorithm);
             if (null == transportAlgorithm) throw new InvalidOperationException();
+            this.LogInformation("Using {0} as transport algorithm", transportAlgorithm.AlgorithmIdentifier);
             ExchangeKeys(baseStream, transportAlgorithm, exchangeAlgorithm, out decryptor, out encryptor);
             blockSize = transportAlgorithm.BlockSize / 8;
             return true;
@@ -58,8 +59,6 @@ namespace iLynx.Networking.Cryptography
                 Key = encryptionAlgorithm.Key,
                 InitializationVector = encryptionAlgorithm.IV,
             };
-            this.LogDebug("TX Key: {0}", keyPackage.Key.CombineToString());
-            this.LogDebug("TX IV : {0}", keyPackage.InitializationVector.CombineToString());
             byte[] keyBuffer;
             using (var memoryStream = new MemoryStream())
             {
@@ -80,14 +79,10 @@ namespace iLynx.Networking.Cryptography
             KeyPackage remoteKeyPackage;
             using (var memoryStream = new MemoryStream(buffer))
                 remoteKeyPackage = Serializer.Deserialize<KeyPackage>(memoryStream);
-            this.LogDebug("RX Key: {0}", remoteKeyPackage.Key.CombineToString());
-            this.LogDebug("RX IV : {0}", remoteKeyPackage.InitializationVector.CombineToString());
             decryptionAlgorithm.Key = remoteKeyPackage.Key;
             decryptionAlgorithm.IV = remoteKeyPackage.InitializationVector;
             encryptor = encryptionAlgorithm.CreateEncryptor();
             decryptor = decryptionAlgorithm.CreateDecryptor();
-            //encryptor = new CryptoStream(baseStream, encryptor.CreateEncryptor(), CryptoStreamMode.Write);
-            //decryptor = new CryptoStream(baseStream, decryptor.CreateDecryptor(), CryptoStreamMode.Read);
         }
 
         private IKeyExchangeAlgorithm GetKeyExchangeAlgorithm(Stream baseStream)

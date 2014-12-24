@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using iLynx.Chatter.Infrastructure;
+using iLynx.Chatter.Infrastructure.Crypto;
 using iLynx.Common;
 using iLynx.Common.Threading;
 using iLynx.Networking;

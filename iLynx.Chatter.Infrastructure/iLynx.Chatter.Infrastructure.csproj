@@ -83,13 +83,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AesDescriptor.cs" />
     <Compile Include="Authentication\ClientAuthenticatedEvent.cs" />
     <Compile Include="ChatMessage.cs" />
     <Compile Include="ChatMessageSerializer.cs" />
     <Compile Include="ClientManager.cs" />
     <Compile Include="ClientNickManagerService.cs" />
     <Compile Include="CommandDefinition.cs" />
+    <Compile Include="Crypto\AesDescriptor.cs" />
+    <Compile Include="Crypto\RsaDescriptor.cs" />
+    <Compile Include="Crypto\ThreeFish256Descriptor.cs" />
     <Compile Include="DialogViewModelBase.cs" />
     <Compile Include="Domain\EntityBase.cs" />
     <Compile Include="Domain\IEntity.cs" />
@@ -109,7 +111,6 @@
     <Compile Include="NickManagerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />
-    <Compile Include="RsaDescriptor.cs" />
     <Compile Include="Services\IAuthenticationService.cs" />
     <Compile Include="Services\IDialog.cs" />
     <Compile Include="Services\IMainMenuService.cs" />
@@ -120,6 +121,10 @@
     <Compile Include="TextMessage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\External\SkeinFish\SkeinFish.csproj">
+      <Project>{F7C81EDE-7E55-4EAA-93FE-72885698E138}</Project>
+      <Name>SkeinFish</Name>
+    </ProjectReference>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
       <Project>{569111CC-D436-46E5-BE9E-32B1BAD1B950}</Project>
       <Name>iLynx.Common.WPF</Name>

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Windows;
 using iLynx.Chatter.Infrastructure;
+using iLynx.Chatter.Infrastructure.Crypto;
 using iLynx.Chatter.ServerServicesModule;
 using iLynx.Chatter.WPF;
 using iLynx.Common;

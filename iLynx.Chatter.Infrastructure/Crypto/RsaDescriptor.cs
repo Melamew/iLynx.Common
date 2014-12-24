@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using iLynx.Networking.Cryptography;
 
-namespace iLynx.Chatter.Infrastructure
+namespace iLynx.Chatter.Infrastructure.Crypto
 {
     public class RsaDescriptor : IKeyExchangeAlgorithmDescriptor
     {
