@@ -11,7 +11,11 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <RichTextBox broadcastMessaging:RichTextBoxExtensions.Document="{Binding MessageLog}"></RichTextBox>
+        <RichTextBox broadcastMessaging:RichTextBoxExtensions.Document="{Binding MessageLog}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     BorderBrush="Transparent"
+                     IsReadOnly="True"/>
         <!--<ListView ItemsSource="{Binding Entries}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
