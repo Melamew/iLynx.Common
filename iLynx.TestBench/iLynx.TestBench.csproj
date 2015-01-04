@@ -122,7 +122,7 @@
     </Compile>
     <Compile Include="ClientServerDemo\SimpleChatServerViewModel.cs" />
     <Compile Include="ConsoleMenu.cs" />
-    <Compile Include="HellViewMOdel.cs" />
+    <Compile Include="HellViewModel.cs" />
     <Compile Include="IClientContainer.cs" />
     <Compile Include="IServerContainer.cs" />
     <Compile Include="MainWindow.xaml.cs">
