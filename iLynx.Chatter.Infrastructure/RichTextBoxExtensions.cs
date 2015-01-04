@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
-namespace iLynx.Chatter.BroadcastMessaging
+namespace iLynx.Chatter.Infrastructure
 {
     public class RichTextBoxExtensions
     {

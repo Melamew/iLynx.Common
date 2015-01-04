@@ -80,12 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientBroadcastMessagingModule.cs" />
-    <Compile Include="Client\MessageLogView.xaml.cs">
-      <DependentUpon>MessageLogView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Client\MessageLogViewModel.cs" />
     <Compile Include="LogEntry.cs" />
-    <Compile Include="RichTextBoxExtensions.cs" />
     <Compile Include="ServerBroadcastMessagingModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\BroadcastMessagingService.cs" />
@@ -116,10 +112,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Client\MessageLogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="DataTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

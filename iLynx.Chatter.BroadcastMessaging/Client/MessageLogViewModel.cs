@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Documents;
@@ -17,11 +15,6 @@ using iLynx.PubSub;
 
 namespace iLynx.Chatter.BroadcastMessaging.Client
 {
-    //public class MessageLogInline : Inline
-    //{
-
-    //}
-
     public class MessageLogViewModel : NotificationBase
     {
         private readonly IBus<IApplicationEvent> applicationEventBus;
@@ -33,7 +26,7 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
 
         private readonly Dictionary<Guid, List<Run>> missingNicks = new Dictionary<Guid, List<Run>>();
         private readonly INickManagerService nickManagerService;
-        private string chatLine;
+        private string commandLine;
         private Guid clientId;
         private ICommand sendCommand;
 
@@ -52,7 +45,7 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
             Subscribe();
         }
 
-        public ICommand SendCommand
+        public ICommand SubmitCommand
         {
             get { return sendCommand ?? (sendCommand = new DelegateCommand(OnSend)); }
         }
@@ -62,13 +55,13 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
             get { return messageLog; }
         }
 
-        public string ChatLine
+        public string CommandLine
         {
-            get { return chatLine; }
+            get { return commandLine; }
             set
             {
-                if (value == chatLine) return;
-                chatLine = value;
+                if (value == commandLine) return;
+                commandLine = value;
                 OnPropertyChanged();
             }
         }
@@ -144,14 +137,11 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
                     r.Text = MakeNickString(message.Nick);
                 lst.RemoveAll(copy.Contains);
             }, message);
-            //foreach (var entry in entries.Where(x => x.SourceClient == message.ClientId && !x.HaveNick))
-            //    entry.SetNickname(message.Nick);
         }
 
         private void OnTextMessageReceived(ChatMessage message, int totalSize)
         {
             dispatcher.InvokeIfRequired(
-                //msg => entries.Add(new LogEntry(msg.ClientId, nickManagerService.GetNickName(msg.ClientId), DateTime.Now, Encoding.Unicode.GetString(msg.Data), message.ClientId == clientId)),
                 msg =>
                     messageLog.Blocks.Add(
                         MakeBlock(new LogEntry(msg.ClientId, nickManagerService.GetNickName(msg.ClientId), DateTime.Now,
@@ -161,10 +151,10 @@ namespace iLynx.Chatter.BroadcastMessaging.Client
 
         private async void OnSend()
         {
-            string str = chatLine;
+            string str = commandLine;
             if (string.IsNullOrEmpty(str)) return;
             await messageBus.PublishAsync(new MessageEnvelope<ChatMessage, int>(new TextMessage(str)));
-            ChatLine = string.Empty;
+            CommandLine = string.Empty;
         }
     }
 }

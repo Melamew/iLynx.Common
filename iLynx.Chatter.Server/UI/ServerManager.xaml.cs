@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace iLynx.Chatter.BroadcastMessaging.Client
+namespace iLynx.Chatter.Server.UI
 {
     /// <summary>
-    /// Interaction logic for MessageLogView.xaml
+    /// Interaction logic for ServerManager.xaml
     /// </summary>
-    public partial class MessageLogView
+    public partial class ServerManager : Window
     {
-        public MessageLogView()
+        public ServerManager()
         {
             InitializeComponent();
         }
