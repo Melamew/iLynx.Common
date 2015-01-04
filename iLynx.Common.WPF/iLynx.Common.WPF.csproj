@@ -231,6 +231,10 @@
       <Project>{1241ac19-9872-4126-8915-3a34919e1705}</Project>
       <Name>iLynx.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\iLynx.Threading\iLynx.Threading.csproj">
+      <Project>{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}</Project>
+      <Name>iLynx.Threading</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

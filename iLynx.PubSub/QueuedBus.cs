@@ -4,8 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using iLynx.Common;
-using iLynx.Common.Threading;
-using iLynx.Common.Threading.Unmanaged;
+using iLynx.Threading;
 
 namespace iLynx.PubSub
 {

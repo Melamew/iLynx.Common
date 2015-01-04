@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using iLynx.Common.Threading;
+using iLynx.Threading;
 
 namespace iLynx.Common.WPF.Imaging
 {

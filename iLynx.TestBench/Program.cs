@@ -7,9 +7,9 @@ using System.Threading;
 using System.Windows.Media;
 using System.Xml;
 using iLynx.Common;
-using iLynx.Common.Threading;
 using iLynx.Serialization;
 using iLynx.Serialization.Xml;
+using iLynx.Threading;
 
 // ReSharper disable LocalizableElement
 

@@ -26,6 +26,7 @@ namespace iLynx.Chatter.BroadcastMessaging
         {
             var box = dependencyObject as RichTextBox;
             if (null == box) return;
+            if (null == dependencyPropertyChangedEventArgs.NewValue) return;
             box.Document = dependencyPropertyChangedEventArgs.NewValue as FlowDocument;
         }
 

@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Threading;
-using iLynx.Common.Threading.Unmanaged;
 
-namespace iLynx.Common.Threading
+namespace iLynx.Threading
 {
     /// <summary>
     /// IThreadManagerService

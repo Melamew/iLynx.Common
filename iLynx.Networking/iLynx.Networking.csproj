@@ -121,6 +121,10 @@
       <Project>{86100c1f-b2c4-4231-bfd4-f16dbc60e174}</Project>
       <Name>iLynx.Serialization</Name>
     </ProjectReference>
+    <ProjectReference Include="..\iLynx.Threading\iLynx.Threading.csproj">
+      <Project>{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}</Project>
+      <Name>iLynx.Threading</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

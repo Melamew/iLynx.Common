@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
-using iLynx.Common.Threading;
-using iLynx.Common.Threading.Unmanaged;
+using iLynx.Threading;
 
 namespace iLynx.Common.WPF.Imaging
 {

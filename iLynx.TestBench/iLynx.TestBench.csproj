@@ -219,6 +219,10 @@
       <Project>{86100C1F-B2C4-4231-BFD4-F16DBC60E174}</Project>
       <Name>iLynx.Serialization</Name>
     </ProjectReference>
+    <ProjectReference Include="..\iLynx.Threading\iLynx.Threading.csproj">
+      <Project>{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}</Project>
+      <Name>iLynx.Threading</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="ClientServerDemo\ChatClientListView.xaml">

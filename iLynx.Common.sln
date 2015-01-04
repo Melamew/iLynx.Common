@@ -79,6 +79,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{FC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkeinFish", "External\SkeinFish\SkeinFish.csproj", "{F7C81EDE-7E55-4EAA-93FE-72885698E138}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Threading", "iLynx.Threading\iLynx.Threading.csproj", "{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -253,6 +255,14 @@ Global
 		{F7C81EDE-7E55-4EAA-93FE-72885698E138}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F7C81EDE-7E55-4EAA-93FE-72885698E138}.Release|x64.ActiveCfg = Release|Any CPU
 		{F7C81EDE-7E55-4EAA-93FE-72885698E138}.Release|x86.ActiveCfg = Release|Any CPU
+		{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}.Release|x64.ActiveCfg = Release|Any CPU
+		{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

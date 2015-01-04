@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using iLynx.Common;
 
-namespace iLynx.Common.Threading
+namespace iLynx.Threading
 {
     /// <summary>
     /// A 'lightweight' class for timers that uses a single thread to manage multiple timers.

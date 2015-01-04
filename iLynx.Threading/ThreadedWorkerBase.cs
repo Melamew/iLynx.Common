@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
-using iLynx.Common.Threading.Unmanaged;
+using iLynx.Common;
 
-namespace iLynx.Common.Threading
+namespace iLynx.Threading
 {
     /// <summary>
     /// ThreadedWorkerBase

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace iLynx.Common.Threading
+namespace iLynx.Common
 {
     public interface ITimerService
     {

@@ -1,5 +1,4 @@
 using iLynx.Common;
-using iLynx.Common.Threading;
 using iLynx.Networking.Interfaces;
 using iLynx.Serialization;
 

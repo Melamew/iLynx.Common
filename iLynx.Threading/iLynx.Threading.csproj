@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DF55B984-7E5E-447C-9D68-D93F9FB0C227}</ProjectGuid>
+    <ProjectGuid>{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>iLynx.PubSub</RootNamespace>
-    <AssemblyName>iLynx.PubSub</AssemblyName>
+    <RootNamespace>iLynx.Threading</RootNamespace>
+    <AssemblyName>iLynx.Threading</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,22 +39,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bus.cs" />
-    <Compile Include="IBus.cs" />
-    <Compile Include="IKeyedSubscriptionManager.cs" />
+    <Compile Include="IThreadManager.cs" />
+    <Compile Include="IWorker.cs" />
+    <Compile Include="ParameterizedThreadedResultWorker.cs" />
+    <Compile Include="ParameterizedThreadedWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="KeyedSubscriptionManager.cs" />
-    <Compile Include="QueuedBus.cs" />
-    <Compile Include="SubscriberCallback.cs" />
+    <Compile Include="SingleThreadedTimerService.cs" />
+    <Compile Include="ThreadedResultWorker.cs" />
+    <Compile Include="ThreadedWorker.cs" />
+    <Compile Include="ThreadedWorkerBase.cs" />
+    <Compile Include="ThreadManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\iLynx.Common\iLynx.Common.csproj">
       <Project>{1241AC19-9872-4126-8915-3A34919E1705}</Project>
       <Name>iLynx.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\iLynx.Threading\iLynx.Threading.csproj">
-      <Project>{907D4C5B-FE3A-4364-B0B0-4DBDF1FCEF4F}</Project>
-      <Name>iLynx.Threading</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

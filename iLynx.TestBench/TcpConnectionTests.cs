@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Crypto;
 using iLynx.Common;
-using iLynx.Common.Threading;
 using iLynx.Networking;
 using iLynx.Networking.Cryptography;
 using iLynx.Networking.Interfaces;
 using iLynx.Networking.Serialization;
 using iLynx.Networking.TCP;
 using iLynx.Serialization;
+using iLynx.Threading;
 
 namespace iLynx.TestBench
 {

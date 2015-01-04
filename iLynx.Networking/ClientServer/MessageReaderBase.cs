@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Net.Sockets;
 using iLynx.Common;
-using iLynx.Common.Threading;
-using iLynx.Common.Threading.Unmanaged;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
+using iLynx.Threading;
 
 namespace iLynx.Networking.ClientServer
 {

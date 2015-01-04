@@ -1,28 +1,26 @@
 using System;
 using System.Threading;
-using iLynx.Common.Threading.Unmanaged;
+using iLynx.Common;
 
-namespace iLynx.Common.Threading
+namespace iLynx.Threading
 {
     /// <summary>
-    /// ParameterizedThreadedResultWorker
+    /// ThreadedResultWorker{TResult}
     /// </summary>
-    /// <typeparam name="TArgs">The type of the args.</typeparam>
     /// <typeparam name="TResult">The type of the result.</typeparam>
-    public class ParameterizedThreadedResultWorker<TArgs,TResult> : ThreadedWorkerBase, IParameterizedResultWorker<TArgs,TResult>
+    public class ThreadedResultWorker<TResult> : ThreadedWorkerBase, IResultWorker<TResult>
     {
+        private readonly Func<TResult> target;
         private TResult result;
-        private readonly Func<TArgs, TResult> target;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterizedThreadedResultWorker{TArgs,TResult}" /> class.
+        /// Initializes a new instance of the <see cref="ThreadedResultWorker{TResult}" /> class.
         /// </summary>
         /// <param name="target">The target.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="apartmentState">State of the apartment.</param>
         /// <param name="isBackgroundThread"></param>
-        public ParameterizedThreadedResultWorker(Func<TArgs, TResult> target, ILogger logger, ApartmentState apartmentState = ApartmentState.MTA, bool isBackgroundThread = true)
-            : base(logger, apartmentState, isBackgroundThread)
+        public ThreadedResultWorker(Func<TResult> target, ILogger logger, ApartmentState apartmentState = ApartmentState.MTA, bool isBackgroundThread = true) : base(logger, apartmentState, isBackgroundThread)
         {
             target.Guard("target");
             this.target = target;
@@ -34,17 +32,7 @@ namespace iLynx.Common.Threading
         /// <param name="args">The args.</param>
         protected override void ExecuteInternal(object args)
         {
-            if (!(args is TArgs)) return;
-            result = target((TArgs)args);
-        }
-
-        /// <summary>
-        /// Executes the specified args.
-        /// </summary>
-        /// <param name="args">The args.</param>
-        public void Execute(TArgs args)
-        {
-            base.Execute(args);
+            result = target();
         }
 
         /// <summary>

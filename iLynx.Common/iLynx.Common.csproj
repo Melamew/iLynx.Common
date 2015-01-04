@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="Annotations\Jetbrains.cs" />
     <Compile Include="BooleanOperator.cs" />
+    <Compile Include="Collections\ActivelyTimedCacheEntry.cs" />
     <Compile Include="Collections\AsynchronourQueryableWrapper.cs" />
     <Compile Include="Collections\AsynchronousEnumerableWrapper.cs" />
     <Compile Include="Collections\BufferedThreadedEnumerator.cs" />
@@ -117,7 +118,6 @@
     <Compile Include="Collections\Priority.cs" />
     <Compile Include="Collections\PriorityItem.cs" />
     <Compile Include="Collections\TimedCache.cs" />
-    <Compile Include="Collections\ActivelyTimedCacheEntry.cs" />
     <Compile Include="Collections\ExtensionMethods.cs" />
     <Compile Include="Collections\ICache.cs" />
     <Compile Include="Collections\IIDentifiable.cs" />
@@ -127,6 +127,7 @@
     <Compile Include="IFreezable.cs" />
     <Compile Include="Interfaces\INode.cs" />
     <Compile Include="Interfaces\IRequestRecalculate.cs" />
+    <Compile Include="ITimerService.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="NonComponentNotificationBase.cs" />
     <Compile Include="Pixels\IPalette.cs" />
@@ -156,24 +157,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="RuntimeHelper.cs" />
-    <Compile Include="Threading\ITimerService.cs" />
-    <Compile Include="Threading\ParameterizedThreadedResultWorker.cs" />
-    <Compile Include="Threading\ParameterizedThreadedWorker.cs" />
-    <Compile Include="Threading\SingleThreadedTimerService.cs" />
-    <Compile Include="Threading\ThreadedResultWorker.cs" />
-    <Compile Include="Threading\ThreadedWorker.cs" />
-    <Compile Include="Threading\ThreadedWorkerBase.cs" />
-    <Compile Include="Threading\ThreadManager.cs" />
-    <Compile Include="Threading\Unmanaged\IParameterizedResultWorker.cs" />
-    <Compile Include="Threading\Unmanaged\IParameterizedWorker.cs" />
-    <Compile Include="Threading\Unmanaged\IProvideProgress.cs" />
-    <Compile Include="Threading\Unmanaged\IResultWorker.cs" />
-    <Compile Include="Threading\IThreadManager.cs" />
-    <Compile Include="Threading\Unmanaged\IWorker.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="RuntimeCommon.cs" />
-    <Compile Include="Threading\Unmanaged\ProgressResultWorker.cs" />
-    <Compile Include="Threading\Unmanaged\ThreadedResultWorker.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -184,7 +169,9 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Threading\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

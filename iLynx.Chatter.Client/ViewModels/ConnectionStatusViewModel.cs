@@ -2,10 +2,10 @@
 using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Events;
 using iLynx.Common;
-using iLynx.Common.Threading;
 using iLynx.Common.WPF;
 using iLynx.Networking.ClientServer;
 using iLynx.PubSub;
+using iLynx.Threading;
 
 namespace iLynx.Chatter.Client.ViewModels
 {

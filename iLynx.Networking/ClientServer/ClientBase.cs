@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using iLynx.Common;
-using iLynx.Common.Threading;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
+using iLynx.Threading;
 
 namespace iLynx.Networking.ClientServer
 {

@@ -5,7 +5,6 @@ using iLynx.Chatter.Infrastructure.Crypto;
 using iLynx.Chatter.ServerServicesModule;
 using iLynx.Chatter.WPF;
 using iLynx.Common;
-using iLynx.Common.Threading;
 using iLynx.Common.WPF;
 using iLynx.Configuration;
 using iLynx.Networking.ClientServer;
@@ -13,6 +12,7 @@ using iLynx.Networking.Cryptography;
 using iLynx.PubSub;
 using iLynx.Serialization;
 using iLynx.TestBench.ClientServerDemo;
+using iLynx.Threading;
 using Microsoft.Practices.Unity;
 
 namespace iLynx.TestBench

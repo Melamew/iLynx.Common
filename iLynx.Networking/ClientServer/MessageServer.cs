@@ -4,10 +4,9 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using iLynx.Common;
-using iLynx.Common.Threading;
-using iLynx.Common.Threading.Unmanaged;
 using iLynx.Networking.Interfaces;
 using iLynx.PubSub;
+using iLynx.Threading;
 
 namespace iLynx.Networking.ClientServer
 {
