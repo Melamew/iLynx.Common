@@ -3,3 +3,4 @@ obj/
 packages/
 *.dll
 *.suo
+*.user
