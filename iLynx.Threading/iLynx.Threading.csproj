@@ -43,6 +43,7 @@
     <Compile Include="IWorker.cs" />
     <Compile Include="ParameterizedThreadedResultWorker.cs" />
     <Compile Include="ParameterizedThreadedWorker.cs" />
+    <Compile Include="ProgressResultWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleThreadedTimerService.cs" />
     <Compile Include="ThreadedResultWorker.cs" />
