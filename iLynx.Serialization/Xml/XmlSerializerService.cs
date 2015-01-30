@@ -30,6 +30,7 @@ namespace iLynx.Serialization.Xml
             {typeof (Color), new XmlPrimitives.ColorSerializer()},
             {typeof (DateTime), new XmlPrimitives.DateTimeSerializer()},
             {typeof (TimeSpan), new XmlPrimitives.TimeSpanSerializer()},
+            {typeof(bool), new XmlPrimitives.BooleanSerializer()}
         };
 
         private static readonly XmlWriterSettings WriterSettings = new XmlWriterSettings
@@ -524,6 +525,19 @@ namespace iLynx.Serialization.Xml
             }
 
             #endregion
+        }
+
+        public class BooleanSerializer : XmlSerializerBase<bool>
+        {
+            public override void Serialize(bool item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(bool).Name, item.ToString(CultureInfo.InvariantCulture));
+            }
+
+            public override bool Deserialize(XmlReader reader)
+            {
+                return bool.Parse(reader.ReadElementString(typeof (bool).Name));
+            }
         }
     }
 }
