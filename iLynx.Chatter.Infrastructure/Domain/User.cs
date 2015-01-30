@@ -9,9 +9,4 @@ namespace iLynx.Chatter.Infrastructure.Domain
         public virtual long PasswordSalt { get; set; }
         public virtual IList<Permission> Permissions { get; set; }
     }
-
-    public class Permission : EntityBase
-    {
-        public virtual string PermissionIdentifier { get; set; }
-    }
 }

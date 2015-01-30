@@ -98,6 +98,7 @@
     <Compile Include="DialogViewModelBase.cs" />
     <Compile Include="Domain\EntityBase.cs" />
     <Compile Include="Domain\IEntity.cs" />
+    <Compile Include="Domain\Permission.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Events\ClientConnectedEvent.cs" />
     <Compile Include="Events\ClientDisconnectedEvent.cs" />

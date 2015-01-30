@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ISessionScoper.cs" />
+    <Compile Include="Mappings\PermissionMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="NHibernateAdapter.cs" />
     <Compile Include="NHibernateModule.cs" />
