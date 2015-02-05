@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using System;
+using iLynx.Common;
+using iLynx.Serialization;
 
 namespace iLynx.Configuration
 {
@@ -46,6 +48,7 @@ namespace iLynx.Configuration
         /// <summary>
         /// Gets or Sets the value of this <see cref="ExeConfigValue{T}" />
         /// </summary>
+        [NotSerialized] // Let the base value be serialized instead - TODO: Maybe figure out a way to serialize this one instead.
         public new T Value
         {
             get { return (T)base.Value; }
@@ -55,5 +58,14 @@ namespace iLynx.Configuration
                 base.Value = value;
             }
         }
+
+        protected override void OnValueChanged(object oldValue, object newValue)
+        {
+            var handler = ValueChanged;
+            if (null == handler) return;
+            handler(this, new ValueChangedEventArgs<T>((T)oldValue, (T)newValue));
+        }
+
+        public new event EventHandler<ValueChangedEventArgs<T>> ValueChanged;
     }
 }

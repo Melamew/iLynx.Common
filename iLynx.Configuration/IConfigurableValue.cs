@@ -58,5 +58,10 @@ namespace iLynx.Configuration
         /// The value.
         /// </value>
         new T Value { get; set; }
+
+        /// <summary>
+        /// Raised whenever the value of this ConfigurableValue changes.
+        /// </summary>
+        new event EventHandler<ValueChangedEventArgs<T>> ValueChanged;
     }
 }
