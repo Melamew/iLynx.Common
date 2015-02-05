@@ -207,7 +207,7 @@ namespace iLynx.Serialization.Xml
 
             public override short Deserialize(XmlReader reader)
             {
-                return short.Parse(reader.ReadElementString(typeof (short).Name));
+                return short.Parse(reader.ReadElementString(typeof(short).Name), CultureInfo.InvariantCulture);
             }
 
             #endregion
@@ -224,7 +224,7 @@ namespace iLynx.Serialization.Xml
 
             public override ushort Deserialize(XmlReader reader)
             {
-                return ushort.Parse(reader.ReadElementString(typeof(ushort).Name));
+                return ushort.Parse(reader.ReadElementString(typeof(ushort).Name), CultureInfo.InvariantCulture);
             }
 
             #endregion
@@ -239,7 +239,7 @@ namespace iLynx.Serialization.Xml
 
             public override int Deserialize(XmlReader reader)
             {
-                return int.Parse(reader.ReadElementString(typeof(int).Name));
+                return int.Parse(reader.ReadElementString(typeof(int).Name), CultureInfo.InvariantCulture);
             }
         }
 
@@ -252,7 +252,7 @@ namespace iLynx.Serialization.Xml
 
             public override uint Deserialize(XmlReader reader)
             {
-                return uint.Parse(reader.ReadElementString(typeof(uint).Name));
+                return uint.Parse(reader.ReadElementString(typeof(uint).Name), CultureInfo.InvariantCulture);
             }
         }
 
@@ -265,7 +265,7 @@ namespace iLynx.Serialization.Xml
 
             public override long Deserialize(XmlReader reader)
             {
-                return long.Parse(reader.ReadElementString(typeof(long).Name));
+                return long.Parse(reader.ReadElementString(typeof(long).Name), CultureInfo.InvariantCulture);
             }
         }
 
@@ -278,7 +278,7 @@ namespace iLynx.Serialization.Xml
 
             public override ulong Deserialize(XmlReader reader)
             {
-                return ulong.Parse(reader.ReadElementString(typeof(ulong).Name));
+                return ulong.Parse(reader.ReadElementString(typeof(ulong).Name), CultureInfo.InvariantCulture);
             }
         }
 
@@ -291,7 +291,7 @@ namespace iLynx.Serialization.Xml
 
             public override double Deserialize(XmlReader reader)
             {
-                return double.Parse(reader.ReadElementString(typeof(double).Name));
+                return double.Parse(reader.ReadElementString(typeof(double).Name), CultureInfo.InvariantCulture);
             }
         }
 
@@ -304,7 +304,7 @@ namespace iLynx.Serialization.Xml
 
             public override float Deserialize(XmlReader reader)
             {
-                return float.Parse(reader.ReadElementString(typeof(float).Name));
+                return float.Parse(reader.ReadElementString(typeof(float).Name), CultureInfo.InvariantCulture);
             }
         }
 
@@ -317,7 +317,7 @@ namespace iLynx.Serialization.Xml
 
             public override decimal Deserialize(XmlReader reader)
             {
-                return decimal.Parse(reader.ReadElementString(typeof(decimal).Name));
+                return decimal.Parse(reader.ReadElementString(typeof(decimal).Name), CultureInfo.InvariantCulture);
             }
         }
 
@@ -356,7 +356,7 @@ namespace iLynx.Serialization.Xml
 
             public override DateTime Deserialize(XmlReader reader)
             {
-                return DateTime.Parse(reader.ReadElementString(typeof(DateTime).Name));
+                return DateTime.Parse(reader.ReadElementString(typeof(DateTime).Name), CultureInfo.InvariantCulture);
             }
         }
 
@@ -369,7 +369,7 @@ namespace iLynx.Serialization.Xml
 
             public override TimeSpan Deserialize(XmlReader reader)
             {
-                return TimeSpan.Parse(reader.ReadElementString(typeof(TimeSpan).Name));
+                return TimeSpan.Parse(reader.ReadElementString(typeof(TimeSpan).Name), CultureInfo.InvariantCulture);
             }
         }
 
