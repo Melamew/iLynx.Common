@@ -252,6 +252,24 @@ namespace iLynx.Common
             }
         }
 
+        public static short SwapEndianness(this short value)
+        {
+            unsafe
+            {
+                Swap16((byte*) &value, 0, 1);
+            }
+            return value;
+        }
+
+        public static ushort SwapEndianness(this ushort value)
+        {
+            unsafe
+            {
+                Swap16((byte*)&value, 0, 1);
+            }
+            return value;
+        }
+
         /// <summary>
         /// Swaps the endianness.
         /// </summary>
@@ -330,6 +348,24 @@ namespace iLynx.Common
             }
         }
 
+        public static int SwapEndianness(this int value)
+        {
+            unsafe
+            {
+                Swap32((byte*)&value, 0, 1);
+            }
+            return value;
+        }
+
+        public static uint SwapEndianness(this uint value)
+        {
+            unsafe
+            {
+                Swap32((byte*)&value, 0, 1);
+            }
+            return value;
+        }
+
         /// <summary>
         /// Swaps the endianness of a 32 bit integer at the specified byte offset.
         /// </summary>
@@ -399,6 +435,24 @@ namespace iLynx.Common
                 fixed (void* arr = array)
                     Swap64((byte*)arr, 0, array.Length);
             }
+        }
+
+        public static long SwapEndianness(this long value)
+        {
+            unsafe
+            {
+                Swap64((byte*)&value, 0, 1);
+            }
+            return value;
+        }
+
+        public static ulong SwapEndianness(this ulong value)
+        {
+            unsafe
+            {
+                Swap64((byte*)&value, 0, 1);
+            }
+            return value;
         }
 
         /// <summary>

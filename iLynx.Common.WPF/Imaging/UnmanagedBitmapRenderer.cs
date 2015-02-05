@@ -121,7 +121,7 @@ namespace iLynx.Common.WPF.Imaging
                 if (0 >= width || 0 >= height) return;
                 renderWidth = width;
                 renderHeight = height;
-                var bitmap = new WriteableBitmap(renderWidth, renderHeight, 96d, 96d, PixelFormats.Pbgra32, null);
+                var bitmap = new WriteableBitmap(renderWidth, renderHeight, 96d, 96d, PixelFormats.Bgra32, null);
                 var newSetup = new RenderSetup
                                {
                                    Bitmap = bitmap,

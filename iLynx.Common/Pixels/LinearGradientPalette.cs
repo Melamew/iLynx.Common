@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
+using System.Windows.Media;
 
 namespace iLynx.Common.Pixels
 {
     /// <summary>
     /// InterpolatingPalette
     /// </summary>
-    public class LinearGradientPalette : NotificationBase, IPalette
+    public class LinearGradientPalette : NotificationBase, IPalette<double>
     {
         private readonly SortedList<double, int> colourMap = new SortedList<double, int>();
         private double[] sortedKeys;
@@ -117,6 +118,11 @@ namespace iLynx.Common.Pixels
             }
         }
 
+        public void MapValue(double sampleValue, Color colour)
+        {
+            MapValue(sampleValue, colour.A, colour.R, colour.G, colour.B);
+        }
+
         public unsafe int GetColour(double sampleValue)
         {
             double min, max;
@@ -143,6 +149,33 @@ namespace iLynx.Common.Pixels
                 var colour = *((int*)p); // As if by magic.
                 return colour;
             }
+        }
+
+        public unsafe byte[] GetColourBytes(double sampleValue)
+        {
+            double min, max;
+
+            FindSamples(sampleValue, out min, out max);
+            var res = new byte[4];
+            if (Math.Abs(min - max) <= double.Epsilon)
+            {
+                var val = colourMap[min];
+                var p = (byte*) &val;
+                res[0] = p[0];
+                res[1] = p[1];
+                res[2] = p[2];
+                res[3] = p[3];
+                return res;
+            }
+            var f = colourMap[min];
+            var s = colourMap[max];
+            var first = (byte*)&f;
+            var second = (byte*)&s;
+            res[0] = (byte)InterpolateLinear(sampleValue, min, max, first[0], second[0]);
+            res[1] = (byte)InterpolateLinear(sampleValue, min, max, first[1], second[1]);
+            res[2] = (byte)InterpolateLinear(sampleValue, min, max, first[2], second[2]);
+            res[3] = (byte)InterpolateLinear(sampleValue, min, max, first[3], second[3]);
+            return res;
         }
 
         [TargetedPatchingOptOut("")]

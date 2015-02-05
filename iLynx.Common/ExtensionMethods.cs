@@ -195,6 +195,7 @@ namespace System
         public static float[] Normalize(this float[] arr)
         {
             var max = float.MinValue;
+            if (null == arr) return null;
             // ReSharper disable LoopCanBeConvertedToQuery // Faster like this, ffs
             // ReSharper disable ForCanBeConvertedToForeach // Faster like this, ffs
             // TODO: Maybe find a way to make this go faster?
