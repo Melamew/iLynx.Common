@@ -2,6 +2,7 @@
 using System.Linq;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Common;
+using iLynx.Common.DataAccess;
 
 namespace iLynx.Chatter.AuthenticationModule
 {

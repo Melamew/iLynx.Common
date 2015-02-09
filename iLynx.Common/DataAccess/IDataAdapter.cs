@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace iLynx.Common
+namespace iLynx.Common.DataAccess
 {
     /// <summary>
     /// An interface that can be used to implement a simple data store adapter

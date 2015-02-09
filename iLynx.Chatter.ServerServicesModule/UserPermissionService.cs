@@ -5,6 +5,7 @@ using iLynx.Chatter.Infrastructure;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Chatter.Infrastructure.Services;
 using iLynx.Common;
+using iLynx.Common.DataAccess;
 
 namespace iLynx.Chatter.ServerServicesModule
 {

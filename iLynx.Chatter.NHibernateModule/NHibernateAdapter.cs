@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using iLynx.Chatter.Infrastructure.Domain;
 using iLynx.Common;
+using iLynx.Common.DataAccess;
 using NHibernate.Linq;
 
 namespace iLynx.Chatter.NHibernateModule

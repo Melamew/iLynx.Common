@@ -124,6 +124,8 @@
     <Compile Include="Collections\PriorityQueue.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="Cryptography\IEncryptionAlgorithm.cs" />
+    <Compile Include="DataAccess\IDataAdapter.cs" />
+    <Compile Include="DataAccess\IDataPersister.cs" />
     <Compile Include="IFreezable.cs" />
     <Compile Include="Interfaces\INode.cs" />
     <Compile Include="Interfaces\IRequestRecalculate.cs" />
@@ -136,8 +138,6 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GenericEventHandler.cs" />
     <Compile Include="Guard.cs" />
-    <Compile Include="IDataAdapter.cs" />
-    <Compile Include="IDataPersister.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IValidatable.cs" />
     <Compile Include="LoggingProxy.cs" />

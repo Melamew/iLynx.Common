@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Common", "iLynx.Common\iLynx.Common.csproj", "{1241AC19-9872-4126-8915-3A34919E1705}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iLynx.Common.WPF", "iLynx.Common.WPF\iLynx.Common.WPF.csproj", "{569111CC-D436-46E5-BE9E-32B1BAD1B950}"

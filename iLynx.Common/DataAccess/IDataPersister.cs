@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace iLynx.Common
+namespace iLynx.Common.DataAccess
 {
     /// <summary>
     /// IStoreData
