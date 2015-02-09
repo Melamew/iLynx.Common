@@ -192,17 +192,20 @@ namespace System
         /// Normalizes the specified arr (In place, and returns it).
         /// </summary>
         /// <param name="arr">The arr.</param>
-        public static float[] Normalize(this float[] arr)
+        public static float[] Normalize(this float[] arr, float level = float.NaN)
         {
-            var max = float.MinValue;
             if (null == arr) return null;
             // ReSharper disable LoopCanBeConvertedToQuery // Faster like this, ffs
             // ReSharper disable ForCanBeConvertedToForeach // Faster like this, ffs
             // TODO: Maybe find a way to make this go faster?
+            if (float.IsNaN(level))
+            {
+                level = float.MinValue;
+                for (var i = 0; i < arr.Length; ++i)
+                    level = arr[i] > level ? arr[i] : level;
+            }
             for (var i = 0; i < arr.Length; ++i)
-                max = arr[i] > max ? arr[i] : max;
-            for (var i = 0; i < arr.Length; ++i)
-                arr[i] /= max;
+                arr[i] /= level;
             return arr;
             // ReSharper restore ForCanBeConvertedToForeach
             // ReSharper restore LoopCanBeConvertedToQuery
@@ -253,16 +256,20 @@ namespace System
         /// Normalizes the specified arr.
         /// </summary>
         /// <param name="arr">The arr.</param>
-        public static void Normalize(this double[] arr)
+        /// <param name="level"></param>
+        public static void Normalize(this double[] arr, double level = double.NaN)
         {
-            var max = double.MinValue;
             // ReSharper disable LoopCanBeConvertedToQuery // Faster like this, ffs
             // ReSharper disable ForCanBeConvertedToForeach // Faster like this, ffs
             // TODO: Maybe find a way to make this go faster?
+            if (double.IsNaN(level))
+            {
+                level = double.MinValue;
+                for (var i = 0; i < arr.Length; ++i)
+                    level = arr[i] > level ? arr[i] : level;
+            }
             for (var i = 0; i < arr.Length; ++i)
-                max = arr[i] > max ? arr[i] : max;
-            for (var i = 0; i < arr.Length; ++i)
-                arr[i] /= max;
+                arr[i] /= level;
             // ReSharper restore ForCanBeConvertedToForeach
             // ReSharper restore LoopCanBeConvertedToQuery
         }
