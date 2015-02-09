@@ -419,10 +419,11 @@ namespace iLynx.Serialization.Xml
                 try
                 {
                     var countString = reader.GetAttribute("Count");
-                    reader.ReadStartElement("Array");
                     int count;
                     if (!int.TryParse(countString, out count)) return null;
                     var target = Array.CreateInstance(arrayElementType, count);
+                    if (reader.IsEmptyElement) return target;
+                    reader.ReadStartElement("Array");
                     for (var i = 0; i < count; ++i)
                     {
                         try
@@ -444,7 +445,13 @@ namespace iLynx.Serialization.Xml
                     }
                     return target;
                 }
-                finally { reader.ReadEndElement(); }
+                finally
+                {
+                    if (reader.IsEmptyElement)
+                        reader.Skip();
+                    else
+                        reader.ReadEndElement();
+                }
             }
         }
 
@@ -480,6 +487,7 @@ namespace iLynx.Serialization.Xml
                     int count;
                     if (!int.TryParse(countAttrib, out count)) return null;
                     var target = Array.CreateInstance(elementType, count);
+                    if (reader.IsEmptyElement) return target;
                     reader.ReadStartElement("Array");
                     for (var i = 0; i < count; ++i)
                     {
@@ -488,7 +496,13 @@ namespace iLynx.Serialization.Xml
                     }
                     return target;
                 }
-                finally { reader.ReadEndElement(); }
+                finally
+                {
+                    if (reader.IsEmptyElement)
+                        reader.Skip();
+                    else
+                        reader.ReadEndElement();
+                }
             }
         }
 
@@ -498,7 +512,7 @@ namespace iLynx.Serialization.Xml
 
             public override void Serialize(Color item, XmlWriter writer)
             {
-                writer.WriteElementString(typeof (Color).Name, string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}",
+                writer.WriteElementString(typeof(Color).Name, string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}",
                     item.A,
                     item.R,
                     item.G,
@@ -507,7 +521,7 @@ namespace iLynx.Serialization.Xml
 
             public override Color Deserialize(XmlReader reader)
             {
-                var str = reader.ReadElementString(typeof (Color).Name);
+                var str = reader.ReadElementString(typeof(Color).Name);
                 var haveAlpha = str.Length - 1 == 8;
                 var offset = 1;
                 byte a = 0xFF;
@@ -536,7 +550,7 @@ namespace iLynx.Serialization.Xml
 
             public override bool Deserialize(XmlReader reader)
             {
-                return bool.Parse(reader.ReadElementString(typeof (bool).Name));
+                return bool.Parse(reader.ReadElementString(typeof(bool).Name));
             }
         }
     }
