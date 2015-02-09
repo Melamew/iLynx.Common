@@ -31,6 +31,11 @@ namespace iLynx.Common.Pixels
             sortedKeys = colourMap.Keys.ToArray();
         }
 
+        public IPalette<double> AsFrozen()
+        {
+            return new LinearGradientPalette(colourMap);
+        } 
+
         public void RemoveValue(double sampleValue)
         {
             if (isFrozen) throw new InvalidOperationException("This instance is frozen, it cannot be modified");
