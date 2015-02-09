@@ -20,7 +20,7 @@ namespace iLynx.Chatter.Server
             logLevelValue.ValueChanged += LogLevelValueOnValueChanged;
         }
 
-        private void LogLevelValueOnValueChanged(object sender, ValueChangedEventArgs<object> valueChangedEventArgs)
+        private void LogLevelValueOnValueChanged(object sender, ValueChangedEventArgs<LogLevel> changedEventArgs)
         {
             logLevel = (int)logLevelValue.Value;
         }
