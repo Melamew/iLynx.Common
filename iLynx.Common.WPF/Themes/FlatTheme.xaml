@@ -262,20 +262,27 @@
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="Black"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
                     <BulletDecorator Background="Transparent">
                         <BulletDecorator.Bullet>
-                            <Border Name="PART_Background" Width="13" Height="13" CornerRadius="0" BorderThickness="1"
-                                    Background="{DynamicResource BrushBackground}">
-                                <Grid>
-                                    <TextBlock x:Name="CheckMark" Foreground="{StaticResource BrushCheckMark}" Text="a"
+                            <Border Name="PART_Background" CornerRadius="0" BorderThickness="{TemplateBinding BorderThickness}"
+                                    Background="{DynamicResource BrushBackground}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"
+                                    Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">
+                                <Viewbox Stretch="Uniform">
+                                    <Grid>
+                                        <TextBlock x:Name="CheckMark" Foreground="{StaticResource BrushCheckMark}" Text="a"
                                                FontFamily="Webdings" Visibility="Collapsed" />
-                                    <TextBlock x:Name="InderminateMark"
+                                        <TextBlock x:Name="InderminateMark"
                                                Foreground="{DynamicResource BrushIndeterminate}" Text="&lt;"
                                                FontFamily="Webdings" Visibility="Collapsed" />
-                                </Grid>
+                                    </Grid>
+                                </Viewbox>
                             </Border>
                         </BulletDecorator.Bullet>
                         <VisualStateManager.VisualStateGroups>
@@ -747,7 +754,7 @@
                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                 Margin="{TemplateBinding Padding}">
             <!--<Grid>-->
-                <ContentPresenter Margin="6,3,6,3" ContentSource="Header" RecognizesAccessKey="True"/>
+            <ContentPresenter Margin="6,3,6,3" ContentSource="Header" RecognizesAccessKey="True"/>
             <!--</Grid>-->
         </Border>
         <ControlTemplate.Triggers>
@@ -844,8 +851,7 @@
 
     <ControlTemplate x:Key="{x:Static MenuItem.SubmenuHeaderTemplateKey}" TargetType="MenuItem">
         <Border Name="PART_Background" Background="{TemplateBinding Background}">
-            <Grid VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
                     <ColumnDefinition Width="*" />
@@ -853,12 +859,15 @@
                     <ColumnDefinition Width="13" />
                 </Grid.ColumnDefinitions>
                 <ContentPresenter Name="Icon" Margin="6,0,6,0" VerticalAlignment="Center" ContentSource="Icon" />
-                <ContentPresenter Name="HeaderHost" Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True" />
+                <ContentPresenter Name="HeaderHost" Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
                 <TextBlock x:Name="InputGestureText" Grid.Column="2" Text="{TemplateBinding InputGestureText}"
                            Margin="5,2,2,2" DockPanel.Dock="Right" />
                 <Path Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"
-                      Data="M 0 0 L 0 7 L 4 3.5 Z" Fill="{StaticResource GlyphBrush}" />
-                <Popup Grid.Column="0" Name="Popup" Placement="Right" HorizontalOffset="-4" IsOpen="{TemplateBinding IsSubmenuOpen}"
+                      Data="M 0 0 L 0 7 L 4 3.5 Z" Fill="{StaticResource GlyphBrush}"
+                      x:Name="Glyph"/>
+                <Popup Grid.Column="0" Name="Popup" Placement="Left" PlacementTarget="{Binding ElementName=Glyph}" HorizontalOffset="-4" IsOpen="{TemplateBinding IsSubmenuOpen}"
                        AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
                     <Border Name="SubmenuBorder" SnapsToDevicePixels="True" BorderThickness="1">
                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
