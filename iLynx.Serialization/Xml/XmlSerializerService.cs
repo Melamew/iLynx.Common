@@ -530,11 +530,11 @@ namespace iLynx.Serialization.Xml
                     a = byte.Parse(str.Substring(offset, 2), NumberStyles.HexNumber);
                     offset += 2;
                 }
-                var r = byte.Parse(str.Substring(offset, 2));
+                var r = byte.Parse(str.Substring(offset, 2), NumberStyles.HexNumber);
                 offset += 2;
-                var g = byte.Parse(str.Substring(offset, 2));
+                var g = byte.Parse(str.Substring(offset, 2), NumberStyles.HexNumber);
                 offset += 2;
-                var b = byte.Parse(str.Substring(offset, 2));
+                var b = byte.Parse(str.Substring(offset, 2), NumberStyles.HexNumber);
                 return Color.FromArgb(a, r, g, b);
             }
 
