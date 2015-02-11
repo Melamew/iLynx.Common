@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Automation.Peers;
 using iLynx.Common;
 
 namespace iLynx.Common.Collections
@@ -32,6 +33,12 @@ namespace iLynx.Common.Collections
         public static IQueryable<T> WrapQueryableAsync<T>(this IQueryable<T> source, int maxPrebuffered)
         {
             return new AsynchronourQueryableWrapper<T>(source, maxPrebuffered);
+        }
+
+        public static void AddRange<TKey, TValue>(this SortedList<TKey, TValue> target, IEnumerable<KeyValuePair<TKey, TValue>> items)
+        {
+            foreach (var item in items)
+                target.Add(item.Key, item.Value);
         }
     }
 }

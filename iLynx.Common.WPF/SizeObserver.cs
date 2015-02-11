@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace iLynx.Common.WPF
 {
@@ -80,7 +79,7 @@ namespace iLynx.Common.WPF
             UpdateObservedSizesForFrameworkElement((FrameworkElement)sender);
         }
 
-        private static void UpdateObservedSizesForFrameworkElement(FrameworkElement frameworkElement)
+        public static void UpdateObservedSizesForFrameworkElement(FrameworkElement frameworkElement)
         {
             // WPF 4.0 onwards
             frameworkElement.SetCurrentValue(ObservedWidthProperty, frameworkElement.ActualWidth);

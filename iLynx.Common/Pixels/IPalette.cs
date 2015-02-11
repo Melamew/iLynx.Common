@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Windows.Media;
 
 namespace iLynx.Common.Pixels
 {
@@ -13,5 +14,8 @@ namespace iLynx.Common.Pixels
         void MapValue(T sampleValue, Color colour);
         int GetColour(T sampleValue);
         byte[] GetColourBytes(T sampleValue);
+        IPalette<T> AsFrozen();
+        Tuple<T, Color>[] GetMap();
+        void FromMap(Tuple<T, Color>[] values);
     }
 }

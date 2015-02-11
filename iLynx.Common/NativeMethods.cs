@@ -32,7 +32,7 @@ namespace iLynx.Common
         /// </summary>
         /// <param name="dst">The DST.</param>
         /// <param name="filler">The filler.</param>
-        /// <param name="count">The count (int bytes).</param>
+        /// <param name="count">The count (in bytes).</param>
         [TargetedPatchingOptOut("Inlined for performance reasons")]
         public static void MemSet(IntPtr dst, int filler, int count)
         {

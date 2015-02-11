@@ -130,7 +130,7 @@ namespace iLynx.Serialization.Xml
             return (IXmlSerializer<T>)GetSerializer(typeof(T));
         }
 
-        public void AddOverride<T>(IXmlSerializer<T> serializer)
+        public static void AddOverride<T>(IXmlSerializer<T> serializer)
         {
             var xmlSerializer = serializer;
             lock (Overrides)

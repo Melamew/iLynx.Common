@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 using System.Windows.Media;
+using iLynx.Common.Collections;
 
 namespace iLynx.Common.Pixels
 {
@@ -34,7 +35,27 @@ namespace iLynx.Common.Pixels
         public IPalette<double> AsFrozen()
         {
             return new LinearGradientPalette(colourMap);
-        } 
+        }
+
+        public Tuple<double, Color>[] GetMap()
+        {
+            return colourMap.Select(x => new Tuple<double, Color>(x.Key, Color.FromArgb(
+                (byte)((x.Value >> 24) & 0xFF),
+                (byte)((x.Value >> 16) & 0xFF),
+                (byte)((x.Value >> 8) & 0xFF),
+                (byte)(x.Value & 0xFF)
+                )))
+                .ToArray();
+        }
+
+        public void FromMap(Tuple<double, Color>[] values)
+        {
+            colourMap.Clear();
+            colourMap.AddRange(values.Select(x => new KeyValuePair<double, int>(x.Item1, unchecked(x.Item2.A << 24 | x.Item2.R << 16 | x.Item2.G << 8 | x.Item2.B))));
+            MinValue = colourMap.Keys.Min();
+            MaxValue = colourMap.Keys.Max();
+            sortedKeys = colourMap.Keys.ToArray();
+        }
 
         public void RemoveValue(double sampleValue)
         {
