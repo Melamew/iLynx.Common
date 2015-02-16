@@ -501,7 +501,7 @@ namespace iLynx.Common.WPF
             base.OnApplyTemplate();
             maximizeButton = Template.FindName("maximizeButton", this) as Button;
             if (null != maximizeButton)
-                maximizeButton.Content = "1";
+                SetMaximizeContent();
 
             mainBorder = Template.FindName("PART_Main", this) as Border;
             if (null != mainBorder)
@@ -517,6 +517,11 @@ namespace iLynx.Common.WPF
             headerRect.PreviewMouseMove += HeaderRectOnPreviewMouseMove;
         }
 
+        private void SetMaximizeContent()
+        {
+            maximizeButton.Content = WindowState == WindowState.Maximized ? "2" : "1";
+        }
+
         private void HeaderRectOnPreviewMouseMove(object sender, MouseEventArgs mouseEventArgs)
         {
             if (mouseEventArgs.LeftButton != MouseButtonState.Pressed) return;
@@ -524,10 +529,11 @@ namespace iLynx.Common.WPF
             {
                 var relPos = mouseEventArgs.GetPosition(this);
                 var relFac = relPos.X/ActualWidth;
-                var prevX = Screen.FromHandle(windowInteropHelper.EnsureHandle()).WorkingArea.Left;
+                var workingArea = Screen.FromHandle(windowInteropHelper.EnsureHandle()).WorkingArea;
+                var prevX = workingArea.Left;
                 WindowState = WindowState.Normal;
-                Left = prevX + (ActualWidth*relFac);
-                Top = -relPos.Y;
+                Left = prevX + relPos.X - (relFac * ActualWidth);
+                Top = workingArea.Top;
             }
             DragMove();
         }
@@ -562,6 +568,7 @@ namespace iLynx.Common.WPF
                 WindowState = WindowState.Normal;
                 return;
             }
+            SetMaximizeContent();
             base.OnStateChanged(e);
         }
 
