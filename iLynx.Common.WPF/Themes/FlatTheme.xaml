@@ -1439,8 +1439,8 @@
     <Style TargetType="{x:Type wpf:BorderlessWindow}">
         <Setter Property="Background" Value="{StaticResource BrushBackground}" />
         <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="4"/>
         <Setter Property="HeaderBorderThickness" Value="0,0,0,4" />
-        <Setter Property="BorderThickness" Value="2" />
         <Setter Property="TitleFontSize" Value="18" />
         <Setter Property="TitleFontWeight" Value="Bold" />
         <Setter Property="TitleFontFamily" Value="Verdana" />
