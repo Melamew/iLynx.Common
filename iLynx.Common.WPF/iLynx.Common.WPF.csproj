@@ -161,9 +161,13 @@
     <Compile Include="Imaging\VectorI.cs" />
     <Compile Include="IMergeDictionaryService.cs" />
     <Compile Include="MergeDictionaryService.cs" />
+    <Compile Include="MINMAXINFO.cs" />
+    <Compile Include="MONITORINFO.cs" />
     <Compile Include="MouseObserver.cs" />
     <Compile Include="NodeHelper.cs" />
     <Compile Include="ObjectObserver.cs" />
+    <Compile Include="POINT.cs" />
+    <Compile Include="RECT.cs" />
     <Compile Include="SizeObserver.cs" />
     <Compile Include="Themes\IThemeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

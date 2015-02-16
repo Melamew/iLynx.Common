@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Screen = System.Windows.Forms.Screen;
+using Button = System.Windows.Controls.Button;
+using Cursor = System.Windows.Input.Cursor;
+using Cursors = System.Windows.Input.Cursors;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace iLynx.Common.WPF
 {
@@ -16,6 +20,7 @@ namespace iLynx.Common.WPF
     /// </summary>
     public class BorderlessWindow : Window
     {
+        private readonly WindowInteropHelper windowInteropHelper;
         /// <summary>
         /// The header size property
         /// </summary>
@@ -450,14 +455,15 @@ namespace iLynx.Common.WPF
                 { ResizeDirection.BottomRight, Cursors.SizeNWSE},
             };
 
-        private bool isMaximized;
-        private Rect previousBounds;
         private Button maximizeButton;
         private Rectangle headerRect;
         private Border mainBorder;
         private ResizeDirection resizeDirection;
         private Rect startBounds;
         private Point startPoint;
+        private bool isMoving;
+        private DateTime lastDown = DateTime.MinValue;
+        private bool isClicking;
 
         /// <summary>
         /// Gets the header rectangle.
@@ -473,34 +479,7 @@ namespace iLynx.Common.WPF
         /// <param name="borderlessWindow">The borderless window.</param>
         private static void OnToggleMaximized(BorderlessWindow borderlessWindow)
         {
-            if (borderlessWindow.isMaximized)
-                borderlessWindow.Restore();
-            else
-                borderlessWindow.Maximize();
-        }
-
-        private void Restore()
-        {
-            Left = previousBounds.Left;
-            Top = previousBounds.Top;
-            Width = previousBounds.Width;
-            Height = previousBounds.Height;
-            if (null != maximizeButton)
-                maximizeButton.Content = "1";
-            isMaximized = false;
-        }
-
-        private void Maximize()
-        {
-            var area = Screen.GetWorkingArea(new System.Drawing.Rectangle((int)Left, (int)Top, (int)ActualWidth, (int)ActualHeight));
-            previousBounds = new Rect(Left, Top, ActualWidth, ActualHeight);
-            Left = area.Left;
-            Top = area.Top;
-            Width = area.Width;
-            Height = area.Height;
-            if (null != maximizeButton)
-                maximizeButton.Content = "2";
-            isMaximized = true;
+            borderlessWindow.WindowState = WindowState.Maximized == borderlessWindow.WindowState ? WindowState.Normal : WindowState.Maximized;
         }
 
         /// <summary>
@@ -535,26 +514,27 @@ namespace iLynx.Common.WPF
             headerRect = Template.FindName("DragGrip", this) as Rectangle;
             if (null == headerRect) return;
             headerRect.PreviewMouseDown += HeaderRectOnPreviewMouseDown;
+            headerRect.PreviewMouseMove += HeaderRectOnPreviewMouseMove;
         }
 
-        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        private void HeaderRectOnPreviewMouseMove(object sender, MouseEventArgs mouseEventArgs)
         {
-            base.OnPreviewMouseMove(e);
-            if (lastState != WindowState.Maximized) return;
-            Restore();
-            WindowState = WindowState.Normal;
-            lastState = WindowState.Normal;
+            if (mouseEventArgs.LeftButton != MouseButtonState.Pressed) return;
+            if (WindowState.Maximized == WindowState)
+            {
+                var relPos = mouseEventArgs.GetPosition(this);
+                var relFac = relPos.X/ActualWidth;
+                var prevX = Screen.FromHandle(windowInteropHelper.EnsureHandle()).WorkingArea.Left;
+                WindowState = WindowState.Normal;
+                Left = prevX + (ActualWidth*relFac);
+                Top = -relPos.Y;
+            }
+            DragMove();
         }
 
-        private bool isMoving;
-
-        private DateTime lastDown = DateTime.MinValue;
-        private bool isClicking;
         private void HeaderRectOnPreviewMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             HandleHeaderMaximizeClick();
-            isMoving = true;
-            DragMove();
         }
 
         private void HandleHeaderMaximizeClick()
@@ -562,7 +542,6 @@ namespace iLynx.Common.WPF
             if (IsCollapsed) return;
             if (DateTime.MinValue == lastDown)
                 lastDown = DateTime.Now;
-
 
             var deltaClick = DateTime.Now - lastDown;
             if (deltaClick.TotalMilliseconds <= GetDoubleClickTime() && isClicking)
@@ -576,8 +555,6 @@ namespace iLynx.Common.WPF
             isClicking = true;
         }
 
-        private WindowState lastState;
-
         protected override void OnStateChanged(EventArgs e)
         {
             if (IsCollapsed)
@@ -586,16 +563,6 @@ namespace iLynx.Common.WPF
                 return;
             }
             base.OnStateChanged(e);
-            if (WindowState == WindowState.Maximized && lastState != WindowState.Maximized)
-            {
-                WindowState = WindowState.Normal;
-                Maximize();
-                lastState = WindowState;
-                return;
-            }
-            if (WindowState != WindowState.Normal || lastState == WindowState.Normal) return;
-            Restore();
-            lastState = WindowState;
         }
 
         private ResizeDirection GetDirection(Point p)
@@ -629,6 +596,87 @@ namespace iLynx.Common.WPF
             }
             return result;
         }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            var hwnd = windowInteropHelper.EnsureHandle();
+            if (IntPtr.Zero == hwnd)
+            {
+                this.LogWarning("Unable to get HWND for this window");
+                return;
+            }
+            var source = HwndSource.FromHwnd(hwnd);
+            if (null == source)
+            {
+                this.LogWarning("Unable to get HWND Source for this window");
+                return;
+            }
+            source.AddHook(WindowProc);
+        }
+
+        private IntPtr WindowProc(
+            IntPtr hwnd,
+            int msg,
+            IntPtr wParam,
+            IntPtr lParam,
+            ref bool handled)
+        {
+            switch (msg)
+            {
+                case 0x0024: /* WM_GETMINMAXINFO */
+                    WmGetMinMaxInfo(hwnd, lParam);
+                    handled = true;
+                    break;
+            }
+
+            return (IntPtr)0;
+        }
+
+        // TODO: Move this, and associated features to a separate class so it can be used from other windows as well.
+        private void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
+        {
+            var mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
+
+            // Adjust the maximized size and position to fit the work area of the correct monitor
+            const int monitorDefaulttonearest = 0x00000002;
+            var monitor = MonitorFromWindow(hwnd, monitorDefaulttonearest);
+            if (monitor != IntPtr.Zero)
+            {
+                var monitorInfo = new MONITORINFO();
+                GetMonitorInfo(monitor, monitorInfo);
+                var rcWorkArea = monitorInfo.rcWork;
+                var rcMonitorArea = monitorInfo.rcMonitor;
+                var source = PresentationSource.FromVisual(this);
+                if (null == source)
+                {
+                    this.LogWarning("Unable to get PresentationSource for this window");
+                    return;
+                }
+                var compositionTarget = source.CompositionTarget;
+                if (null == compositionTarget)
+                {
+                    this.LogWarning("Unable to get CompositionTarget for this window");
+                    return;
+                }
+                var dpiX = compositionTarget.TransformToDevice.M11;
+                var dpiY = compositionTarget.TransformToDevice.M22;
+                mmi.ptMaxPosition.x = Math.Abs(rcWorkArea.left - rcMonitorArea.left);
+                mmi.ptMaxPosition.y = Math.Abs(rcWorkArea.top - rcMonitorArea.top);
+                mmi.ptMaxSize.x = (int)Math.Abs(rcWorkArea.right - rcWorkArea.left * dpiX);
+                mmi.ptMaxSize.y = (int)Math.Abs(rcWorkArea.bottom - rcWorkArea.top * dpiY);
+            }
+
+            Marshal.StructureToPtr(mmi, lParam, true);
+        }
+
+        [DllImport("user32")]
+        internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
+
+        /// <summary>
+        /// </summary>
+        [DllImport("User32")]
+        internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
 
         private ResizeDirection previousDirection;
 
@@ -756,6 +804,7 @@ namespace iLynx.Common.WPF
             WindowStyle = WindowStyle.None;
             Top = 0;
             Left = 0;
+            windowInteropHelper = new WindowInteropHelper(this);
         }
 
         /// <summary>

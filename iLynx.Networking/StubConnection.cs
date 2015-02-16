@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using iLynx.Common;
 using iLynx.Networking.Interfaces;
@@ -96,6 +97,38 @@ namespace iLynx.Networking
                 size = stub.Write(keyedMessage);
             }
             return size;
+        }
+
+        public TMessage Send(TMessage message, TMessageKey responseKey, out int txSize, out int rxSize, TimeSpan? timeout = null)
+        {
+            var result = default(TMessage);
+            var s = 0;
+            var received = false;
+            var subscriber = new MessageReceivedHandler<TMessage, TMessageKey>((keyedMessage, size) =>
+            {
+                result = message;
+                s = size;
+                received = true;
+            });
+            Subscribe(responseKey, subscriber);
+            try
+            {
+                txSize = Send(message);
+                var rxBegin = DateTime.UtcNow;
+// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
+                while (received) // This variable is changed when the messagehandler above receives a message
+                {
+                    if (null != timeout && (DateTime.UtcNow - rxBegin) >= timeout)
+                        throw new TimeoutException();
+                    Thread.CurrentThread.Join(5);
+                }
+            }
+            finally
+            {
+                Unsubscribe(responseKey, subscriber);
+            }
+            rxSize = s;
+            return result;
         }
 
         public override async Task<int> SendAsync(TMessage keyedMessage)
