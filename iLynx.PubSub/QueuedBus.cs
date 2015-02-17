@@ -30,7 +30,6 @@ namespace iLynx.PubSub
                     continue;
                 }
                 var item = messageQueue.Dequeue();
-                //this.LogDebug("Publish: {0}", item.Item1);
                 Publish(item.Item1, item.Item2);
             }
             PopLast();

@@ -4,7 +4,7 @@
                     xmlns:wpf="clr-namespace:iLynx.Common.WPF"
                     xmlns:extensions="clr-namespace:iLynx.Common.WPF.Extensions">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/iLynx.Common.WPF;component/Themes/Shared.xaml"/>
+        <ResourceDictionary Source="/iLynx.Common.WPF;component/Themes/Shared.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <ContextMenu x:Key="TextBoxContextMenu">
         <MenuItem Command="ApplicationCommands.Copy" />
@@ -15,16 +15,17 @@
     <Style TargetType="{x:Type TextBox}" x:Key="{x:Type TextBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
         <Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
         <Setter Property="Foreground" Value="{StaticResource BrushForeground}" />
         <Setter Property="SelectionBrush" Value="{StaticResource BrushHighlight}" />
-        <Setter Property="Background" Value="{StaticResource BrushBackground}"/>
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Border BorderThickness="1" x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                    <Border BorderThickness="1" x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{TemplateBinding Background}">
                         <ScrollViewer x:Name="PART_ContentHost"
                                       Margin="0" />
                     </Border>
@@ -262,25 +263,27 @@
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="Black" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
                     <BulletDecorator Background="Transparent">
                         <BulletDecorator.Bullet>
-                            <Border Name="PART_Background" CornerRadius="0" BorderThickness="{TemplateBinding BorderThickness}"
+                            <Border Name="PART_Background" CornerRadius="0"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{DynamicResource BrushBackground}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"
                                     Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">
                                 <Viewbox Stretch="Uniform">
                                     <Grid>
-                                        <TextBlock x:Name="CheckMark" Foreground="{StaticResource BrushCheckMark}" Text="a"
-                                               FontFamily="Webdings" Visibility="Collapsed" />
+                                        <TextBlock x:Name="CheckMark" Foreground="{StaticResource BrushCheckMark}"
+                                                   Text="a"
+                                                   FontFamily="Webdings" Visibility="Collapsed" />
                                         <TextBlock x:Name="InderminateMark"
-                                               Foreground="{DynamicResource BrushIndeterminate}" Text="&lt;"
-                                               FontFamily="Webdings" Visibility="Collapsed" />
+                                                   Foreground="{DynamicResource BrushIndeterminate}" Text="&lt;"
+                                                   FontFamily="Webdings" Visibility="Collapsed" />
                                     </Grid>
                                 </Viewbox>
                             </Border>
@@ -351,8 +354,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
-            <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="2" BorderThickness="1" Background="Transparent">
-            </Border>
+            <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="2" BorderThickness="1" Background="Transparent" />
             <Border Grid.Column="0" CornerRadius="2,0,0,2" Margin="1" BorderThickness="0,0,1,0" />
             <Path x:Name="Arrow" Grid.Column="1" Fill="{StaticResource GlyphBrush}" HorizontalAlignment="Center"
                   VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z" />
@@ -458,27 +460,27 @@
     <ControlTemplate x:Key="HorizontalExpanderTemplate" TargetType="{x:Type Expander}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Border Grid.RowSpan="2"
-                                Grid.ColumnSpan="2"
-                                x:Name="PART_Border"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                BorderBrush="{TemplateBinding BorderBrush}"/>
+                    Grid.ColumnSpan="2"
+                    x:Name="PART_Border"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderBrush="{TemplateBinding BorderBrush}" />
             <ContentPresenter x:Name="PART_Header"
-                                          Grid.Row="0"
-                                          Grid.Column="0"
-                                          ContentSource="Header"
-                                          Height="24">
+                              Grid.Row="0"
+                              Grid.Column="0"
+                              ContentSource="Header"
+                              Height="24">
                 <ContentPresenter.LayoutTransform>
                     <ScaleTransform x:Name="HeaderTransform"
-                                                ScaleY="1.0"
-                                                ScaleX="1.0"/>
+                                    ScaleY="1.0"
+                                    ScaleX="1.0" />
                 </ContentPresenter.LayoutTransform>
             </ContentPresenter>
             <ToggleButton x:Name="PART_ExpanderButton"
@@ -492,22 +494,23 @@
                           Margin="2"
                           RenderTransformOrigin="0.5,0.5">
                 <ToggleButton.Content>
-                    <Path Data="M0.5,30.5 L10.5,30.5 40.5,60.5 70.5,30.5 80.5,30.5 40.5,70.5 z M0.5,0.5 L10.5,0.5 40.5,30.5 70.5,0.5 80.5,0.5 40.5,40.5 z"
-                          Fill="{StaticResource BrushForeground}"
-                          Stroke="{StaticResource BrushBorder}"
-                          RenderTransformOrigin="0.5,0.5"
-                          Stretch="Fill"/>
+                    <Path
+                        Data="M0.5,30.5 L10.5,30.5 40.5,60.5 70.5,30.5 80.5,30.5 40.5,70.5 z M0.5,0.5 L10.5,0.5 40.5,30.5 70.5,0.5 80.5,0.5 40.5,40.5 z"
+                        Fill="{StaticResource BrushForeground}"
+                        Stroke="{StaticResource BrushBorder}"
+                        RenderTransformOrigin="0.5,0.5"
+                        Stretch="Fill" />
                 </ToggleButton.Content>
                 <ToggleButton.RenderTransform>
-                    <RotateTransform x:Name="ButtonTransform" Angle="0"/>
+                    <RotateTransform x:Name="ButtonTransform" Angle="0" />
                 </ToggleButton.RenderTransform>
             </ToggleButton>
             <ContentPresenter Grid.Row="1"
-                                          Grid.Column="0"
-                                          Grid.ColumnSpan="2"
-                                          ContentSource="Content">
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              ContentSource="Content">
                 <ContentPresenter.LayoutTransform>
-                    <ScaleTransform x:Name="ContentTransform" ScaleX="1" ScaleY="0"/>
+                    <ScaleTransform x:Name="ContentTransform" ScaleX="1" ScaleY="0" />
                 </ContentPresenter.LayoutTransform>
             </ContentPresenter>
         </Grid>
@@ -517,25 +520,25 @@
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="ContentTransform"
-                                                         Storyboard.TargetProperty="ScaleY"
-                                                         From="0.0"
-                                                         To="1.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleY"
+                                             From="0.0"
+                                             To="1.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="HeaderTransform"
-                                                         Storyboard.TargetProperty="ScaleX"
-                                                         From="1.0"
-                                                         To="2.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleX"
+                                             From="1.0"
+                                             To="2.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="HeaderTransform"
-                                                         Storyboard.TargetProperty="ScaleY"
-                                                         From="1.0"
-                                                         To="2.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleY"
+                                             From="1.0"
+                                             To="2.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="ButtonTransform"
-                                                         Storyboard.TargetProperty="Angle"
-                                                         From="0"
-                                                         To="180"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="Angle"
+                                             From="0"
+                                             To="180"
+                                             Duration="0:00:00.125" />
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
@@ -543,25 +546,25 @@
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="ContentTransform"
-                                                         Storyboard.TargetProperty="ScaleY"
-                                                         From="1.0"
-                                                         To="0.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleY"
+                                             From="1.0"
+                                             To="0.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="HeaderTransform"
-                                                         Storyboard.TargetProperty="ScaleX"
-                                                         From="2.0"
-                                                         To="1.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleX"
+                                             From="2.0"
+                                             To="1.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="HeaderTransform"
-                                                         Storyboard.TargetProperty="ScaleY"
-                                                         From="2.0"
-                                                         To="1.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleY"
+                                             From="2.0"
+                                             To="1.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="ButtonTransform"
-                                                         Storyboard.TargetProperty="Angle"
-                                                         From="180"
-                                                         To="0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="Angle"
+                                             From="180"
+                                             To="0"
+                                             Duration="0:00:00.125" />
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.ExitActions>
@@ -572,18 +575,18 @@
     <ControlTemplate x:Key="VerticalExpanderTemplate" TargetType="{x:Type Expander}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Border Grid.RowSpan="2"
                     Grid.ColumnSpan="2"
                     x:Name="PART_Border"
                     BorderThickness="{TemplateBinding BorderThickness}"
-                    BorderBrush="{TemplateBinding BorderBrush}"/>
+                    BorderBrush="{TemplateBinding BorderBrush}" />
             <ContentPresenter x:Name="PART_Header"
                               Grid.Row="1"
                               Grid.Column="0"
@@ -593,9 +596,9 @@
                 <ContentPresenter.LayoutTransform>
                     <TransformGroup>
                         <ScaleTransform x:Name="HeaderTransform"
-                                                ScaleY="1.0"
-                                                ScaleX="1.0"/>
-                        <RotateTransform Angle="-90"/>
+                                        ScaleY="1.0"
+                                        ScaleX="1.0" />
+                        <RotateTransform Angle="-90" />
                     </TransformGroup>
                 </ContentPresenter.LayoutTransform>
             </ContentPresenter>
@@ -610,14 +613,15 @@
                           Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(extensions:ExpanderExtensions.ToggleButtonVisibility)}"
                           Margin="2">
                 <ToggleButton.Content>
-                    <Path Data="M0.5,30.5 L10.5,30.5 40.5,60.5 70.5,30.5 80.5,30.5 40.5,70.5 z M0.5,0.5 L10.5,0.5 40.5,30.5 70.5,0.5 80.5,0.5 40.5,40.5 z"
-                          Fill="{StaticResource BrushForeground}"
-                          Stroke="{StaticResource BrushBorder}"
-                          RenderTransformOrigin="0.5,0.5"
-                          Stretch="Fill"/>
+                    <Path
+                        Data="M0.5,30.5 L10.5,30.5 40.5,60.5 70.5,30.5 80.5,30.5 40.5,70.5 z M0.5,0.5 L10.5,0.5 40.5,30.5 70.5,0.5 80.5,0.5 40.5,40.5 z"
+                        Fill="{StaticResource BrushForeground}"
+                        Stroke="{StaticResource BrushBorder}"
+                        RenderTransformOrigin="0.5,0.5"
+                        Stretch="Fill" />
                 </ToggleButton.Content>
                 <ToggleButton.RenderTransform>
-                    <RotateTransform x:Name="ButtonTransform" Angle="-90"/>
+                    <RotateTransform x:Name="ButtonTransform" Angle="-90" />
                 </ToggleButton.RenderTransform>
             </ToggleButton>
             <ContentPresenter Grid.Row="0"
@@ -627,7 +631,7 @@
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                 <ContentPresenter.LayoutTransform>
-                    <ScaleTransform x:Name="ContentTransform" ScaleX="0" ScaleY="1"/>
+                    <ScaleTransform x:Name="ContentTransform" ScaleX="0" ScaleY="1" />
                 </ContentPresenter.LayoutTransform>
             </ContentPresenter>
         </Grid>
@@ -637,25 +641,25 @@
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="ContentTransform"
-                                                         Storyboard.TargetProperty="ScaleX"
-                                                         From="0.0"
-                                                         To="1.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleX"
+                                             From="0.0"
+                                             To="1.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="HeaderTransform"
-                                                         Storyboard.TargetProperty="ScaleX"
-                                                         From="1.0"
-                                                         To="2.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleX"
+                                             From="1.0"
+                                             To="2.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="HeaderTransform"
-                                                         Storyboard.TargetProperty="ScaleY"
-                                                         From="1.0"
-                                                         To="2.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleY"
+                                             From="1.0"
+                                             To="2.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="ButtonTransform"
-                                                         Storyboard.TargetProperty="Angle"
-                                                         From="-90"
-                                                         To="90"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="Angle"
+                                             From="-90"
+                                             To="90"
+                                             Duration="0:00:00.125" />
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
@@ -663,25 +667,25 @@
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="ContentTransform"
-                                                         Storyboard.TargetProperty="ScaleX"
-                                                         From="1.0"
-                                                         To="0.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleX"
+                                             From="1.0"
+                                             To="0.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="HeaderTransform"
-                                                         Storyboard.TargetProperty="ScaleX"
-                                                         From="2.0"
-                                                         To="1.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleX"
+                                             From="2.0"
+                                             To="1.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="HeaderTransform"
-                                                         Storyboard.TargetProperty="ScaleY"
-                                                         From="2.0"
-                                                         To="1.0"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="ScaleY"
+                                             From="2.0"
+                                             To="1.0"
+                                             Duration="0:00:00.125" />
                             <DoubleAnimation Storyboard.TargetName="ButtonTransform"
-                                                         Storyboard.TargetProperty="Angle"
-                                                         From="90"
-                                                         To="-90"
-                                                         Duration="0:00:00.125"/>
+                                             Storyboard.TargetProperty="Angle"
+                                             From="90"
+                                             To="-90"
+                                             Duration="0:00:00.125" />
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.ExitActions>
@@ -690,15 +694,15 @@
     </ControlTemplate>
 
     <Style x:Key="{x:Type Expander}" TargetType="{x:Type Expander}">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Background" Value="{StaticResource BrushBackground}"/>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
         <Style.Triggers>
             <Trigger Property="extensions:ExpanderExtensions.Orientation" Value="Horizontal">
-                <Setter Property="Template" Value="{StaticResource HorizontalExpanderTemplate}"/>
+                <Setter Property="Template" Value="{StaticResource HorizontalExpanderTemplate}" />
             </Trigger>
             <Trigger Property="extensions:ExpanderExtensions.Orientation" Value="Vertical">
-                <Setter Property="Template" Value="{StaticResource VerticalExpanderTemplate}"/>
+                <Setter Property="Template" Value="{StaticResource VerticalExpanderTemplate}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -710,7 +714,7 @@
                 <ContentPresenter ContentSource="Header" RecognizesAccessKey="True"
                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  Margin="{TemplateBinding Padding}"/>
+                                  Margin="{TemplateBinding Padding}" />
                 <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsSubmenuOpen}"
                        AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                     <Border Name="SubmenuBorder" SnapsToDevicePixels="True" BorderThickness="1" CornerRadius="4">
@@ -754,7 +758,7 @@
                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                 Margin="{TemplateBinding Padding}">
             <!--<Grid>-->
-            <ContentPresenter Margin="6,3,6,3" ContentSource="Header" RecognizesAccessKey="True"/>
+            <ContentPresenter Margin="6,3,6,3" ContentSource="Header" RecognizesAccessKey="True" />
             <!--</Grid>-->
         </Border>
         <ControlTemplate.Triggers>
@@ -861,13 +865,14 @@
                 <ContentPresenter Name="Icon" Margin="6,0,6,0" VerticalAlignment="Center" ContentSource="Icon" />
                 <ContentPresenter Name="HeaderHost" Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True"
                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
                 <TextBlock x:Name="InputGestureText" Grid.Column="2" Text="{TemplateBinding InputGestureText}"
                            Margin="5,2,2,2" DockPanel.Dock="Right" />
                 <Path Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"
                       Data="M 0 0 L 0 7 L 4 3.5 Z" Fill="{StaticResource GlyphBrush}"
-                      x:Name="Glyph"/>
-                <Popup Grid.Column="0" Name="Popup" Placement="Left" PlacementTarget="{Binding ElementName=Glyph}" HorizontalOffset="-4" IsOpen="{TemplateBinding IsSubmenuOpen}"
+                      x:Name="Glyph" />
+                <Popup Grid.Column="0" Name="Popup" Placement="Left" PlacementTarget="{Binding ElementName=Glyph}"
+                       HorizontalOffset="-4" IsOpen="{TemplateBinding IsSubmenuOpen}"
                        AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
                     <Border Name="SubmenuBorder" SnapsToDevicePixels="True" BorderThickness="1">
                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
@@ -911,9 +916,9 @@
     <Style x:Key="{x:Type MenuItem}" TargetType="MenuItem">
         <Setter Property="Background" Value="{DynamicResource BrushBackground}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Padding" Value="4,0"></Setter>
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="4,0" />
         <Style.Triggers>
             <Trigger Property="Role" Value="TopLevelHeader">
                 <Setter Property="Template" Value="{StaticResource {x:Static MenuItem.TopLevelHeaderTemplateKey}}" />
@@ -939,7 +944,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Menu">
                     <Border BorderThickness="0">
-                        <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True"/>
+                        <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -1007,8 +1012,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Border x:Name="PART_Background" Background="{TemplateBinding Background}">
-                    </Border>
+                    <Border x:Name="PART_Background" Background="{TemplateBinding Background}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -1212,8 +1216,8 @@
     </Style>
 
     <Style TargetType="{x:Type GroupBox}">
-        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
-        <Setter Property="Foreground" Value="{StaticResource BrushForeground}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+        <Setter Property="Foreground" Value="{StaticResource BrushForeground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GroupBox">
@@ -1226,18 +1230,18 @@
                               StrokeThickness="1"
                               HorizontalAlignment="Left"
                               Width="4"
-                              Margin="0,4,0,0"/>
+                              Margin="0,4,0,0" />
                         <Line Grid.Row="0"
                               Grid.RowSpan="2"
                               Stroke="{TemplateBinding BorderBrush}"
                               StrokeThickness="1"
                               HorizontalAlignment="Left"
-                              VerticalAlignment="Stretch"/>
+                              VerticalAlignment="Stretch" />
                         <ContentControl Grid.Row="0"
-                                            Margin="4,-4,0,0"
-                                            Content="{TemplateBinding Header}"
-                                            FontSize="16"
-                                            FontWeight="Bold"/>
+                                        Margin="4,-4,0,0"
+                                        Content="{TemplateBinding Header}"
+                                        FontSize="16"
+                                        FontWeight="Bold" />
                         <ContentPresenter Grid.Row="1" Margin="4" />
                     </Grid>
                 </ControlTemplate>
@@ -1272,7 +1276,7 @@
                             <ContentPresenter Grid.Column="0" Content="{TemplateBinding Header}"
                                               Visibility="{TemplateBinding IsCollapsed, Converter={StaticResource InvBoolToVis}}" />
                             <ContentPresenter Grid.Column="0" Content="{TemplateBinding CollapsedHeader}"
-                                              Visibility="{TemplateBinding IsCollapsed, Converter={StaticResource BoolToVis}}"/>
+                                              Visibility="{TemplateBinding IsCollapsed, Converter={StaticResource BoolToVis}}" />
                             <TextBlock
                                 Grid.Column="1"
                                 HorizontalAlignment="Right"
@@ -1294,8 +1298,7 @@
                                 <Border Background="{DynamicResource ToggleCollapsedBrush}"
                                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                         Margin="2"
-                                        x:Name="collapserTarget">
-                                </Border>
+                                        x:Name="collapserTarget" />
                             </Button>
                             <Button Style="{StaticResource AutoScalingButton}"
                                     Grid.Column="3" Content="0" FontFamily="Webdings"
@@ -1319,7 +1322,7 @@
                                         <Style.Triggers>
                                             <DataTrigger
                                                 Binding="{Binding IsCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type wpf:BorderlessWindow}}}">
-                                                <Setter Property="Margin" Value="0,0,4,0"></Setter>
+                                                <Setter Property="Margin" Value="0,0,4,0" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -1328,17 +1331,20 @@
                         </Grid>
                     </Border>
                     <Border Grid.Row="1">
-                        <ContentPresenter x:Name="PART_Content" Visibility="{TemplateBinding IsCollapsed, Converter={StaticResource InvBoolToVis}}" />
+                        <ContentPresenter x:Name="PART_Content"
+                                          Visibility="{TemplateBinding IsCollapsed, Converter={StaticResource InvBoolToVis}}" />
                     </Border>
                 </Grid>
             </Grid>
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsCollapsed" Value="True">
-                <Setter TargetName="collapserTarget" Property="Background" Value="{DynamicResource ToggleExpandedBrush}"/>
+                <Setter TargetName="collapserTarget" Property="Background"
+                        Value="{DynamicResource ToggleExpandedBrush}" />
             </Trigger>
             <Trigger Property="IsCollapsed" Value="False">
-                <Setter TargetName="collapserTarget" Property="Background" Value="{DynamicResource ToggleCollapsedBrush}"/>
+                <Setter TargetName="collapserTarget" Property="Background"
+                        Value="{DynamicResource ToggleCollapsedBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -1351,7 +1357,7 @@
                     <RowDefinition Height="{TemplateBinding HeaderSize}" />
                 </Grid.RowDefinitions>
                 <Border BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding HeaderBorderThickness}">
+                        BorderThickness="{TemplateBinding HeaderBorderThickness}">
                     <Grid x:Name="PART_HeaderButtons">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -1361,37 +1367,44 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Rectangle IsHitTestVisible="True" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" x:Name="DragGrip" />
+                        <Rectangle IsHitTestVisible="True" Grid.ColumnSpan="2" HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch" Fill="Transparent" x:Name="DragGrip" />
                         <ContentPresenter Grid.Column="0" Content="{TemplateBinding CollapsedHeader}" />
                         <TextBlock
-                                Grid.Column="1"
-                                HorizontalAlignment="Right"
-                                FontFamily="{TemplateBinding TitleFontFamily}"
-                                FontStretch="{TemplateBinding TitleFontStretch}"
-                                FontSize="{TemplateBinding TitleFontSize}"
-                                FontWeight="{TemplateBinding TitleFontWeight}"
-                                FontStyle="{TemplateBinding TitleFontStyle}"
-                                Text="{TemplateBinding Title}"
-                                VerticalAlignment="Center"
-                                IsHitTestVisible="False" />
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            FontFamily="{TemplateBinding TitleFontFamily}"
+                            FontStretch="{TemplateBinding TitleFontStretch}"
+                            FontSize="{TemplateBinding TitleFontSize}"
+                            FontWeight="{TemplateBinding TitleFontWeight}"
+                            FontStyle="{TemplateBinding TitleFontStyle}"
+                            Text="{TemplateBinding Title}"
+                            VerticalAlignment="Center"
+                            IsHitTestVisible="False" />
                         <Button x:Name="PART_Expander" HorizontalContentAlignment="Stretch"
-                                    VerticalContentAlignment="Stretch" Grid.Column="2"
-                                    Command="{TemplateBinding ToggleCollapsedCommand}"
-                                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
-                                    Visibility="{TemplateBinding IsCollapsible, Converter={StaticResource BoolToVis}}"
-                                    Background="Transparent"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=wpf:BorderlessWindow}}">
+                                VerticalContentAlignment="Stretch" Grid.Column="2"
+                                Command="{TemplateBinding ToggleCollapsedCommand}"
+                                Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                Visibility="{TemplateBinding IsCollapsible, Converter={StaticResource BoolToVis}}"
+                                Background="Transparent"
+                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=wpf:BorderlessWindow}}">
                             <Border Background="{DynamicResource ToggleCollapsedBrush}"
-                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                        Margin="2">
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                    Margin="2">
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsCollapsed, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource ToggleExpandedBrush}" />
+                                            <DataTrigger
+                                                Binding="{Binding IsCollapsed, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Value="True">
+                                                <Setter Property="Background"
+                                                        Value="{DynamicResource ToggleExpandedBrush}" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsCollapsed, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
-                                                <Setter Property="Background" Value="{DynamicResource ToggleCollapsedBrush}" />
+                                            <DataTrigger
+                                                Binding="{Binding IsCollapsed, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Value="False">
+                                                <Setter Property="Background"
+                                                        Value="{DynamicResource ToggleCollapsedBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -1399,27 +1412,28 @@
                             </Border>
                         </Button>
                         <Button Style="{DynamicResource AutoScalingButton}"
-                                    Grid.Column="3" Content="0" FontFamily="Webdings"
-                                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
-                                    Command="{TemplateBinding MinimizeCommand}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=wpf:BorderlessWindow}}" />
+                                Grid.Column="3" Content="0" FontFamily="Webdings"
+                                Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                Command="{TemplateBinding MinimizeCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=wpf:BorderlessWindow}}" />
                         <Button Style="{DynamicResource AutoScalingButton}"
-                                    Visibility="{TemplateBinding IsCollapsed, Converter={StaticResource InvBoolToVis}}"
-                                    Grid.Column="4"
-                                    x:Name="maximizeButton" FontFamily="Webdings"
-                                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
-                                    Command="{TemplateBinding ToggleMaximizedCommand}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=wpf:BorderlessWindow}}" />
+                                Visibility="{TemplateBinding IsCollapsed, Converter={StaticResource InvBoolToVis}}"
+                                Grid.Column="4"
+                                x:Name="maximizeButton" FontFamily="Webdings"
+                                Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                Command="{TemplateBinding ToggleMaximizedCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=wpf:BorderlessWindow}}" />
                         <Button Grid.Column="5" Content="r" FontFamily="Webdings"
-                                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
-                                    Command="{TemplateBinding CloseCommand}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=wpf:BorderlessWindow}}">
+                                Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                Command="{TemplateBinding CloseCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=wpf:BorderlessWindow}}">
                             <Button.Style>
                                 <Style TargetType="{x:Type Button}"
-                                           BasedOn="{StaticResource AutoScalingButton}">
+                                       BasedOn="{StaticResource AutoScalingButton}">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type wpf:BorderlessWindow}}}">
-                                            <Setter Property="Margin" Value="0,0,4,0"></Setter>
+                                        <DataTrigger
+                                            Binding="{Binding IsCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type wpf:BorderlessWindow}}}">
+                                            <Setter Property="Margin" Value="0,0,4,0" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1439,12 +1453,178 @@
     <Style TargetType="{x:Type wpf:BorderlessWindow}">
         <Setter Property="Background" Value="{StaticResource BrushBackground}" />
         <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
-        <Setter Property="BorderThickness" Value="4"/>
+        <Setter Property="BorderThickness" Value="4" />
         <Setter Property="HeaderBorderThickness" Value="0,0,0,4" />
         <Setter Property="TitleFontSize" Value="18" />
         <Setter Property="TitleFontWeight" Value="Bold" />
         <Setter Property="TitleFontFamily" Value="Verdana" />
         <Setter Property="IsCollapsible" Value="False" />
-        <Setter Property="Template" Value="{StaticResource ExpandedBorderlessWindow}"/>
+        <Setter Property="Template" Value="{StaticResource ExpandedBorderlessWindow}" />
     </Style>
+
+    <Style TargetType="{x:Type controls:LoadScreen}">
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="Foreground" Value="{StaticResource BrushForeground}" />
+        <Setter Property="Message" Value="Loading..." />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:LoadScreen}">
+                    <ControlTemplate.Resources>
+                        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+                    </ControlTemplate.Resources>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                            x:Name="Root"
+                            Visibility="Collapsed">
+                        <Viewbox HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 StretchDirection="Both"
+                                 Stretch="Uniform"
+                                 RenderTransformOrigin="0.5,0.5">
+                            <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="1" Margin="4,0"
+                                      VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <ContentPresenter Content="{TemplateBinding Message}" />
+                                    <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}" />
+                                </Grid>
+                                <Canvas Grid.Column="0" HorizontalAlignment="Center" Height="110" Margin="0"
+                                        VerticalAlignment="Center"
+                                        RenderTransformOrigin="0.5,0.5"
+                                        Width="110">
+                                    <Canvas.RenderTransform>
+                                        <RotateTransform x:Name="CanvasTransform" CenterX="0.5" CenterY="0.5" Angle="0" />
+                                    </Canvas.RenderTransform>
+                                    <Path
+                                        Data="M8.1235192,0.50000047 C12.333874,0.50000047 15.74704,3.8389302 15.74704,7.9577088 15.74704,12.076487 12.333874,15.415417 8.1235192,15.415417 3.9131663,15.415417 0.49999999,12.076487 0.49999999,7.9577088 0.49999999,3.8389302 3.9131663,0.50000047 8.1235192,0.50000047 z"
+                                        Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="20"
+                                        Stretch="Fill"
+                                        Stroke="Transparent" VerticalAlignment="Top" Width="20" Canvas.Left="20"
+                                        Canvas.Top="20"
+                                        Opacity=".3" />
+                                    <Path
+                                        Data="M8.1235192,0.50000047 C12.333874,0.50000047 15.74704,3.8389302 15.74704,7.9577088 15.74704,12.076487 12.333874,15.415417 8.1235192,15.415417 3.9131663,15.415417 0.49999999,12.076487 0.49999999,7.9577088 0.49999999,3.8389302 3.9131663,0.50000047 8.1235192,0.50000047 z"
+                                        Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="20"
+                                        Stretch="Fill"
+                                        Stroke="Transparent" VerticalAlignment="Top" Width="20" Canvas.Left="10"
+                                        Canvas.Top="45"
+                                        Opacity=".4" />
+                                    <Path
+                                        Data="M8.1235192,0.50000047 C12.333874,0.50000047 15.74704,3.8389302 15.74704,7.9577088 15.74704,12.076487 12.333874,15.415417 8.1235192,15.415417 3.9131663,15.415417 0.49999999,12.076487 0.49999999,7.9577088 0.49999999,3.8389302 3.9131663,0.50000047 8.1235192,0.50000047 z"
+                                        Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="20"
+                                        Stretch="Fill"
+                                        Stroke="Transparent" VerticalAlignment="Top" Width="20" Canvas.Left="20"
+                                        Canvas.Top="70"
+                                        Opacity=".5" />
+                                    <Path
+                                        Data="M8.1235192,0.50000047 C12.333874,0.50000047 15.74704,3.8389302 15.74704,7.9577088 15.74704,12.076487 12.333874,15.415417 8.1235192,15.415417 3.9131663,15.415417 0.49999999,12.076487 0.49999999,7.9577088 0.49999999,3.8389302 3.9131663,0.50000047 8.1235192,0.50000047 z"
+                                        Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="20"
+                                        Stretch="Fill"
+                                        Stroke="Transparent" VerticalAlignment="Top" Width="20" Canvas.Left="45"
+                                        Canvas.Top="80"
+                                        Opacity=".6" />
+                                    <Path
+                                        Data="M8.1235192,0.50000047 C12.333874,0.50000047 15.74704,3.8389302 15.74704,7.9577088 15.74704,12.076487 12.333874,15.415417 8.1235192,15.415417 3.9131663,15.415417 0.49999999,12.076487 0.49999999,7.9577088 0.49999999,3.8389302 3.9131663,0.50000047 8.1235192,0.50000047 z"
+                                        Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="20"
+                                        Stretch="Fill"
+                                        Stroke="Transparent" VerticalAlignment="Top" Width="20" Canvas.Left="70"
+                                        Canvas.Top="70"
+                                        Opacity=".7" />
+                                    <Path
+                                        Data="M8.1235192,0.50000047 C12.333874,0.50000047 15.74704,3.8389302 15.74704,7.9577088 15.74704,12.076487 12.333874,15.415417 8.1235192,15.415417 3.9131663,15.415417 0.49999999,12.076487 0.49999999,7.9577088 0.49999999,3.8389302 3.9131663,0.50000047 8.1235192,0.50000047 z"
+                                        Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="20"
+                                        Stretch="Fill"
+                                        Stroke="Transparent" VerticalAlignment="Top" Width="20" Canvas.Left="80"
+                                        Canvas.Top="45"
+                                        Opacity=".8" />
+                                    <Path
+                                        Data="M8.1235192,0.50000047 C12.333874,0.50000047 15.74704,3.8389302 15.74704,7.9577088 15.74704,12.076487 12.333874,15.415417 8.1235192,15.415417 3.9131663,15.415417 0.49999999,12.076487 0.49999999,7.9577088 0.49999999,3.8389302 3.9131663,0.50000047 8.1235192,0.50000047 z"
+                                        Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="20"
+                                        Stretch="Fill"
+                                        Stroke="Transparent" VerticalAlignment="Top" Width="20" Canvas.Left="70"
+                                        Canvas.Top="20"
+                                        Opacity=".9" />
+                                    <Path
+                                        Data="M8.1235192,0.50000047 C12.333874,0.50000047 15.74704,3.8389302 15.74704,7.9577088 15.74704,12.076487 12.333874,15.415417 8.1235192,15.415417 3.9131663,15.415417 0.49999999,12.076487 0.49999999,7.9577088 0.49999999,3.8389302 3.9131663,0.50000047 8.1235192,0.50000047 z"
+                                        Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Height="20"
+                                        Stretch="Fill"
+                                        Stroke="Transparent" VerticalAlignment="Top" Width="20" Canvas.Left="45"
+                                        Canvas.Top="10"
+                                        Opacity="1" />
+                                </Canvas>
+                            </Grid>
+                        </Viewbox>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Visibility" Value="Visible">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard x:Name="Storyboard">
+                                        <DoubleAnimation Storyboard.TargetName="CanvasTransform"
+                                                         Storyboard.TargetProperty="Angle"
+                                                         From="0"
+                                                         To="-360"
+                                                         Duration="00:00:02.500"
+                                                         RepeatBehavior="Forever" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="Storyboard"/>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsLoading" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                         From="0"
+                                                         To="1"
+                                                         Storyboard.TargetName="Root"
+                                                         Duration="0:00:00.250" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+                                                                       Storyboard.TargetName="Root"
+                                                                       Duration="0">
+                                            <DiscreteObjectKeyFrame Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                         Storyboard.TargetName="Root"
+                                                         From="1"
+                                                         To="0"
+                                                         Duration="0:00:00.250" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+                                                                       Storyboard.TargetName="Root"
+                                                                       Duration="0"
+                                                                       BeginTime="0:00:00.250">
+                                            <DiscreteObjectKeyFrame Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

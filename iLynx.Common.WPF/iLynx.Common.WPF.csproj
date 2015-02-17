@@ -120,6 +120,7 @@
     <Compile Include="Controls\Connector.cs" />
     <Compile Include="Controls\IConnectable.cs" />
     <Compile Include="Controls\IPositionable.cs" />
+    <Compile Include="Controls\LoadScreen.cs" />
     <Compile Include="Controls\Node.cs" />
     <Compile Include="Controls\NodeExtensions.cs" />
     <Compile Include="Controls\NodePanel.cs" />
