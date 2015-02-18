@@ -81,7 +81,7 @@ namespace iLynx.Configuration
         /// <returns></returns>
         public IEnumerable<IConfigurableValue> GetLoadedValues(string category = null)
         {
-            return OpenValues.Values.Where(x => null == category || x.Value.Category == category).Select(x => x.Value);
+            return ExeConfig.ConfigurableValuesSection.Categories.Where(x => null == category || category == x.Key).SelectMany(x => x.Value).Select(x => x.Value);
         }
 
         /// <summary>
