@@ -22,7 +22,6 @@ namespace iLynx.PubSub
         {
             var type = typeof(TMessage);
             Publish(type, message);
-            //this.LogDebug("Publish: {0}", message);
         }
 
         protected virtual void Publish(Type messageType, dynamic message)
