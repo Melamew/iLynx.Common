@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace iLynx.Common.WPF.Behaviours
@@ -6,7 +7,14 @@ namespace iLynx.Common.WPF.Behaviours
     public class PasswordBehaviour
     {
         public static readonly DependencyProperty PasswordProperty = DependencyProperty.RegisterAttached(
-            "Password", typeof (string), typeof (PasswordBehaviour), new PropertyMetadata(default(string)));
+            "Password", typeof (string), typeof (PasswordBehaviour), new PropertyMetadata(default(string), OnPasswordChanged));
+
+        private static void OnPasswordChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            var obj = dependencyObject as PasswordBox;
+            if (null == obj) return;
+            obj.Password = dependencyPropertyChangedEventArgs.NewValue as string;
+        }
 
         public static readonly DependencyProperty AttachProperty = DependencyProperty.RegisterAttached(
             "Attach", typeof (bool), typeof (PasswordBehaviour), new PropertyMetadata(default(bool), OnAttachChanged));
@@ -19,7 +27,10 @@ namespace iLynx.Common.WPF.Behaviours
             if (!attach)
                 passwordBox.PasswordChanged -= PasswordBoxOnPasswordChanged;
             else
+            {
                 passwordBox.PasswordChanged += PasswordBoxOnPasswordChanged;
+                passwordBox.Password = GetPassword(passwordBox);
+            }
         }
 
         private static void PasswordBoxOnPasswordChanged(object sender, RoutedEventArgs routedEventArgs)
