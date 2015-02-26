@@ -57,6 +57,11 @@ namespace iLynx.Common.Pixels
             sortedKeys = colourMap.Keys.ToArray();
         }
 
+        public bool Contains(double value)
+        {
+            return colourMap.ContainsKey(value);
+        }
+
         public void RemoveValue(double sampleValue)
         {
             if (isFrozen) throw new InvalidOperationException("This instance is frozen, it cannot be modified");

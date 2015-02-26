@@ -2,23 +2,31 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:iLynx.Common.WPF.Controls"
                     xmlns:converters="clr-namespace:iLynx.Common.WPF.Converters">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Shared.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
     <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
     <Style x:Key="{x:Type controls:ColorPicker}" TargetType="{x:Type controls:ColorPicker}">
+        <Setter Property="Background" Value="{StaticResource BrushBackground}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:ColorPicker}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="8.5*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="8*"/>
-                            <RowDefinition Height="2*"/>
-                        </Grid.RowDefinitions>
-                        <!--<colorBar:TemplatedSlider Orientation="Vertical" Min="0" Max="360" Value="{Binding Hue, Mode=TwoWay}" ThumbBrush="{TemplateBinding SelectedColor, Converter={StaticResource ColorToBrushConverter}}"/>-->
-                        <controls:ValuePicker XMinimum="0"
+                    <Border BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.25*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="8*"/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
+                            <controls:ValuePicker XMinimum="0"
                                             XMaximum="1"
                                             YMinimum="0"
                                             YMaximum="1"
@@ -26,105 +34,142 @@
                                             XValue="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Saturation, Mode=TwoWay}"
                                             YValue="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Value, Mode=TwoWay}"
                                             Margin="2">
-                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
-                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{TemplateBinding BaseColor, Converter={StaticResource ColorToBrushConverter}}"/>
-                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush StartPoint="0.0, 0.5"
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
+                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{TemplateBinding BaseColor, Converter={StaticResource ColorToBrushConverter}}"/>
+                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0.0, 0.5"
                                                              EndPoint="1.0, 0.5">
-                                            <GradientStop Offset="0" Color="#FFFFFFFF"/>
-                                            <GradientStop Offset="1" Color="#007D7D7D"/>
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush StartPoint="0.5, 0.0"
+                                                <GradientStop Offset="0" Color="#FFFFFFFF"/>
+                                                <GradientStop Offset="1" Color="#007D7D7D"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0.5, 0.0"
                                                              EndPoint="0.5, 1.0">
-                                            <GradientStop Offset="0" Color="#00000000"/>
-                                            <GradientStop Offset="1" Color="#FF000000"/>
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                            </Grid>
-                        </controls:ValuePicker>
-                        <controls:ValuePicker
+                                                <GradientStop Offset="0" Color="#00000000"/>
+                                                <GradientStop Offset="1" Color="#FF000000"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                </Grid>
+                            </controls:ValuePicker>
+                            <controls:ValuePicker
                             Margin="2"
                             YMinimum="0"
                             YMaximum="360"
+                            Grid.Row="0"
                             IsXEnabled="False"
                             IsYReversed="True"
                             Grid.Column="1"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             YValue="{Binding Hue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}">
-                            <controls:ValuePicker.Background>
-                                <LinearGradientBrush StartPoint="0.5, 0.0"
+                                <controls:ValuePicker.Background>
+                                    <LinearGradientBrush StartPoint="0.5, 0.0"
                                                      EndPoint="0.5, 1.0">
-                                    <GradientStop Offset="0" Color="#FFFF0000"/>
-                                    <GradientStop Offset=".167" Color="#FFFF00FF"/>
-                                    <GradientStop Offset="0.334" Color="#FF0000FF"/>
-                                    <GradientStop Offset=".5" Color="#FF00FFFF"/>
-                                    <GradientStop Offset="0.668" Color="#FF00FF00"/>
-                                    <GradientStop Offset=".835" Color="#FFFFFF00"/>
-                                    <GradientStop Offset="1" Color="#FFFF0000"/>
-                                </LinearGradientBrush>
-                            </controls:ValuePicker.Background>
-                            <controls:ValuePicker.PointerTemplate>
-                                <ControlTemplate TargetType="{x:Type Control}">
-                                    <Rectangle Height="3" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ValuePicker}}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
-                                </ControlTemplate>
-                            </controls:ValuePicker.PointerTemplate>
-                        </controls:ValuePicker>
-                        <Rectangle x:Name="PreviewRect"
+                                        <GradientStop Offset="0" Color="#FFFF0000"/>
+                                        <GradientStop Offset=".167" Color="#FFFF00FF"/>
+                                        <GradientStop Offset="0.334" Color="#FF0000FF"/>
+                                        <GradientStop Offset=".5" Color="#FF00FFFF"/>
+                                        <GradientStop Offset="0.668" Color="#FF00FF00"/>
+                                        <GradientStop Offset=".835" Color="#FFFFFF00"/>
+                                        <GradientStop Offset="1" Color="#FFFF0000"/>
+                                    </LinearGradientBrush>
+                                </controls:ValuePicker.Background>
+                                <controls:ValuePicker.PointerTemplate>
+                                    <ControlTemplate TargetType="{x:Type Control}">
+                                        <Rectangle Height="3" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ValuePicker}}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
+                                    </ControlTemplate>
+                                </controls:ValuePicker.PointerTemplate>
+                            </controls:ValuePicker>
+                            <controls:ValuePicker
+                            Margin="2"
+                            YMinimum="0"
+                            YMaximum="1"
+                            Grid.Row="0"
+                            IsXEnabled="False"
+                            IsYReversed="True"
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            YValue="{Binding Alpha, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}">
+                                <controls:ValuePicker.Background>
+                                    <LinearGradientBrush StartPoint="0.5, 0.0"
+                                                     EndPoint="0.5, 1.0">
+                                        <GradientStop Offset="0" Color="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedColorNoAlpha}"/>
+                                        <GradientStop Offset="1" Color="Transparent"/>
+                                    </LinearGradientBrush>
+                                </controls:ValuePicker.Background>
+                                <controls:ValuePicker.PointerTemplate>
+                                    <ControlTemplate TargetType="{x:Type Control}">
+                                        <Rectangle Height="3" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:ValuePicker}}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Black"/>
+                                    </ControlTemplate>
+                                </controls:ValuePicker.PointerTemplate>
+                            </controls:ValuePicker>
+                            <Rectangle x:Name="PreviewRect"
+                                   Grid.ColumnSpan="2"
                                    Grid.Row="1"
                                    Grid.Column="1"
                                    Fill="{TemplateBinding SelectedColor, Converter={StaticResource ColorToBrushConverter}}"
                                    HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
                                    Margin="2"/>
-                        <Grid Visibility="{TemplateBinding IsManualInputEnabled, Converter={StaticResource BooleanToVisibility}}" Grid.Row="1" Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0"
+                            <Grid Visibility="{TemplateBinding IsManualInputEnabled, Converter={StaticResource BooleanToVisibility}}" Grid.Row="1" Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
                                        Grid.Row="0"
+                                       Text="A"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,4,0"/>
+                                <TextBox Grid.Column="1"
+                                     Grid.Row="0"
+                                     Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Alpha, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Column="0"
+                                       Grid.Row="1"
                                        Text="R"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center"
                                        Margin="0,0,4,0"/>
-                            <TextBox Grid.Column="1"
-                                     Grid.Row="0"
+                                <TextBox Grid.Column="1"
+                                     Grid.Row="1"
                                      Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Red, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBlock Grid.Column="0"
-                                       Grid.Row="1"
+                                <TextBlock Grid.Column="0"
+                                       Grid.Row="2"
                                        Text="G"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center"
                                        Margin="0,0,4,0"/>
-                            <TextBox Grid.Column="1"
-                                     Grid.Row="1"
+                                <TextBox Grid.Column="1"
+                                     Grid.Row="2"
                                      Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Green, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBlock Grid.Column="0"
-                                       Grid.Row="2"
+                                <TextBlock Grid.Column="0"
+                                       Grid.Row="3"
                                        Text="B"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center"
                                        Margin="0,0,4,0"/>
-                            <TextBox Grid.Column="1"
-                                     Grid.Row="2"
+                                <TextBox Grid.Column="1"
+                                     Grid.Row="3"
                                      Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Blue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsManualInputEnabled" Value="False">
-                            <Setter TargetName="PreviewRect" Property="Grid.ColumnSpan" Value="2" />
+                            <Setter TargetName="PreviewRect" Property="Grid.ColumnSpan" Value="3" />
                             <Setter TargetName="PreviewRect" Property="Grid.Column" Value="0"/>
                         </Trigger>
                     </ControlTemplate.Triggers>

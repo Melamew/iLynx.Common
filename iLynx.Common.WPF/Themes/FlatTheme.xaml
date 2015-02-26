@@ -249,7 +249,6 @@
                                 <VisualState Name="Pressed" Storyboard="{StaticResource MouseDownAnimation}" />
                                 <VisualState Name="Disabled" Storyboard="{StaticResource DisabledAnimation}" />
                                 <VisualState Name="Checked" Storyboard="{StaticResource MouseDownAnimation}" />
-                                <!--<VisualState Name="UnChecked" Storyboard="{StaticResource BackToBackgroundAnimation}"/>-->
                                 <VisualState Name="Indeterminate" Storyboard="{StaticResource IndeterminateAnimation}" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
