@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="Behaviours\ListViewAutoScrollBehaviour.cs" />
     <Compile Include="Behaviours\PasswordBehaviour.cs" />
+    <Compile Include="Behaviours\TextBoxAutoScrollBehaviour.cs" />
     <Compile Include="Behaviours\TextBoxSelectionBehaviour.cs" />
     <Compile Include="Behaviours\ElementSubmitBehaviour.cs" />
     <Compile Include="BorderlessWindow.cs" />
