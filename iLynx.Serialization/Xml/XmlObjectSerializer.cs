@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Reflection;
 using System.Xml;
+using System.Xml.Linq;
 using iLynx.Common;
 
 namespace iLynx.Serialization.Xml
 {
     public class XmlObjectSerializer<T> : XmlObjectSerializerBase<T>
     {
-        private readonly string xmlFriendlyName = typeof (T).Name.Replace('`', '.');
+        private readonly string xmlFriendlyName = typeof(T).Name.Replace('`', '.');
         public XmlObjectSerializer()
             : base(XmlSerializerService.GetSerializer)
         {
@@ -17,6 +18,7 @@ namespace iLynx.Serialization.Xml
         {
             var target = Activator.CreateInstance(typeof(T));
             reader.SkipToElement(xmlFriendlyName);
+            if (reader.IsEmptyElement) return (T)target;
             reader.ReadStartElement(xmlFriendlyName);
             try
             {
@@ -50,17 +52,22 @@ namespace iLynx.Serialization.Xml
                             break;
                         }
                     }
-                    finally { reader.ReadEndElement(); }
+                    finally
+                    {
+                        CompleteRead(reader);
+                    }
                 }
                 return (T)target;
             }
-            finally { reader.ReadEndElement(); }
+            finally { CompleteRead(reader); }
         }
 
-        private static bool ShouldReadType(XmlReader reader)
+        private void CompleteRead(XmlReader reader)
         {
-            var attribute = reader.GetAttribute("T");
-            return null != attribute && bool.Parse(attribute);
+            if (reader.IsEmptyElement)
+                reader.Skip();
+            else
+                reader.ReadEndElement();
         }
 
         /// <summary>
@@ -80,9 +87,9 @@ namespace iLynx.Serialization.Xml
                     {
                         IXmlSerializer serializer;
                         var value = member.IsDelegate ? null : member.GetValue(item);
-                        if (null == value) continue;
-                        if (member.IsUntyped)
+                        if (null == value || member.IsUntyped)
                         {
+                            value = value ?? new NullType();
                             var type = value.GetType();
                             serializer = XmlSerializerService.GetSerializer(type);
                             WriteType(target, type);

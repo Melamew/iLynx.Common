@@ -414,7 +414,6 @@ namespace iLynx.Serialization.Xml
 
             public override Array Deserialize(XmlReader reader)
             {
-                //reader.Read();
                 reader.SkipToElement("Array");
                 try
                 {
