@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\bin\Any CPU\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -119,8 +119,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(TargetDir)iLynx.Chatter.BroadcastMessaging.dll $(TargetDir)Server\
-xcopy /y $(TargetDir)iLynx.Chatter.BroadcastMessaging.dll $(TargetDir)Client\</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(TargetDir)iLynx.Chatter.BroadcastMessaging.dll" "$(TargetDir)Server\"
+xcopy /y "$(TargetDir)iLynx.Chatter.BroadcastMessaging.dll" "$(TargetDir)Client\"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
