@@ -131,10 +131,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y "$(TargetDir)iLynx.Chatter.NHibernateModule.dll" "$(TargetDir)Server\"
-xcopy /y $(TargetDir)Iesi.Collections.dll "$(TargetDir)Server\"
-xcopy /y $(TargetDir)FluentNHibernate.dll "$(TargetDir)Server\"
-xcopy /y $(TargetDir)NHibernate.dll "$(TargetDir)Server\"
-xcopy /y $(TargetDir)System.Data.SQLite.dll "$(TargetDir)Server\"
+xcopy /y "$(TargetDir)Iesi.Collections.dll" "$(TargetDir)Server\"
+xcopy /y "$(TargetDir)FluentNHibernate.dll" "$(TargetDir)Server\"
+xcopy /y "$(TargetDir)NHibernate.dll" "$(TargetDir)Server\"
+xcopy /y "$(TargetDir)System.Data.SQLite.dll" "$(TargetDir)Server\"
 xcopy /E /y "$(TargetDir)x64\*" "$(TargetDir)Server\x64\"
 xcopy /E /y "$(TargetDir)x86\*" "$(TargetDir)Server\x86\"</PostBuildEvent>
   </PropertyGroup>

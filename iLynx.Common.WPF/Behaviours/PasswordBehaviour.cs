@@ -30,6 +30,7 @@ namespace iLynx.Common.WPF.Behaviours
             {
                 passwordBox.PasswordChanged += PasswordBoxOnPasswordChanged;
                 passwordBox.Password = GetPassword(passwordBox);
+                
             }
         }
 

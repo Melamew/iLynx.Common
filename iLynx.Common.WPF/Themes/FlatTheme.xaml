@@ -86,6 +86,8 @@
                                 Text="{TemplateBinding OverlayText}"
                                 Background="Transparent"
                                 Foreground="{StaticResource BrushForeground}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                 Visibility="{TemplateBinding OverlayVisibility}" />
                             <ScrollViewer x:Name="PART_ContentHost"
                                           SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />

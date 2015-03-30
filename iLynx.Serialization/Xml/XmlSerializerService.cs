@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Windows.Media;
 using System.Xml;
@@ -30,7 +31,8 @@ namespace iLynx.Serialization.Xml
             {typeof (Color), new XmlPrimitives.ColorSerializer()},
             {typeof (DateTime), new XmlPrimitives.DateTimeSerializer()},
             {typeof (TimeSpan), new XmlPrimitives.TimeSpanSerializer()},
-            {typeof(bool), new XmlPrimitives.BooleanSerializer()}
+            {typeof(bool), new XmlPrimitives.BooleanSerializer()},
+            {typeof(IPAddress), new XmlPrimitives.IpAddressSerializer()}
         };
 
         private static readonly XmlWriterSettings WriterSettings = new XmlWriterSettings
@@ -550,6 +552,19 @@ namespace iLynx.Serialization.Xml
             public override bool Deserialize(XmlReader reader)
             {
                 return bool.Parse(reader.ReadElementString(typeof(bool).Name));
+            }
+        }
+
+        public class IpAddressSerializer : XmlSerializerBase<IPAddress>
+        {
+            public override void Serialize(IPAddress item, XmlWriter writer)
+            {
+                writer.WriteElementString(typeof(IPAddress).Name, item.ToString());
+            }
+
+            public override IPAddress Deserialize(XmlReader reader)
+            {
+                return IPAddress.Parse(reader.ReadElementString(typeof (IPAddress).Name));
             }
         }
     }
