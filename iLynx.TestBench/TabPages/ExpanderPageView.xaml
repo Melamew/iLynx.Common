@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="iLynx.TestBench.TabPages.ExpanderPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:extensions="clr-namespace:iLynx.Common.WPF.Extensions;assembly=iLynx.Common.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Expander Header="Expander One"
+                  HorizontalAlignment="Stretch">
+            <Grid Background="White"/>
+        </Expander>
+        <Expander extensions:ExpanderExtensions.Orientation="Vertical"
+                  HorizontalAlignment="Right"
+                  Header="Expander Two"
+                  Grid.Column="1"
+                  Grid.Row="0"
+                  Grid.RowSpan="2">
+            <Grid Background="White"
+                  Width="200"/>
+        </Expander>
+        <Expander Grid.Row="1"
+                  Header="Expander Three"
+                  Grid.Column="0">
+            <Grid Background="White"
+                  Height="200"/>
+        </Expander>
+    </Grid>
+</UserControl>

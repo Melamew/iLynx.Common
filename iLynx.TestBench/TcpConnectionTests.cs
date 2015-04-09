@@ -3,11 +3,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using iLynx.Chatter.Infrastructure;
-using iLynx.Chatter.Infrastructure.Crypto;
 using iLynx.Common;
 using iLynx.Networking;
-using iLynx.Networking.Cryptography;
 using iLynx.Networking.Interfaces;
 using iLynx.Networking.Serialization;
 using iLynx.Networking.TCP;
@@ -24,29 +21,7 @@ namespace iLynx.TestBench
         {
             menu.AddMenuItem('1', "Run a simple Server/Client test", RunClientServerTest);
             menu.AddMenuItem('2', "Run a test on the subscriber functionality of StubConnection", RunSubscriberTest);
-            menu.AddMenuItem('3', "Run encrypted transport tests", RunCryptographyTest);
             menu.ShowMenu();
-        }
-
-        private void RunCryptographyTest()
-        {
-            var keyExchangeContainer = new AlgorithmContainer<IKeyExchangeAlgorithmDescriptor>();
-            keyExchangeContainer.AddAlgorithm(new RsaDescriptor(512));
-
-            var symmetricContainer = new AlgorithmContainer<ISymmetricAlgorithmDescriptor>();
-            symmetricContainer.AddAlgorithm(new AesDescriptor(256));
-            var timerService = new SingleThreadedTimerService();
-            var serializer = new SimpleMessageSerializer<int>(new BinaryPrimitives.Int32Serializer());
-            var keyExchangeNegotiator = new KeyExchangeLinkNegotiator(keyExchangeContainer, symmetricContainer);
-            var listener =
-                new CryptoConnectionStubListener<SimpleMessage<int>, int>(
-                    serializer,
-                    keyExchangeNegotiator,
-                    timerService);
-            RunClientSubscriber(
-                new StubConnection<SimpleMessage<int>, int>(new ThreadManager(),
-                    new CryptoConnectionStubBuilder<SimpleMessage<int>, int>(serializer, keyExchangeNegotiator, timerService)),
-                listener, 5392);
         }
 
         private void RunSubscriberTest()

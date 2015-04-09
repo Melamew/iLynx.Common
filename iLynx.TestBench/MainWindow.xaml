@@ -4,70 +4,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wpf="clr-namespace:iLynx.Common.WPF;assembly=iLynx.Common.WPF"
-             xmlns:extensions="clr-namespace:iLynx.Common.WPF.Extensions;assembly=iLynx.Common.WPF"
-             xmlns:broadcastMessaging1="clr-namespace:iLynx.Chatter.WPF;assembly=iLynx.Chatter.WPF"
+             xmlns:themes="clr-namespace:iLynx.Common.WPF.Themes;assembly=iLynx.Common.WPF"
+             xmlns:testBench="clr-namespace:iLynx.TestBench"
              mc:Ignorable="d"
              HeaderSize="36"
              d:DesignHeight="300" d:DesignWidth="300">
-    <wpf:BorderlessWindow.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/iLynx.Common.WPF;component/Themes/Generic.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </wpf:BorderlessWindow.Resources>
-    <ListView SelectionMode="Multiple"
-              ItemsSource="{Binding Items}"
-              VerticalAlignment="Stretch"
-              ScrollViewer.VerticalScrollBarVisibility="Disabled">
-        <ListView.ItemsPanel>
-            <ItemsPanelTemplate>
-                <DockPanel IsItemsHost="True"
-                           LastChildFill="False"/>
-            </ItemsPanelTemplate>
-        </ListView.ItemsPanel>
-        <ListView.ItemContainerStyle>
-            <Style TargetType="{x:Type ListViewItem}">
-                <Setter Property="OverridesDefaultStyle" Value="True"/>
-                <Setter Property="DockPanel.Dock" Value="Left"/>
-                <Setter Property="VerticalContentAlignment" Value="Top"/>
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ListViewItem}">
-                            <Border Background="{TemplateBinding Background}">
-                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="{StaticResource BrushSelectedBackground}"/>
-                    </Trigger>
-                    <Trigger Property="IsSelected" Value="False">
-                        <Setter Property="Background" Value="{StaticResource BrushBackground}"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.ItemTemplate>
-            <DataTemplate DataType="{x:Type broadcastMessaging1:ContainerViewModel}">
-                <Expander Content="{Binding Content}"
-                          IsExpanded="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"
-                          MinWidth="{Binding ContentWidth}"
-                          VerticalAlignment="Stretch"
-                          VerticalContentAlignment="Stretch"
-                          extensions:ExpanderExtensions.Orientation="Vertical"
-                          extensions:ExpanderExtensions.ToggleButtonVisibility="Collapsed">
-                    <Expander.Header>
-                        <TextBlock Text="{Binding Header}"
-                                   FontSize="{Binding HeaderSize}"
-                                   FontWeight="Bold"/>
-                    </Expander.Header>
-                </Expander>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+    <themes:ThemeManager.Theme>
+        <themes:FlatTheme/>
+    </themes:ThemeManager.Theme>
+    <wpf:BorderlessWindow.Header>
+        <Menu Grid.Row="0" IsMainMenu="True">
+            <MenuItem Header="File">
+                <MenuItem Header="1"/>
+                <MenuItem Header="2"/>
+                <MenuItem Header="3"/>
+                <Separator/>
+                <MenuItem Header="Exit"
+                          Command="{x:Static testBench:TestApplication.ShutdownCommand}"/>
+            </MenuItem>
+        </Menu>
+    </wpf:BorderlessWindow.Header>
+    <Grid>
+        <TabControl ItemsSource="{Binding TabPages}"
+                SelectedItem="{Binding SelectedItem}">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Setter Property="Header" Value="{Binding Header}"/>
+                    <Setter Property="Content" Value="{Binding Content}"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
+        </TabControl>
+    </Grid>
 </wpf:BorderlessWindow>

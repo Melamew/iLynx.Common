@@ -10,7 +10,7 @@
             InitializeComponent();
         }
 
-        public MainWindow(HellViewModel viewModel)
+        public MainWindow(ShellViewModel viewModel)
             : this()
         {
             DataContext = viewModel;

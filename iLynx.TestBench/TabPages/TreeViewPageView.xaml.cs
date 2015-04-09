@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace iLynx.TestBench.ClientServerDemo
+namespace iLynx.TestBench.TabPages
 {
     /// <summary>
-    /// Interaction logic for ChatLogView.xaml
+    /// Interaction logic for TreeViewPageView.xaml
     /// </summary>
-    public partial class ChatLogView : UserControl
+    public partial class TreeViewPageView : UserControl
     {
-        public ChatLogView()
+        public TreeViewPageView()
         {
             InitializeComponent();
         }

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 namespace iLynx.Common
 {
@@ -32,6 +33,7 @@ namespace iLynx.Common
         /// Called when [property changed].
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
             var handler = PropertyChanged;

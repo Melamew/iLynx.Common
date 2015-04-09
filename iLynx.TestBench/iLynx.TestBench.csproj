@@ -97,34 +97,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientContainer.cs" />
-    <Compile Include="ClientServerDemo\ChatClientListView.xaml.cs">
-      <DependentUpon>ChatClientListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ClientServerDemo\ChatClientListViewModel.cs" />
-    <Compile Include="ClientServerDemo\ChatLogView.xaml.cs">
-      <DependentUpon>ChatLogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ClientServerDemo\ChatLogViewModel.cs" />
-    <Compile Include="ClientServerDemo\ClientServerDemoView.xaml.cs">
-      <DependentUpon>ClientServerDemoView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ClientServerDemo\ClientServerDemoViewModel.cs" />
-    <Compile Include="ClientServerDemo\IChatLogViewModel.cs" />
-    <Compile Include="ClientServerDemo\IPAddressConverter.cs" />
-    <Compile Include="ClientServerDemo\ServerClientViewModel.cs" />
-    <Compile Include="ClientServerDemo\SimpleChatClientView.xaml.cs">
-      <DependentUpon>SimpleChatClientView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ClientServerDemo\SimpleChatClientViewModel.cs" />
-    <Compile Include="ClientServerDemo\SimpleChatServerView.xaml.cs">
-      <DependentUpon>SimpleChatServerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ClientServerDemo\SimpleChatServerViewModel.cs" />
     <Compile Include="ConsoleMenu.cs" />
-    <Compile Include="HellViewModel.cs" />
-    <Compile Include="IClientContainer.cs" />
-    <Compile Include="IServerContainer.cs" />
+    <Compile Include="ContainerModel.cs" />
+    <Compile Include="ShellViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -169,32 +144,24 @@
     <Compile Include="Properties\StringFormatMethodAttribute.cs" />
     <Compile Include="Properties\UsedImplicitlyAttribute.cs" />
     <Compile Include="SerializerTester.cs" />
-    <Compile Include="ServerContainer.cs" />
+    <Compile Include="TabPages\ExpanderPageView.xaml.cs">
+      <DependentUpon>ExpanderPageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabPages\ExpanderPageViewModel.cs" />
+    <Compile Include="TabPages\ListViewPageView.xaml.cs">
+      <DependentUpon>ListViewPageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabPages\ListViewPageViewModel.cs" />
+    <Compile Include="TabPages\TreeNode.cs" />
+    <Compile Include="TabPages\TreeViewPageView.xaml.cs">
+      <DependentUpon>TreeViewPageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabPages\TreeViewPageViewModel.cs" />
     <Compile Include="TcpConnectionTests.cs" />
     <Compile Include="TestApplication.cs" />
     <Compile Include="TestObject.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\iLynx.Chatter.BroadcastMessaging\iLynx.Chatter.BroadcastMessaging.csproj">
-      <Project>{3ADE8D8F-3708-43C7-B88D-E77AA96BFAF5}</Project>
-      <Name>iLynx.Chatter.BroadcastMessaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\iLynx.Chatter.Infrastructure\iLynx.Chatter.Infrastructure.csproj">
-      <Project>{ED0CB42A-7D74-4AE4-99FE-6EDC3B8C4143}</Project>
-      <Name>iLynx.Chatter.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\iLynx.Chatter.PasswordAuth\iLynx.Chatter.AuthenticationModule.csproj">
-      <Project>{54DDF932-AE22-4EE0-A261-97D800E959B8}</Project>
-      <Name>iLynx.Chatter.AuthenticationModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\iLynx.Chatter.ServerServicesModule\iLynx.Chatter.ServerServicesModule.csproj">
-      <Project>{56057B48-A342-4EDC-8F03-3C339B4B8DB2}</Project>
-      <Name>iLynx.Chatter.ServerServicesModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\iLynx.Chatter.WPF\iLynx.Chatter.WPF.csproj">
-      <Project>{E488D852-E94C-472E-AB74-DC0E9B5C42B7}</Project>
-      <Name>iLynx.Chatter.WPF</Name>
-    </ProjectReference>
     <ProjectReference Include="..\iLynx.Common.WPF\iLynx.Common.WPF.csproj">
       <Project>{569111cc-d436-46e5-be9e-32b1bad1b950}</Project>
       <Name>iLynx.Common.WPF</Name>
@@ -225,31 +192,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ClientServerDemo\ChatClientListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ClientServerDemo\ChatLogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ClientServerDemo\ClientServerDemoView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ClientServerDemo\SimpleChatClientView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ClientServerDemo\SimpleChatServerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="DataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabPages\ExpanderPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabPages\ListViewPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabPages\TreeViewPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace iLynx.TestBench.ClientServerDemo
+namespace iLynx.TestBench.TabPages
 {
     /// <summary>
-    /// Interaction logic for SimpleChatClientView.xaml
+    /// Interaction logic for ListViewPageView.xaml
     /// </summary>
-    public partial class SimpleChatClientView : UserControl
+    public partial class ListViewPageView : UserControl
     {
-        public SimpleChatClientView()
+        public ListViewPageView()
         {
             InitializeComponent();
         }

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace iLynx.TestBench.ClientServerDemo
+namespace iLynx.TestBench.TabPages
 {
     /// <summary>
-    /// Interaction logic for ClientServerDemoView.xaml
+    /// Interaction logic for ExpanderPageView.xaml
     /// </summary>
-    public partial class ClientServerDemoView : UserControl
+    public partial class ExpanderPageView : UserControl
     {
-        public ClientServerDemoView()
+        public ExpanderPageView()
         {
             InitializeComponent();
         }

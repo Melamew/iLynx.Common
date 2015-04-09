@@ -4,11 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Windows.Media;
 using System.Xml;
 using iLynx.Common;
 using iLynx.Serialization;
-using iLynx.Serialization.Xml;
 using iLynx.Threading;
 
 // ReSharper disable LocalizableElement
@@ -20,6 +18,9 @@ namespace iLynx.TestBench
         public static readonly Random Rand = new Random();
         public static void Main(string[] args)
         {
+            if (null != args && args.Length > 0)
+                if (!ParseArgs(args))
+                    return;
             var menu = new ConsoleMenu();
             menu.AddMenuItem('1', "Run some BinarySerializerService tests", RunSerializerTests);
             menu.AddMenuItem('2', "Run tests on RuntimeHelper", RunRuntimeHelper);
@@ -32,6 +33,21 @@ namespace iLynx.TestBench
             menu.AddMenuItem('9', "Run some tests on XmlSerializer", DoTest);
             menu.AddMenuItem('w', "Run the WPF test window", StartDialog);
             menu.ShowMenu();
+        }
+
+        private static bool ParseArgs(IEnumerable<string> args)
+        {
+            foreach (var arg in args)
+            {
+                // TODO: Make this nicer.
+                switch (arg)
+                {
+                    case "-w":
+                        StartDialog();
+                        return false;
+                }
+            }
+            return true;
         }
 
         private static void DoTest()

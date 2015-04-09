@@ -10,7 +10,7 @@
     <Color x:Key="SSelectedBg">#FF325C74</Color>
     <Color x:Key="SMouseBg">#FF525C65</Color>
     <Color x:Key="SHighlightCol">#FF517693</Color>
-    <Color x:Key="SCloseCol">#FFC24641</Color>
+    <Color x:Key="SDisabledCol">#FFC24641</Color>
     <Color x:Key="SHighlightCloseCol">#FFFF0000</Color>
     <Color x:Key="SPushCloseCol">#FFEE0000</Color>
     <Color x:Key="SDefaultedCol">#FF387C44</Color>
@@ -26,7 +26,7 @@
     <SolidColorBrush x:Key="BrushSelectedBackground" Color="{StaticResource SSelectedBg}" />
     <SolidColorBrush x:Key="BrushMouseoverBackground" Color="{StaticResource SMouseBg}" />
     <SolidColorBrush x:Key="BrushHighlight" Color="{StaticResource SHighlightCol}" />
-    <SolidColorBrush x:Key="BrushDisabled" Color="{StaticResource SCloseCol}" />
+    <SolidColorBrush x:Key="BrushDisabled" Color="{StaticResource SDisabledCol}" />
     <SolidColorBrush x:Key="BrushDefaulted" Color="{StaticResource SDefaultedCol}" />
     <SolidColorBrush x:Key="BrushIndeterminate" Color="{StaticResource SIndeterminate}" />
     <SolidColorBrush x:Key="BrushCheckMark" Color="{StaticResource SCheckMarkCol}" />
