@@ -1,5 +1,5 @@
 iLynx.Common - A free library containing tools and utilities for the .Net framework.
-Copyright (C) 2014  Melanie Hjorth
+Copyright (C) 2016  Melanie Hjorth
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
